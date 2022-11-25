@@ -1,12 +1,7 @@
-import TextField from '@mui/material/TextField/TextField'
-import Button from '@mui/material/Button/Button'
 import * as React from 'react'
 import {useRouter} from 'next/router'
-import Container from '@mui/material/Container/Container'
-import CssBaseline from '@mui/material/CssBaseline'
-import Box from '@mui/material/Box'
-import {Avatar, Typography} from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import {Avatar, Box, Button, Container, CssBaseline, TextField, Typography} from '@mui/material'
+import {LockOutlined} from '@mui/icons-material'
 
 export default function LoginPage() {
 	const router = useRouter()
@@ -28,7 +23,7 @@ export default function LoginPage() {
 				}}
 			>
 				<Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-					<LockOutlinedIcon/>
+					<LockOutlined/>
 				</Avatar>
 				<Typography component="h1" variant="h5">
 					Вход
@@ -60,7 +55,7 @@ export default function LoginPage() {
 						variant="contained"
 						sx={{mt: 3, mb: 2}}
 					>
-						Sign In
+						Войти
 					</Button>
 				</Box>
 			</Box>

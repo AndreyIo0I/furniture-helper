@@ -1,13 +1,9 @@
-import * as React from 'react'
+import {useRef, useState} from 'react'
 import styles from './styles.module.css'
 import Link from '../Link'
 import {useRouter} from 'next/router'
-import Typography from '@mui/material/Typography/Typography'
-import Logout from '@mui/icons-material/Logout'
-import {useRef, useState} from 'react'
-import Menu from '@mui/material/Menu/Menu'
-import ListItemIcon from '@mui/material/ListItemIcon/ListItemIcon'
-import MenuItem from '@mui/material/MenuItem/MenuItem'
+import {Logout} from '@mui/icons-material'
+import {ListItemIcon, Menu, MenuItem, Typography} from '@mui/material'
 
 type TabType = 'projects'|'analytics'|'settings'
 
@@ -33,6 +29,7 @@ const tabs: Tab[] = [{
 
 function AccountButton() {
 	const userEmail = 'user@gmail.com'
+	const router = useRouter()
 
 	const ref = useRef<HTMLDivElement>(null)
 	const [open, setOpen] = useState(false)
@@ -58,13 +55,14 @@ function AccountButton() {
 					'aria-labelledby': 'basic-button',
 				}}
 			>
-				<MenuItem autoFocus={false}>
-					<Link href={'/login'}>
-						<ListItemIcon>
-							<Logout fontSize="small"/>
-						</ListItemIcon>
-						Выход
-					</Link>
+				<MenuItem
+					autoFocus={false}
+					onClick={() => router.push('/link')}
+				>
+					<ListItemIcon>
+						<Logout fontSize="small"/>
+					</ListItemIcon>
+					Выход
 				</MenuItem>
 			</Menu>
 		</>
