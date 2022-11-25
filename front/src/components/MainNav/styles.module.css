@@ -1,0 +1,7 @@
+.container {
+    display: flex;
+    background: bisque;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 0;
+}
