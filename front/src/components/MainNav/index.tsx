@@ -42,7 +42,7 @@ function AccountButton() {
 					setOpen(true)
 				}}
 			>
-				<Typography>{userEmail}</Typography>
+				<Typography className={styles.userEmail}>{userEmail}</Typography>
 			</div>
 			<Menu
 				id="basic-menu"
@@ -57,7 +57,7 @@ function AccountButton() {
 			>
 				<MenuItem
 					autoFocus={false}
-					onClick={() => router.push('/link')}
+					onClick={() => router.push('/login')}
 				>
 					<ListItemIcon>
 						<Logout fontSize="small"/>
