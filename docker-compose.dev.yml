@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  front:
+    build:
+      context: ./front
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./front/src:/app/src
+      - ./front/public:/app/public
+      - ./front/pages:/app/pages
+    restart: always
+    ports:
+      - '3000:3000'

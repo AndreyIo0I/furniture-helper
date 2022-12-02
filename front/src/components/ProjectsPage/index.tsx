@@ -103,7 +103,7 @@ export default function ProjectsPage() {
 									{row.name}
 								</TableCell>
 								<TableCell align="right">{row.client.name}</TableCell>
-								<TableCell align="right">{row.deadline.toString()}</TableCell>
+								<TableCell align="right">{row.deadline.toDateString()}</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
