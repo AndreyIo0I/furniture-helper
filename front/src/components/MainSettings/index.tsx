@@ -1,12 +1,16 @@
 import {Box, Button, TextField} from '@mui/material'
-import {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
-import FormHelper from '../../helpers/FormHelper'
-import IFormState from '../../helpers/IFormState'
 import MainNav from '../MainNav'
 import * as Yup from 'yup'
 import styles from './styles.module.css'
+
+type Form = {
+	projectDurationDays: number;
+	beforeDeadlineYellowColorDays: number;
+	beforeDeadlineRedColorDays: number;
+}
 
 const defaultSettings = {
 	projectDurationDays: 42,
@@ -42,24 +46,16 @@ const validationSchema = Yup.object().shape({
 })
 
 export default function MainSettingsPage() {
-	const [form, setForm] = useState<IFormState>({
-		projectDurationDays: defaultSettings.projectDurationDays,
-		beforeDeadlineYellowColorDays: defaultSettings.beforeDeadlineYellowColorDays,
-		beforeDeadlineRedColorDays: defaultSettings.beforeDeadlineRedColorDays,
-	})
-
 	const {
 		register,
 		handleSubmit,
 		reset,
 		formState: {errors, isSubmitSuccessful},
-	} = useForm({
+	} = useForm<Form>({
 		mode: 'onBlur',
 		resolver: yupResolver(validationSchema),
 	})
 
-	const formHelper = new FormHelper(form, setForm)
-	const handleOnChange = () => formHelper.handleOnChange.bind(formHelper)
 	const handleOnSubmit = (data: Object) => {
 		alert('Form submit success: ' + JSON.stringify(data))
 	}
@@ -91,11 +87,10 @@ export default function MainSettingsPage() {
 								className={styles.mainSettingsTextField}
 								label="Желтый"
 								{...register('beforeDeadlineYellowColorDays')}
-								onChange={handleOnChange()}
-								helperText={errors.beforeDeadlineYellowColorDays?.message?.toString()}
-								value={form.beforeDeadlineYellowColorDays}
+								helperText={errors.beforeDeadlineYellowColorDays?.message}
+								defaultValue={defaultSettings.beforeDeadlineYellowColorDays}
 								type="number"
-								FormHelperTextProps={{error: !!errors.beforeDeadlineYellowColorDays?.message?.toString()}}
+								FormHelperTextProps={{error: !!errors.beforeDeadlineYellowColorDays?.message}}
 							/>
 						</div>
 						<div className={styles.deadlineColorSettingWrapper}>
@@ -106,11 +101,10 @@ export default function MainSettingsPage() {
 								className={styles.mainSettingsTextField}
 								label="Красный"
 								{...register('beforeDeadlineRedColorDays')}
-								onChange={handleOnChange()}
-								helperText={errors.beforeDeadlineRedColorDays?.message?.toString()}
-								value={form.beforeDeadlineRedColorDays}
+								helperText={errors.beforeDeadlineRedColorDays?.message}
+								defaultValue={defaultSettings.beforeDeadlineRedColorDays}
 								type="number"
-								FormHelperTextProps={{error: !!errors.beforeDeadlineRedColorDays?.message?.toString()}}
+								FormHelperTextProps={{error: !!errors.beforeDeadlineRedColorDays?.message}}
 							/>
 						</div>
 					</div>
@@ -119,11 +113,10 @@ export default function MainSettingsPage() {
 							className={styles.mainSettingsTextField}
 							label="Длительность проектов по умолчанию"
 							{...register('projectDurationDays')}
-							onChange={handleOnChange()}
-							helperText={errors.projectDurationDays?.message?.toString()}
-							value={form.projectDurationDays}
+							helperText={errors.projectDurationDays?.message}
+							defaultValue={defaultSettings.projectDurationDays}
 							type="number"
-							FormHelperTextProps={{error: !!errors.projectDurationDays?.message?.toString()}}
+							FormHelperTextProps={{error: !!errors.projectDurationDays?.message}}
 						/>
 					</div>
 				</div>
