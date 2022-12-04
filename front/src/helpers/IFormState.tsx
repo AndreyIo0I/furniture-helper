@@ -1,0 +1,1 @@
+export default interface IFormState { [key: string]: any }
