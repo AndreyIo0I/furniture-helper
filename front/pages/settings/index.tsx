@@ -1,5 +1,5 @@
-import MainSettingsPage from "../../src/components/MainSettings";
+import MainSettingsPage from '../../src/components/MainSettings'
 
 export default function ProjectsRoute() {
-	return <MainSettingsPage />
+	return <MainSettingsPage/>
 }
