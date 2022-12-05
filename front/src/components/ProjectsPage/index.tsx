@@ -10,7 +10,6 @@ import {
 	TextField,
 	InputAdornment,
 } from '@mui/material'
-import * as React from 'react'
 import MainNav from '../MainNav'
 import styles from './styles.module.css'
 import {useRouter} from 'next/router'
@@ -21,7 +20,7 @@ interface Client {
 }
 
 interface Project {
-	id: string;
+	id: number;
 	name: string;
 	client: Client;
 	deadline: Date;
@@ -29,7 +28,7 @@ interface Project {
 }
 
 const rows: Project[] = [{
-	id: '1',
+	id: 1,
 	name: 'Диван',
 	client: {
 		name: 'Васнецов С.В.',
@@ -37,7 +36,7 @@ const rows: Project[] = [{
 	deadline: new Date('2022-02-08'),
 	deadlineState: 'red',
 }, {
-	id: '2',
+	id: 2,
 	name: 'Стол',
 	client: {
 		name: 'Наталья В.Ф.',
@@ -45,7 +44,7 @@ const rows: Project[] = [{
 	deadline: new Date('2022-02-08'),
 	deadlineState: 'yellow',
 }, {
-	id: '3',
+	id: 3,
 	name: 'ул.Чехова 1-1, 1под, 1этаж',
 	client: {
 		name: 'Елена Т.Ч.',
