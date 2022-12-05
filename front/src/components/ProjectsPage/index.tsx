@@ -66,7 +66,7 @@ export default function ProjectsPage() {
 					InputProps={{
 						startAdornment: (
 							<InputAdornment position="start">
-								<Search />
+								<Search/>
 							</InputAdornment>
 						),
 					}}
