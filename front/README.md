@@ -8,6 +8,7 @@
 1) docker
 
 ## разработка
+запукать в папке front
 ```bash
 yarn install
 ```
