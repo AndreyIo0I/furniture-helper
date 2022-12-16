@@ -5,7 +5,7 @@ import {useRouter} from 'next/router'
 import {Logout} from '@mui/icons-material'
 import {ListItemIcon, Menu, MenuItem, Typography} from '@mui/material'
 
-type TabType = 'projects'|'analytics'|'settings'
+type TabType = 'projects' | 'analytics' | 'settings'
 
 interface Tab {
 	id: TabType;
@@ -74,16 +74,18 @@ export default function MainNav() {
 
 	return (
 		<div className={styles.container}>
-			{tabs.map(tab => (
-				<Link
-					key={tab.id}
-					href={tab.link}
-					underline={router.route === tab.link ? 'always' : 'none'}
-				>
-					{tab.name}
-				</Link>
-			))}
-			<AccountButton/>
+			<div className={styles.content}>
+				{tabs.map(tab => (
+					<Link
+						key={tab.id}
+						href={tab.link}
+						underline={router.route === tab.link ? 'always' : 'none'}
+					>
+						{tab.name}
+					</Link>
+				))}
+				<AccountButton/>
+			</div>
 		</div>
 	)
 }

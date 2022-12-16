@@ -5,6 +5,7 @@ import {yupResolver} from '@hookform/resolvers/yup'
 import MainNav from '../MainNav'
 import * as Yup from 'yup'
 import styles from './styles.module.css'
+import SettingsSecondaryNav from '../SettingsSecondaryNav'
 
 type Form = {
 	projectDurationDays: number;
@@ -69,6 +70,7 @@ export default function MainSettingsPage() {
 	return (
 		<>
 			<MainNav/>
+			<SettingsSecondaryNav/>
 			<Box
 				component="form"
 				className={styles.form}

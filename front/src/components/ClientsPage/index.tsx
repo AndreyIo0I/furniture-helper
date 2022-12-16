@@ -13,6 +13,8 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Button from '@mui/material/Button'
 import TableCell, {tableCellClasses} from '@mui/material/TableCell'
 import styled from '@mui/material/styles/styled'
+import SettingsSecondaryNav from '../SettingsSecondaryNav'
+import React from 'react'
 
 interface Client {
 	id: number
@@ -72,6 +74,7 @@ export default function ClientsPage() {
 	return (
 		<>
 			<MainNav/>
+			<SettingsSecondaryNav/>
 			<div className={styles.top}>
 				<TextField
 					margin="none"
@@ -92,7 +95,13 @@ export default function ClientsPage() {
 					Добавить клиента
 				</Button>
 			</div>
-			<TableContainer component={Paper}>
+			<TableContainer
+				component={Paper}
+				sx={{
+					maxWidth: '1440px',
+					margin: 'auto',
+				}}
+			>
 				<Table>
 					<TableHead>
 						<TableRow>
