@@ -1,4 +1,7 @@
 import {
+	Button,
+	Container,
+	InputAdornment,
 	Paper,
 	Table,
 	TableBody,
@@ -6,9 +9,7 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	Button,
 	TextField,
-	InputAdornment,
 } from '@mui/material'
 import MainNav from '../MainNav'
 import styles from './styles.module.css'
@@ -58,62 +59,64 @@ export default function ProjectsPage() {
 	return (
 		<>
 			<MainNav/>
-			<div className={styles.top}>
-				<TextField
-					margin="none"
-					size="small"
-					autoFocus
-					InputProps={{
-						startAdornment: (
-							<InputAdornment position="start">
-								<Search/>
-							</InputAdornment>
-						),
+			<Container maxWidth="lg">
+				<div className={styles.top}>
+					<TextField
+						margin="none"
+						size="small"
+						autoFocus
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+									<Search/>
+								</InputAdornment>
+							),
+						}}
+					/>
+					<Button
+						onClick={() => router.push('/projects/new')}
+						variant="contained"
+					>
+						Добавить новый проект
+					</Button>
+				</div>
+				<TableContainer
+					component={Paper}
+					sx={{
+						maxWidth: '1440px',
+						margin: 'auto',
 					}}
-				/>
-				<Button
-					onClick={() => router.push('/projects/new')}
-					variant="contained"
 				>
-					Добавить новый проект
-				</Button>
-			</div>
-			<TableContainer
-				component={Paper}
-				sx={{
-					maxWidth: '1440px',
-					margin: 'auto',
-				}}
-			>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<TableCell>Название</TableCell>
-							<TableCell align="right">Клиент</TableCell>
-							<TableCell align="right">Дедлайн</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{rows.map(row => (
-							<TableRow
-								key={row.name}
-								className={[
-									styles.row,
-									row.deadlineState === 'red' && styles.row_red,
-									row.deadlineState === 'yellow' && styles.row_yellow,
-								].filter(x => !!x).join(' ')}
-								onClick={() => router.push(`/project/${row.id}`)}
-							>
-								<TableCell component="th" scope="row">
-									{row.name}
-								</TableCell>
-								<TableCell align="right">{row.client.name}</TableCell>
-								<TableCell align="right">{row.deadline.toDateString()}</TableCell>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<TableCell>Название</TableCell>
+								<TableCell align="right">Клиент</TableCell>
+								<TableCell align="right">Дедлайн</TableCell>
 							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+						</TableHead>
+						<TableBody>
+							{rows.map(row => (
+								<TableRow
+									key={row.name}
+									className={[
+										styles.row,
+										row.deadlineState === 'red' && styles.row_red,
+										row.deadlineState === 'yellow' && styles.row_yellow,
+									].filter(x => !!x).join(' ')}
+									onClick={() => router.push(`/project/${row.id}`)}
+								>
+									<TableCell component="th" scope="row">
+										{row.name}
+									</TableCell>
+									<TableCell align="right">{row.client.name}</TableCell>
+									<TableCell align="right">{row.deadline.toDateString()}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			</Container>
 		</>
 	)
 }
