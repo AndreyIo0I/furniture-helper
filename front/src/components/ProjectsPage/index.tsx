@@ -20,15 +20,15 @@ interface Client {
 }
 
 interface Project {
-	id: number;
+	id: string;
 	name: string;
 	client: Client;
 	deadline: Date;
-	deadlineState?: 'red'|'yellow';
+	deadlineState?: 'red' | 'yellow';
 }
 
 const rows: Project[] = [{
-	id: 1,
+	id: '1',
 	name: 'Диван',
 	client: {
 		name: 'Васнецов С.В.',
@@ -36,7 +36,7 @@ const rows: Project[] = [{
 	deadline: new Date('2022-02-08'),
 	deadlineState: 'red',
 }, {
-	id: 2,
+	id: '2',
 	name: 'Стол',
 	client: {
 		name: 'Наталья В.Ф.',
@@ -44,7 +44,7 @@ const rows: Project[] = [{
 	deadline: new Date('2022-02-08'),
 	deadlineState: 'yellow',
 }, {
-	id: 3,
+	id: '3',
 	name: 'ул.Чехова 1-1, 1под, 1этаж',
 	client: {
 		name: 'Елена Т.Ч.',
@@ -78,7 +78,13 @@ export default function ProjectsPage() {
 					Добавить новый проект
 				</Button>
 			</div>
-			<TableContainer component={Paper}>
+			<TableContainer
+				component={Paper}
+				sx={{
+					maxWidth: '1440px',
+					margin: 'auto',
+				}}
+			>
 				<Table>
 					<TableHead>
 						<TableRow>
