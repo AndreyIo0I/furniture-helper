@@ -1,7 +1,7 @@
 import * as React from 'react'
 import MainNav from '../MainNav'
 import {useRouter} from 'next/router'
-import {Box, Button, TextField} from '@mui/material'
+import {Box, Button, Container, TextField} from '@mui/material'
 import styles from './styles.module.css'
 
 export default function NewProjectPage() {
@@ -17,33 +17,35 @@ export default function NewProjectPage() {
 	return (
 		<>
 			<MainNav/>
-			<Box
-				component="form"
-				onSubmit={createNewProject}
-				className={styles.form}
-			>
-				<TextField
-					margin="normal"
-					required
-					label="Название проекта"
-					autoFocus
-				/>
-				<TextField
-					label="Описание"
-					multiline
-					minRows={4}
-					maxRows={16}
-				/>
-				<div>
-					<Button
-						type="submit"
-						variant="contained"
-						className={styles.button}
-					>
-						Создать
-					</Button>
-				</div>
-			</Box>
+			<Container maxWidth="lg">
+				<Box
+					component="form"
+					onSubmit={createNewProject}
+					className={styles.form}
+				>
+					<TextField
+						margin="normal"
+						required
+						label="Название проекта"
+						autoFocus
+					/>
+					<TextField
+						label="Описание"
+						multiline
+						minRows={4}
+						maxRows={16}
+					/>
+					<div>
+						<Button
+							type="submit"
+							variant="contained"
+							className={styles.button}
+						>
+							Создать
+						</Button>
+					</div>
+				</Box>
+			</Container>
 		</>
 	)
 }

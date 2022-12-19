@@ -1,15 +1,7 @@
 .top {
     display: flex;
-    width: 100%;
-    max-width: 1440px;
-    margin: auto;
     justify-content: space-between;
     padding: 40px;
-}
-
-.tableContainer {
-    max-width: 1440px;
-    margin: auto;
 }
 
 .row {

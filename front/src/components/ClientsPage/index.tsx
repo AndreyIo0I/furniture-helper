@@ -15,6 +15,7 @@ import TableCell, {tableCellClasses} from '@mui/material/TableCell'
 import styled from '@mui/material/styles/styled'
 import SettingsSecondaryNav from '../SettingsSecondaryNav'
 import React from 'react'
+import {Container} from '@mui/material'
 
 interface Client {
 	id: number
@@ -75,56 +76,58 @@ export default function ClientsPage() {
 		<>
 			<MainNav/>
 			<SettingsSecondaryNav/>
-			<div className={styles.top}>
-				<TextField
-					margin="none"
-					size="small"
-					autoFocus
-					InputProps={{
-						startAdornment: (
-							<InputAdornment position="start">
-								<Search/>
-							</InputAdornment>
-						),
+			<Container maxWidth="lg">
+				<div className={styles.top}>
+					<TextField
+						margin="none"
+						size="small"
+						autoFocus
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+									<Search/>
+								</InputAdornment>
+							),
+						}}
+					/>
+					<Button
+						onClick={() => router.push(`${location.pathname}/new`)}
+						variant="contained"
+					>
+						Добавить клиента
+					</Button>
+				</div>
+				<TableContainer
+					component={Paper}
+					sx={{
+						maxWidth: '1440px',
+						margin: 'auto',
 					}}
-				/>
-				<Button
-					onClick={() => router.push(`${location.pathname}/new`)}
-					variant="contained"
 				>
-					Добавить клиента
-				</Button>
-			</div>
-			<TableContainer
-				component={Paper}
-				sx={{
-					maxWidth: '1440px',
-					margin: 'auto',
-				}}
-			>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<StyledTableCell>ФИО</StyledTableCell>
-							<StyledTableCell align="center">Телефон</StyledTableCell>
-							<StyledTableCell align="right">Источник продаж</StyledTableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{rows.map(row => (
-							<StyledTableRow
-								key={row.id}
-							>
-								<StyledTableCell component="th" scope="row">
-									{row.fullName}
-								</StyledTableCell>
-								<StyledTableCell align="center">{row.phone}</StyledTableCell>
-								<StyledTableCell align="right">{row.source}</StyledTableCell>
-							</StyledTableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<StyledTableCell>ФИО</StyledTableCell>
+								<StyledTableCell align="center">Телефон</StyledTableCell>
+								<StyledTableCell align="right">Источник продаж</StyledTableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{rows.map(row => (
+								<StyledTableRow
+									key={row.id}
+								>
+									<StyledTableCell component="th" scope="row">
+										{row.fullName}
+									</StyledTableCell>
+									<StyledTableCell align="center">{row.phone}</StyledTableCell>
+									<StyledTableCell align="right">{row.source}</StyledTableCell>
+								</StyledTableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			</Container>
 		</>
 	)
 }
