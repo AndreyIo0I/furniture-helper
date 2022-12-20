@@ -35,6 +35,8 @@ builder.Services
             } );
     } );
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -46,5 +48,7 @@ if ( app.Environment.IsDevelopment() )
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHealthChecks( "/health" );
 
 app.Run();
