@@ -116,6 +116,7 @@ export default function ClientsPage() {
 							{rows.map(row => (
 								<StyledTableRow
 									key={row.id}
+									onClick={() => router.push(`/settings/client/${row.id}`)}
 								>
 									<StyledTableCell component="th" scope="row">
 										{row.fullName}
