@@ -6,7 +6,7 @@ Description=Furniture Helper entry web api service
 [Service]
 WorkingDirectory=/root/srv/FurnitureHelper
 
-ExecStart=dotnet ./FurnitureHelper
+ExecStart=dotnet /root/srv/FurnitureHelper/ExtranetAPI
 
 User=root
 
