@@ -58,7 +58,10 @@ systemctl daemon-reload
 systemctl start FHExtranetAPI
 
 systemctl status FHExtranetAPI:
-![[Pasted image 20221221015701.png]]
+![ожидаемый результат](./status_result.png)
+
+health check:
+http://62.217.179.210:5000/health
 
 Если что-то не так, то логи зауска:
 journalctl -u FHExtranetAPI.service -b -n 100 --no-pager
