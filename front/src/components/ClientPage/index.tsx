@@ -1,10 +1,10 @@
 import * as Yup from 'yup'
-import MainNav from '../MainNav'
 import {Box, Button, Container, TextField} from '@mui/material'
 import styles from './styles.module.css'
 import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
+import MainNav from '../MainNav'
 
 type Form = {
 	fullName: string;
@@ -29,7 +29,7 @@ const validationSchema = Yup.object().shape({
 	description: Yup.string().nullable(true),
 })
 
-export default function NewClientPage() {
+export default function ClientPage() {
 	const {
 		register,
 		handleSubmit,
@@ -52,6 +52,7 @@ export default function NewClientPage() {
 
 	return (
 		<>
+			<MainNav/>
 			<Container maxWidth="lg">
 				<Box
 					component="form"
@@ -106,7 +107,6 @@ export default function NewClientPage() {
 						<Button
 							type="submit"
 							variant="contained"
-							className={styles.button}
 						>
 							Сохранить
 						</Button>
