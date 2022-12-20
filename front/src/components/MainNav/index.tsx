@@ -5,7 +5,7 @@ import {useRouter} from 'next/router'
 import {Logout} from '@mui/icons-material'
 import {ListItemIcon, Menu, MenuItem, Typography} from '@mui/material'
 
-type TabType = 'projects' | 'analytics' | 'settings'
+type TabType = 'projects' | 'analytics' | 'settings' | 'costs'
 
 interface Tab {
 	id: TabType;
@@ -25,6 +25,10 @@ const tabs: Tab[] = [{
 	id: 'settings',
 	name: 'Настройки',
 	link: '/settings',
+}, {
+	id: 'costs',
+	name: 'Издержки',
+	link: '/costs',
 }]
 
 function AccountButton() {
