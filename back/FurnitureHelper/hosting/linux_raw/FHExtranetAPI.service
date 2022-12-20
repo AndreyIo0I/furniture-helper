@@ -1,9 +1,9 @@
 # описание сервиса для запуска ExtranetAPI с помощью systemd
 
-[unit]
+[Unit]
 Description=Furniture Helper entry web api service
 
-[service]
+[Service]
 WorkingDirectory=/root/srv/FurnitureHelper
 
 ExecStart=dotnet ./FurnitureHelper
