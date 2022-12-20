@@ -1,0 +1,27 @@
+# описание сервиса для запуска ExtranetAPI с помощью systemd
+
+[unit]
+Description=Furniture Helper entry web api service
+
+[service]
+WorkingDirectory=/root/srv/FurnitureHelper
+
+ExecStart=dotnet ./FurnitureHelper
+
+User=root
+
+Restart=always
+
+RestartSec=5
+
+KillSignal=SIGINT
+
+Environment=ASPNETCORE_ENVIRONMENT=prod
+
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+Environment=ASPNETCORE_URLS=http://60.217.179.210:5000;
+
+# не знаю зачем, не разобрался пока что
+[Install]
+WantedBy=multi-user.target
