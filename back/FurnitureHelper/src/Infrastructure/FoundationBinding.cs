@@ -1,4 +1,6 @@
 ﻿using Application.Foundation;
+using Domain.ClientManagement;
+using Domain.CostsManagement;
 using Domain.ProjectManagement;
 using Infrastructure.Foundation;
 using Infrastructure.Foundation.EntityFramwork;
@@ -22,6 +24,9 @@ namespace Infrastructure
         private static IServiceCollection AddRepositories( this IServiceCollection services )
         {
             services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IClientRepository, ClientRepository>();
+            services.AddScoped<ICostRepository, CostRepository>();
+            services.AddScoped<IProjectBudgetRepository, ProjectBudgetRepository>();
 
             return services;
         }

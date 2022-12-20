@@ -14,5 +14,10 @@ namespace Infrastructure.Repositories
         {
             return await Entities.FirstOrDefaultAsync( x => x.Id == id );
         }
+
+        public async Task<IReadOnlyList<Project>> GetAll()
+        {
+            return await Entities.ToListAsync();
+        }
     }
 }

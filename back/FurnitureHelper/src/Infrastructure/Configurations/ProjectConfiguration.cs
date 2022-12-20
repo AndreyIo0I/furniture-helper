@@ -11,6 +11,11 @@ namespace Infrastructure.Configurations
             builder.ToTable( "project" )
                 .HasKey( item => item.Id );
             builder.Property( item => item.Name ).IsRequired();
+            builder.Property( item => item.ContractNumber ).IsRequired();
+            builder.Property( item => item.DateOfStart ).IsRequired();
+            builder.Property( item => item.DeadLine ).IsRequired();
+            builder.Property( item => item.ClientId ).IsRequired();
+            builder.Property( item => item.Description ).IsRequired();
         }
     }
 }

@@ -21,6 +21,9 @@ namespace Infrastructure.Foundation.EntityFramwork
         protected override void OnModelCreating( ModelBuilder modelBuilder )
         {
             modelBuilder.ApplyConfiguration( new ProjectConfiguration() );
+            modelBuilder.ApplyConfiguration( new ClientConfiguration() );
+            modelBuilder.ApplyConfiguration( new CostConfiguration() );
+            modelBuilder.ApplyConfiguration( new ProjectBudgetCongifuration() );
         }
     }
 }
