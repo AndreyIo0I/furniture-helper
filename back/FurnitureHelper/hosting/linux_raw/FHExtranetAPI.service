@@ -6,7 +6,7 @@ Description=Furniture Helper entry web api service
 [Service]
 WorkingDirectory=/root/srv/FurnitureHelper
 
-ExecStart=dotnet /root/srv/FurnitureHelper/ExtranetAPI
+ExecStart=dotnet /root/srv/FurnitureHelper/ExtranetAPI.dll
 
 User=root
 
@@ -20,7 +20,7 @@ Environment=ASPNETCORE_ENVIRONMENT=prod
 
 Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
 
-Environment=ASPNETCORE_URLS=http://60.217.179.210:5000;
+Environment=ASPNETCORE_URLS=http://*:5000;
 
 # не знаю зачем, не разобрался пока что
 [Install]
