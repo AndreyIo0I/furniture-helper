@@ -28,7 +28,7 @@ const tabs: Tab[] = [{
 }, {
 	id: 'costs',
 	name: 'Издержки',
-	link: '/totalCosts',
+	link: '/costs',
 }]
 
 function AccountButton() {

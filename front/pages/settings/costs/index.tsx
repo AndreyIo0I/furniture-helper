@@ -1,5 +1,5 @@
 import * as React from 'react'
-import TypeCostsPage from '../../../src/components/TypeCostsPage'
+import TypeCostsPage from '../../../src/components/SettingsCostsPage'
 
 export default function TypeRoute() {
 	return (

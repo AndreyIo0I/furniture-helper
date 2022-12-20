@@ -40,7 +40,7 @@ export default function TypeCostsPage() {
 			<MainNav/>
 			<SettingsSecondaryNav/>
 			<Container maxWidth="lg">
-				<TableContainer component={Paper} sx={{maxWidth: '400px', marginTop: '24px', marginBottom: '24px'}}>
+				<TableContainer component={Paper} sx={{maxWidth: '400px', margin: '24px 0'}}>
 					<Table>
 						<TableHead>
 							<TableRow>
