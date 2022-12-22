@@ -12,10 +12,10 @@ export default function ProjectSecondaryNav(props: ProjectSecondaryNav) {
 			link: `/project/${props.projectId}`,
 		}, {
 			text: 'Этапы',
-			link: '/project/stages',
+			link: `/project/${props.projectId}/stages`,
 		}, {
 			text: 'Исполнение бюджета',
-			link: '/project/budget',
+			link: `/project/${props.projectId}/budget`,
 		}]}
 	/>
 }

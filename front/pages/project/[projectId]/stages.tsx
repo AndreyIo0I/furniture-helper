@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {useRouter} from 'next/router'
-import MainNav from '../../src/components/MainNav'
-import ProjectSecondaryNav from '../../src/components/ProjectSecondaryNav'
+import MainNav from '../../../src/components/MainNav'
+import ProjectSecondaryNav from '../../../src/components/ProjectSecondaryNav'
 
 export default function ProjectsRoute() {
 	const router = useRouter()
@@ -12,7 +12,7 @@ export default function ProjectsRoute() {
 		<>
 			<MainNav/>
 			<ProjectSecondaryNav projectId={projectId}/>
-			<h1>Welcome to {projectId}</h1>
+			<h1>Welcome to stages of {projectId}</h1>
 		</>
 	)
 }
