@@ -22,7 +22,7 @@ const validationSchema = Yup.object().shape({
 	role: Yup.string().required('Поле не должно быть пустым'),
 })
 
-export default function ProfileRoute() {
+export default function NewUserPage() {
 	const {
 		register,
 		handleSubmit,
