@@ -9,13 +9,13 @@ import {
 	Table,
 	TableBody,
 	TableCell,
-	tableCellClasses,
 	TableContainer,
 	TableHead,
 	TableRow,
 	TextField,
 } from '@mui/material'
 import {styled} from '@mui/material/styles'
+import {tableCellClasses} from '@mui/material/TableCell'
 import {useRouter} from 'next/router'
 import React from 'react'
 import MainNav from '../MainNav'
