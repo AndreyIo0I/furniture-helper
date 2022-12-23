@@ -1,0 +1,8 @@
+.col_content_sized {
+    width: 0;
+    white-space: nowrap;
+}
+
+.col_stage_name {
+    padding-left: 0;
+}
