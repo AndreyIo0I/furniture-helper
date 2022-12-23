@@ -4,6 +4,7 @@ import {
 	Container,
 	IconButton,
 	Paper,
+	SxProps,
 	Table,
 	TableBody,
 	TableCell,
@@ -11,9 +12,9 @@ import {
 	TableHead,
 	TableRow,
 } from '@mui/material'
-import styles from './styles.module.css'
 import MainNav from '../MainNav'
 import ProjectSecondaryNav from '../ProjectSecondaryNav'
+import styles from './styles.module.css'
 
 interface ProjectStagesPageProps {
 	projectId: string,
