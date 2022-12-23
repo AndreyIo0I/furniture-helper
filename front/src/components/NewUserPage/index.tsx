@@ -1,11 +1,11 @@
-import * as Yup from 'yup'
-import MainNav from '../MainNav'
+import {yupResolver} from '@hookform/resolvers/yup'
 import {Box, Button, Container, TextField} from '@mui/material'
-import styles from './styles.module.css'
 import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
-import {yupResolver} from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
+import MainNav from '../MainNav'
 import SettingsSecondaryNav from '../SettingsSecondaryNav'
+import styles from './styles.module.css'
 
 type Form = {
 	fullName: string;

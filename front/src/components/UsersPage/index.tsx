@@ -1,28 +1,31 @@
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
-import MainNav from '../MainNav'
-import styles from './styles.module.css'
-import {useRouter} from 'next/router'
-import {Search} from '@mui/icons-material'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import Button from '@mui/material/Button'
-import TableCell, {tableCellClasses} from '@mui/material/TableCell'
-import styled from '@mui/material/styles/styled'
-import SettingsSecondaryNav from '../SettingsSecondaryNav'
-import React from 'react'
-import {Container, IconButton} from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import {useState} from 'react'
+import SearchIcon from '@mui/icons-material/Search'
+import {
+	Button,
+	Container,
+	IconButton,
+	InputAdornment,
+	Paper,
+	Table,
+	TableBody,
+	TableCell,
+	tableCellClasses,
+	TableContainer,
+	TableHead,
+	TableRow,
+	TextField,
+} from '@mui/material'
+import {styled} from '@mui/material/styles'
+import {useRouter} from 'next/router'
+import React from 'react'
+import MainNav from '../MainNav'
+import SettingsSecondaryNav from '../SettingsSecondaryNav'
+import styles from './styles.module.css'
 
 interface User {
 	id: number
 	fullName: string
-    role: string
+	role: string
 	email: string
 }
 
@@ -75,7 +78,7 @@ export default function UsersPage() {
 						InputProps={{
 							startAdornment: (
 								<InputAdornment position="start">
-									<Search/>
+									<SearchIcon/>
 								</InputAdornment>
 							),
 						}}

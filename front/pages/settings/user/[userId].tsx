@@ -1,5 +1,5 @@
-import * as React from 'react'
 import {useRouter} from 'next/router'
+import * as React from 'react'
 import UserPage from '../../../src/components/UserPage'
 
 export default function UserIdRoute() {
