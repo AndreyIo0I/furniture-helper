@@ -1,0 +1,14 @@
+.top {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+}
+
+.row {
+    cursor: pointer;
+}
+
+.row:last-child td,
+.row:last-child th {
+    border: 0;
+}
