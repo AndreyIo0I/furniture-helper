@@ -1,18 +1,10 @@
-import * as React from 'react'
 import {useRouter} from 'next/router'
-import MainNav from '../../../src/components/MainNav'
-import ProjectSecondaryNav from '../../../src/components/ProjectSecondaryNav'
+import ProjectBudgetPage from '../../../src/components/ProjectBudgetPage'
 
-export default function ProjectsRoute() {
+export default function ProjectBudgetRoute() {
 	const router = useRouter()
 
 	const projectId = router.query.projectId as string
 
-	return (
-		<>
-			<MainNav/>
-			<ProjectSecondaryNav projectId={projectId}/>
-			<h1>Welcome to budget of {projectId}</h1>
-		</>
-	)
+	return <ProjectBudgetPage projectId={projectId}/>
 }
