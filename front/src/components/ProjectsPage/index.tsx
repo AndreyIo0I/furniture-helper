@@ -1,3 +1,4 @@
+import {Search} from '@mui/icons-material'
 import {
 	Button,
 	Container,
@@ -11,10 +12,10 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
+import {useRouter} from 'next/router'
+import useProjects from '../../../api/useProjects'
 import MainNav from '../MainNav'
 import styles from './styles.module.css'
-import {useRouter} from 'next/router'
-import {Search} from '@mui/icons-material'
 
 interface Client {
 	name: string;
@@ -56,6 +57,18 @@ const rows: Project[] = [{
 export default function ProjectsPage() {
 	const router = useRouter()
 
+	const {data, error, isLoading} = useProjects()
+	const projects = data && data.map(project => ({
+		id: project.id,
+		name: project.name,
+		client: {
+			name: 'TODO: загрузить клиента',
+		},
+		deadline: new Date(project.deadLine!),
+		deadlineState: 'normal',
+	}))
+	console.log('useProjects: ', {data, error, isLoading})
+
 	return (
 		<>
 			<MainNav/>
@@ -96,9 +109,9 @@ export default function ProjectsPage() {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{rows.map(row => (
+							{projects && projects.map(row => (
 								<TableRow
-									key={row.name}
+									key={row.id}
 									className={[
 										styles.row,
 										row.deadlineState === 'red' && styles.row_red,

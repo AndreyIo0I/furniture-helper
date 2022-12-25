@@ -1,0 +1,564 @@
+openapi: 3.0.1
+info:
+  title: ExtranetAPI
+  version: '1.0'
+paths:
+  /clients/{clientId}:
+    get:
+      tags:
+        - Client
+      summary: Получить клиента по идентификатору
+      parameters:
+        - name: clientId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Получить клиента по идентификатору
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+    delete:
+      tags:
+        - Client
+      summary: Удалить клиента
+      parameters:
+        - name: clientId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Удалить клиента
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /clients:
+    get:
+      tags:
+        - Client
+      summary: Получить всех клиентов
+      responses:
+        '200':
+          description: Получить всех клиентов
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDto'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDto'
+    post:
+      tags:
+        - Client
+      summary: Создать клиента
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+        required: true
+      responses:
+        '200':
+          description: Создать клиента
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /clients/{clientId}/client-updating:
+    post:
+      tags:
+        - Client
+      summary: Обновить основную информацию по клиенту
+      parameters:
+        - name: clientId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+        required: true
+      responses:
+        '200':
+          description: Обновить основную информацию по клиенту
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /costs/{costId}:
+    get:
+      tags:
+        - Cost
+      summary: Получить издержку по идентификатору
+      parameters:
+        - name: costId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Получить издержку по идентификатору
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Cost'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cost'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Cost'
+  /costs:
+    get:
+      tags:
+        - Cost
+      summary: Получить все издержки
+      responses:
+        '200':
+          description: Получить все издержки
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cost'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cost'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cost'
+    post:
+      tags:
+        - Cost
+      summary: Создать издержку
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cost'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Cost'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Cost'
+        required: true
+      responses:
+        '200':
+          description: Создать издержку
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /projects/{projectId}:
+    get:
+      tags:
+        - Project
+      summary: Получить проект по идентификатору
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Получить проект по идентификатору
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProjectDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDto'
+    delete:
+      tags:
+        - Project
+      summary: Удалить проект
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Удалить проект
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /projects:
+    get:
+      tags:
+        - Project
+      summary: Получить все проекты
+      responses:
+        '200':
+          description: Получить все проекты
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDto'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDto'
+    post:
+      tags:
+        - Project
+      summary: Создать проект
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ProjectDto'
+        required: true
+      responses:
+        '200':
+          description: Создать проект
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /projects/{projectId}/project-updating:
+    post:
+      tags:
+        - Project
+      summary: Обновить основную информацию по проекту
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ProjectDto'
+        required: true
+      responses:
+        '200':
+          description: Обновить основную информацию по проекту
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /project-budgets/{projectId}:
+    get:
+      tags:
+        - ProjectBudget
+      summary: Получить бюджет по проекту
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Получить бюджет по проекту
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProjectBudgetDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectBudgetDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProjectBudgetDto'
+  /project-budgets/{projectId}/project-budget-updating:
+    post:
+      tags:
+        - ProjectBudget
+      summary: Обновить бюджет проекта
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectBudgetDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ProjectBudgetDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ProjectBudgetDto'
+        required: true
+      responses:
+        '200':
+          description: Обновить бюджет проекта
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProjectBudgetDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectBudgetDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProjectBudgetDto'
+components:
+  schemas:
+    ClientDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+        communicationChannel:
+          type: string
+          nullable: true
+        phoneNumber:
+          type: string
+          nullable: true
+        mail:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ClientPayment:
+      type: object
+      properties:
+        paymentDate:
+          type: string
+          format: date-time
+        amount:
+          type: number
+          format: double
+      additionalProperties: false
+    Cost:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CostPayment:
+      type: object
+      properties:
+        costId:
+          type: integer
+          format: int32
+        paymentDate:
+          type: string
+          format: date-time
+        amount:
+          type: number
+          format: double
+      additionalProperties: false
+    ProjectBudgetDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        projectId:
+          type: integer
+          format: int32
+        projectCost:
+          type: number
+          format: double
+        clientPayments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientPayment'
+          nullable: true
+        costPayments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CostPayment'
+          nullable: true
+      additionalProperties: false
+    ProjectDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+        contractNumber:
+          type: string
+          nullable: true
+        dateOfStart:
+          type: string
+          format: date-time
+        deadLine:
+          type: string
+          format: date-time
+        clientId:
+          type: integer
+          format: int32
+        description:
+          type: string
+          nullable: true
+      additionalProperties: false

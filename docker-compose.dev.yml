@@ -1,6 +1,25 @@
 version: '3.9'
 
 services:
+  postgres:
+    image: postgres:14.5
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: 'furnitureHelper'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'mydevpassword'
+  back:
+    build:
+      context: ./back/FurnitureHelper
+      dockerfile: dev.Dockerfile
+    ports:
+      - '5070:5070'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://*:5070
   front:
     build:
       context: ./front

@@ -3,6 +3,14 @@ const nextConfig = {
 	reactStrictMode: true,
 	poweredByHeader: false,
 	output: 'standalone',
+	async rewrites() {
+		return {
+			beforeFiles: [{
+				source: '/api/:path*',
+				destination: 'http://localhost:5070/:path*',
+			}],
+		}
+	},
 	async redirects() {
 		return [{
 			source: '/',
