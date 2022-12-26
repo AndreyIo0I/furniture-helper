@@ -1,16 +1,10 @@
+import {Button, Container, Paper, SxProps, TextField} from '@mui/material'
 import React from 'react'
-import {
-	Button,
-	Container,
-	Paper,
-	SxProps,
-	TextField,
-} from '@mui/material'
 import MainNav from '../MainNav'
 import ProjectSecondaryNav from '../ProjectSecondaryNav'
 import ClientPaymentsTable from './clientPayments'
-import CostPaymentsTable from './costPayments'
 import {formStyle} from './common'
+import CostPaymentsTable from './costPayments'
 import * as model from './model'
 import styles from './styles.module.css'
 
@@ -81,6 +75,7 @@ export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
 			clientPayments,
 		})
 	}
+
 	function setCostPayments(costPayments: model.CostPayment[]) {
 		setBudget({
 			...budget,

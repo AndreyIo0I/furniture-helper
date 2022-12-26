@@ -1,4 +1,4 @@
-import React from 'react'
+import {AddCircleOutline, Delete} from '@mui/icons-material'
 import {
 	FormControl,
 	IconButton,
@@ -13,7 +13,7 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
-import {AddCircleOutline, Delete} from '@mui/icons-material'
+import React from 'react'
 import {formStyle} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
@@ -108,7 +108,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 	}
 
 	const [newPayment, setNewPayment] = React.useState(
-		() => makeNewPayment(props.costPayments.length)
+		() => makeNewPayment(props.costPayments.length),
 	)
 
 	function setNewPaymentNeedsValidation() {
@@ -117,12 +117,14 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 			needsValidation: true,
 		})
 	}
+
 	function setNewPaymentCostId(costId: number) {
 		setNewPayment({
 			...newPayment,
 			costId,
 		})
 	}
+
 	function setNewPaymentAmount(amount?: number) {
 		setNewPayment({
 			...newPayment,
@@ -145,16 +147,18 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		])
 		setNewPayment(makeNewPayment(newPayment.paymentId + 1))
 	}
+
 	function setPayment(payment: model.CostPayment) {
 		props.setCostPayments(
 			props.costPayments.map(oldPayment =>
-				oldPayment.paymentId === payment.paymentId ? payment : oldPayment
-			)
+				oldPayment.paymentId === payment.paymentId ? payment : oldPayment,
+			),
 		)
 	}
+
 	function removePayment(paymentId: number) {
 		props.setCostPayments(
-			props.costPayments.filter(payment => payment.paymentId !== paymentId)
+			props.costPayments.filter(payment => payment.paymentId !== paymentId),
 		)
 	}
 

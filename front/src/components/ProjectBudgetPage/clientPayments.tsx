@@ -1,4 +1,4 @@
-import React from 'react'
+import {AddCircleOutline, Delete} from '@mui/icons-material'
 import {
 	IconButton,
 	Paper,
@@ -10,8 +10,8 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
-import {AddCircleOutline, Delete} from '@mui/icons-material'
 import {DatePicker} from '@mui/x-date-pickers'
+import React from 'react'
 import {formStyle} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
@@ -81,7 +81,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 	}
 
 	const [newPayment, setNewPayment] = React.useState(
-		() => makeNewPayment(props.clientPayments.length)
+		() => makeNewPayment(props.clientPayments.length),
 	)
 
 	function setNewPaymentNeedsValidation() {
@@ -90,12 +90,14 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 			needsValidation: true,
 		})
 	}
+
 	function setNewPaymentAmount(amount?: number) {
 		setNewPayment({
 			...newPayment,
 			amount,
 		})
 	}
+
 	function setNewPaymentDate(paymentDate: Date | null) {
 		setNewPayment({
 			...newPayment,
@@ -105,7 +107,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 
 	function addPayment() {
 		if (newPayment.amount === undefined
-		 || newPayment.paymentDate === null || isNaN(Number(newPayment.paymentDate))) {
+			|| newPayment.paymentDate === null || isNaN(Number(newPayment.paymentDate))) {
 			setNewPaymentNeedsValidation()
 			return
 		}
@@ -119,16 +121,18 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 		])
 		setNewPayment(makeNewPayment(newPayment.paymentId + 1))
 	}
+
 	function setPayment(payment: model.ClientPayment) {
 		props.setClientPayments(
 			props.clientPayments.map(oldPayment =>
-				oldPayment.paymentId === payment.paymentId ? payment : oldPayment
-			)
+				oldPayment.paymentId === payment.paymentId ? payment : oldPayment,
+			),
 		)
 	}
+
 	function removePayment(paymentId: number) {
 		props.setClientPayments(
-			props.clientPayments.filter(payment => payment.paymentId !== paymentId)
+			props.clientPayments.filter(payment => payment.paymentId !== paymentId),
 		)
 	}
 
