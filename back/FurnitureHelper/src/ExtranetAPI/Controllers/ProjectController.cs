@@ -71,7 +71,7 @@ namespace ExtranetAPI.Controllers
             _projectBudgetRepository.Add( newProjectBudget );
             await _unitOfWork.Commit();
 
-            return Ok();
+            return Ok( project.Id );
         }
 
         /// <summary>

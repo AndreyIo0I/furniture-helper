@@ -59,7 +59,7 @@ namespace ExtranetAPI.Controllers
             _costRepository.Add( costDto );
             await _unitOfWork.Commit();
 
-            return Ok();
+            return Ok( costDto.Id );
         }
     }
 }
