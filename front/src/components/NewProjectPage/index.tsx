@@ -3,19 +3,25 @@ import dayjs from 'dayjs'
 import {useRef, useState} from 'react'
 import * as React from 'react'
 import createProject from '../../../api/createProject'
+import useClients from '../../../api/useClients'
 import MainNav from '../MainNav'
 import {useRouter} from 'next/router'
-import {Box, Button, Container, TextField} from '@mui/material'
+import {Autocomplete, Box, Button, Container, TextField} from '@mui/material'
 import styles from './styles.module.css'
+
+const DEFAULT_PROJECT_DURATION_IN_DAYS = 42
 
 export default function NewProjectPage() {
 	const router = useRouter()
 
 	const nameRef = useRef<HTMLInputElement>(null)
+	const clientIdRef = useRef<number|null>(null)
 	const [startDate, setStartDate] = useState(dayjs())
-	const [finishDate, setFinishDate] = useState(dayjs())
+	const [finishDate, setFinishDate] = useState(dayjs().add(DEFAULT_PROJECT_DURATION_IN_DAYS, 'day'))
 	const contractRef = useRef<HTMLInputElement>(null)
 	const descriptionRef = useRef<HTMLInputElement>(null)
+
+	const {data: clients} = useClients()
 
 	const createNewProject = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -24,7 +30,7 @@ export default function NewProjectPage() {
 			contractNumber: contractRef.current!.value,
 			dateOfStart: startDate.toISOString(),
 			deadLine: finishDate.toISOString(),
-			clientId: 1,
+			clientId: clientIdRef.current!,
 			description: descriptionRef.current!.value,
 		})
 		await router.push(`/project/${encodeURIComponent(newProjectId)}`)
@@ -45,6 +51,23 @@ export default function NewProjectPage() {
 						required
 						label="Название проекта"
 						autoFocus
+					/>
+					<Autocomplete
+						disablePortal
+						onChange={(event, newValue) => {
+							if (newValue) {
+								clientIdRef.current = newValue.id
+							}
+						}}
+						options={clients
+							? clients.map(client => ({
+								label: client.fullName,
+								id: client.id,
+							}))
+							: []
+						}
+						sx={{width: 300}}
+						renderInput={(params) => <TextField {...params} label="Клиент"/>}
 					/>
 					<DatePicker
 						label="Дата начала"

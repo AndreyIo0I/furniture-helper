@@ -508,7 +508,7 @@ export const ClientApiFp = function (configuration?: Configuration) {
 		 * @param {*} [options] Override http request option.
 		 * @throws {RequiredError}
 		 */
-		clientsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ProjectDto>> {
+		clientsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ClientDto>> {
 			const localVarFetchArgs = ClientApiFetchParamCreator(configuration).clientsGet(options)
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -532,7 +532,7 @@ export const ClientApiFp = function (configuration?: Configuration) {
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
-						return response
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
 					} else {
 						throw response
 					}
@@ -1106,7 +1106,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
-						return response.json()
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
 					} else {
 						throw response
 					}

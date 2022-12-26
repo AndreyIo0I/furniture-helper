@@ -70,17 +70,17 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProjectDto'
+                  $ref: '#/components/schemas/ClientDto'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProjectDto'
+                  $ref: '#/components/schemas/ClientDto'
             text/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProjectDto'
+                  $ref: '#/components/schemas/ClientDto'
     post:
       tags:
         - Client

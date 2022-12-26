@@ -13,6 +13,7 @@ import {
 	TextField,
 } from '@mui/material'
 import {useRouter} from 'next/router'
+import useClients from '../../../api/useClients'
 import useProjects from '../../../api/useProjects'
 import MainNav from '../MainNav'
 import styles from './styles.module.css'
@@ -22,52 +23,29 @@ interface Client {
 }
 
 interface Project {
-	id: string;
+	id: number;
 	name: string;
 	client: Client;
 	deadline: Date;
 	deadlineState?: 'red' | 'yellow';
 }
 
-const rows: Project[] = [{
-	id: '1',
-	name: 'Диван',
-	client: {
-		name: 'Васнецов С.В.',
-	},
-	deadline: new Date('2022-02-08'),
-	deadlineState: 'red',
-}, {
-	id: '2',
-	name: 'Стол',
-	client: {
-		name: 'Наталья В.Ф.',
-	},
-	deadline: new Date('2022-02-08'),
-	deadlineState: 'yellow',
-}, {
-	id: '3',
-	name: 'ул.Чехова 1-1, 1под, 1этаж',
-	client: {
-		name: 'Елена Т.Ч.',
-	},
-	deadline: new Date('2022-02-08'),
-}]
-
 export default function ProjectsPage() {
 	const router = useRouter()
 
-	const {data, error, isLoading} = useProjects()
-	const projects = data && data.map(project => ({
-		id: project.id,
-		name: project.name,
-		client: {
-			name: 'TODO: загрузить клиента',
-		},
-		deadline: new Date(project.deadLine!),
-		deadlineState: 'normal',
-	}))
-	console.log('useProjects: ', {data, error, isLoading})
+	const {data: clients} = useClients()
+
+	const {data} = useProjects()
+	const projects: Project[] = data
+		? data.map(project => ({
+			id: project.id!,
+			name: project.name!,
+			client: {
+				name: clients?.find(client => client.id === project.clientId)?.fullName || '...',
+			},
+			deadline: new Date(project.deadLine!),
+		}))
+		: []
 
 	return (
 		<>
