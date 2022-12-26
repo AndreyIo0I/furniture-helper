@@ -1,4 +1,6 @@
+import {useRouter} from 'next/router'
 import * as Yup from 'yup'
+import createClient from '../../../api/createClient'
 import MainNav from '../MainNav'
 import {Box, Button, Container, TextField} from '@mui/material'
 import styles from './styles.module.css'
@@ -40,8 +42,16 @@ export default function NewClientPage() {
 		resolver: yupResolver(validationSchema),
 	})
 
-	const handleOnSubmit = (data: Object) => {
-		alert('Form submit success: ' + JSON.stringify(data))
+	const router = useRouter()
+	const handleOnSubmit = async (data: Form) => {
+		const newClientId = await createClient({
+			name: data.fullName,
+			communicationChannel: data.source,
+			phoneNumber: data.phone,
+			mail: data.email,
+			description: data.description,
+		})
+		await router.push(`/settings/client/${encodeURIComponent(newClientId)}`)
 	}
 
 	useEffect(() => {

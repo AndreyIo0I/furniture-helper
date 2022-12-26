@@ -41,7 +41,7 @@ namespace ExtranetAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet( "" )]
-        [SwaggerResponse( statusCode: 200, type: typeof( List<ProjectDto> ), description: "Получить всех клиентов" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( List<ClientDto> ), description: "Получить всех клиентов" )]
         public async Task<IActionResult> GetClients()
         {
             IReadOnlyList<Client> clients = await _clientRepository.GetAll();
@@ -56,14 +56,14 @@ namespace ExtranetAPI.Controllers
         /// <returns></returns>
         [HttpPost( "" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Создать клиента" )]
-        public async Task<IActionResult> AddProject(
+        public async Task<IActionResult> AddClient(
             [FromBody, Required] ClientDto clientDto )
         {
             Client client = clientDto.ToDomain();
             _clientRepository.Add( client );
             await _unitOfWork.Commit();
 
-            return Ok();
+            return Ok( client.Id );
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace ExtranetAPI.Controllers
         /// <returns></returns>
         [HttpDelete( "{clientId}" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Удалить клиента" )]
-        public async Task<IActionResult> DeleteProject(
+        public async Task<IActionResult> DeleteClient(
             [FromRoute, Required] int clientId )
         {
             Client client = await _clientRepository.Get( clientId );
@@ -96,7 +96,7 @@ namespace ExtranetAPI.Controllers
         /// <returns></returns>
         [HttpPost( "{clientId}/client-updating" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновить основную информацию по клиенту" )]
-        public async Task<IActionResult> UpdateProject(
+        public async Task<IActionResult> UpdateClient(
             [FromRoute, Required] int clientId,
             [FromBody, Required] ClientDto clientDto )
         {

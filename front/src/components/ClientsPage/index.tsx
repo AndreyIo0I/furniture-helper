@@ -4,6 +4,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
+import useClients from '../../../api/useClients'
 import MainNav from '../MainNav'
 import styles from './styles.module.css'
 import {useRouter} from 'next/router'
@@ -16,38 +17,6 @@ import styled from '@mui/material/styles/styled'
 import SettingsSecondaryNav from '../SettingsSecondaryNav'
 import React from 'react'
 import {Container} from '@mui/material'
-
-interface Client {
-	id: number
-	fullName: string
-	source: string
-	phone: string
-	email: string
-	description: string
-}
-
-const rows: Client[] = [{
-	id: 1,
-	fullName: 'Васнецов С.В.',
-	source: 'Реклама вк',
-	phone: '8-800-555-35-35',
-	email: '',
-	description: '',
-}, {
-	id: 2,
-	fullName: 'Попов А.И.',
-	source: 'Реклама милано',
-	phone: '8-800-555-35-35',
-	email: '',
-	description: '',
-}, {
-	id: 3,
-	fullName: 'Ерошкин Г.А.',
-	source: 'Реклама казино',
-	phone: '8-800-555-35-35',
-	email: '',
-	description: '',
-}]
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -71,6 +40,8 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
 
 export default function ClientsPage() {
 	const router = useRouter()
+
+	const {data: clients} = useClients()
 
 	return (
 		<>
@@ -113,7 +84,7 @@ export default function ClientsPage() {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{rows.map(row => (
+							{clients && clients.map(row => (
 								<StyledTableRow
 									key={row.id}
 									onClick={() => router.push(`/settings/client/${row.id}`)}

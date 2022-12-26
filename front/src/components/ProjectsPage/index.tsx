@@ -1,3 +1,4 @@
+import {Search} from '@mui/icons-material'
 import {
 	Button,
 	Container,
@@ -11,50 +12,40 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
+import {useRouter} from 'next/router'
+import useClients from '../../../api/useClients'
+import useProjects from '../../../api/useProjects'
 import MainNav from '../MainNav'
 import styles from './styles.module.css'
-import {useRouter} from 'next/router'
-import {Search} from '@mui/icons-material'
 
 interface Client {
 	name: string;
 }
 
 interface Project {
-	id: string;
+	id: number;
 	name: string;
 	client: Client;
 	deadline: Date;
 	deadlineState?: 'red' | 'yellow';
 }
 
-const rows: Project[] = [{
-	id: '1',
-	name: 'Диван',
-	client: {
-		name: 'Васнецов С.В.',
-	},
-	deadline: new Date('2022-02-08'),
-	deadlineState: 'red',
-}, {
-	id: '2',
-	name: 'Стол',
-	client: {
-		name: 'Наталья В.Ф.',
-	},
-	deadline: new Date('2022-02-08'),
-	deadlineState: 'yellow',
-}, {
-	id: '3',
-	name: 'ул.Чехова 1-1, 1под, 1этаж',
-	client: {
-		name: 'Елена Т.Ч.',
-	},
-	deadline: new Date('2022-02-08'),
-}]
-
 export default function ProjectsPage() {
 	const router = useRouter()
+
+	const {data: clients} = useClients()
+
+	const {data} = useProjects()
+	const projects: Project[] = data
+		? data.map(project => ({
+			id: project.id!,
+			name: project.name!,
+			client: {
+				name: clients?.find(client => client.id === project.clientId)?.fullName || '...',
+			},
+			deadline: new Date(project.deadLine!),
+		}))
+		: []
 
 	return (
 		<>
@@ -96,9 +87,9 @@ export default function ProjectsPage() {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{rows.map(row => (
+							{projects && projects.map(row => (
 								<TableRow
-									key={row.name}
+									key={row.id}
 									className={[
 										styles.row,
 										row.deadlineState === 'red' && styles.row_red,
