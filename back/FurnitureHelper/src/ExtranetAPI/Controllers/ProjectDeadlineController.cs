@@ -1,11 +1,13 @@
 ﻿using Application.Foundation;
 using Domain.ProjectManagement;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExtranetAPI.Controllers
 {
+    [Authorize]
     [Route( "project-deadline-settings" )]
     public class ProjectDeadlineController : ControllerBase
     {
@@ -36,6 +38,7 @@ namespace ExtranetAPI.Controllers
         /// </summary>
         /// <param name="projectDeadlineSettings"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpPost( "project-deadline-settings-updating" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновить основную информацию по проекту" )]
         public async Task<IActionResult> UpdateProjectDeadlineSettings(

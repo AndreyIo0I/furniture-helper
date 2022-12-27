@@ -5,9 +5,11 @@ using ExtranetAPI.Models.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExtranetAPI.Controllers
 {
+    [Authorize]
     [Route( "project-budgets" )]
     public class ProjectBudgetController : ControllerBase
     {
@@ -56,6 +58,7 @@ namespace ExtranetAPI.Controllers
         /// <param name="projectId"></param>
         /// <param name="projectBudgetDto"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpPost( "{projectId}/project-budget-updating" )]
         [SwaggerResponse( statusCode: 200, type: typeof( ProjectBudgetDto ), description: "Обновить бюджет проекта" )]
         public async Task<IActionResult> UpdateProjectBudget(

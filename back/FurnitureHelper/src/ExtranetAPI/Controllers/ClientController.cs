@@ -5,9 +5,11 @@ using ExtranetAPI.Models.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExtranetAPI.Controllers
 {
+    [Authorize]
     [Route( "clients" )]
     public class ClientController : ControllerBase
     {
@@ -71,6 +73,7 @@ namespace ExtranetAPI.Controllers
         /// </summary>
         /// <param name="clientId"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpDelete( "{clientId}" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Удалить клиента" )]
         public async Task<IActionResult> DeleteClient(
@@ -94,6 +97,7 @@ namespace ExtranetAPI.Controllers
         /// <param name="clientId"></param>
         /// <param name="clientDto"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpPost( "{clientId}/client-updating" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновить основную информацию по клиенту" )]
         public async Task<IActionResult> UpdateClient(

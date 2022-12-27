@@ -3,9 +3,11 @@ using Domain.CostsManagement;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExtranetAPI.Controllers
 {
+    [Authorize]
     [Route( "costs" )]
     public class CostController : ControllerBase
     {

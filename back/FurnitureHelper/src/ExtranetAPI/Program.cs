@@ -3,12 +3,31 @@ using Infrastructure;
 using Infrastructure.Foundation.EntityFramwork;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using ExtranetAPI.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder( args );
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie( CookieAuthenticationDefaults.AuthenticationScheme, options => {
+        options.Events.OnRedirectToLogin = ctx =>
+        {
+            ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        };
+        options.Events.OnRedirectToAccessDenied = ctx =>
+        {
+            ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return Task.CompletedTask;
+        };
+    } );
+builder.Services.AddAuthorization();
+builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen( c =>
@@ -44,6 +63,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI( c => c.SwaggerEndpoint( "/swagger/v1/swagger.json", "FurnitureHelperv1" ) );
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

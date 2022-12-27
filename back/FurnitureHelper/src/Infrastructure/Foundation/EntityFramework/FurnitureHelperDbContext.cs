@@ -1,3 +1,4 @@
+using Domain.UserManagement;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,7 @@ namespace Infrastructure.Foundation.EntityFramwork
             modelBuilder.ApplyConfiguration( new ProjectDeadlineSettingsConfiguration() );
             modelBuilder.ApplyConfiguration( new BuisnessCostConfiguration() );
             modelBuilder.ApplyConfiguration( new ProjectStageConfiguration() );
+            modelBuilder.ApplyConfiguration(new UserConfiguration() );
         }
     }
 }

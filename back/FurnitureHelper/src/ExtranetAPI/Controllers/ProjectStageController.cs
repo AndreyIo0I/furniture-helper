@@ -1,11 +1,13 @@
 ﻿using Application.Foundation;
 using Domain.ProjectManagement;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExtranetAPI.Controllers
 {
+    [Authorize]
     [Route( "project-stages" )]
     public class ProjectStageController : ControllerBase
     {
@@ -41,7 +43,8 @@ namespace ExtranetAPI.Controllers
         /// <param name="projectStageId"></param>
         /// <param name="stage"></param>
         /// <returns></returns>
-        [HttpPost( "{projectStageId}/project-stage-updating" )]
+        [Authorize( Roles = "Admin, Owner" )]
+        [HttpPost( "{projecStageId}/project-stage-updating" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновить основную информацию по этапу проекта" )]
         public async Task<IActionResult> UpdateProject(
             [FromRoute, Required] int projectStageId,

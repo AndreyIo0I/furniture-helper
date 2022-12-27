@@ -279,6 +279,47 @@ namespace Infastructure.Migrations.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_project_stage_project_project_id");
                 });
+
+            modelBuilder.Entity("Domain.UserManagement.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("full_name");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("password");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer")
+                        .HasColumnName("role");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_email");
+
+                    b.ToTable("user", (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }
