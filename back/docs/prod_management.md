@@ -45,7 +45,7 @@ dotnet run -c Release
 
 ### Publish
 *компилируем приложение в папку, из которой оно будет развернуто*
-dotnet publish -c Release --runtime ubuntu.22.04-x64 -o /root/srv/FurnitureHelper --self-contained false
+dotnet publish -c Release --runtime ubuntu.22.04-x64 -o /root/srv/FurnitureHelper --self-contained false \p:EnvironmentName=prod
 
 ### Запуск
 
@@ -67,9 +67,13 @@ http://62.217.179.210:5000/health
 journalctl -u FHExtranetAPI.service -b -n 100 --no-pager
 
 
-### Миграция БД
+### Выполнение миграций:
 
-После описанных выше действий надо обновить базу(если появились новые миграции офк)
+После publish:
 
-Что делать:
-1. Запустить exe файл Infrastructure.Migrations
+cd /root/srv/FurnitureHelper
+
+dotnet /root/srv/FurnitureHelper/Infastructure.Migrations.dll тут нет r в слове 'Infrastructure', так и должно быть
+
+Вопросы?
+![??](./onizuka.jpg)
