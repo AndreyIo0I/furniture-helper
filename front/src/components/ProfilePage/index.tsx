@@ -9,8 +9,9 @@ import styles from './styles.module.css'
 
 type Form = {
 	fullName: string;
-	role: string;
 	email: string;
+    password: string;
+    newPassword: string;
 }
 
 const validationSchema = Yup.object().shape({
@@ -19,7 +20,10 @@ const validationSchema = Yup.object().shape({
 		.string()
 		.required('Поле не должно быть пустым')
 		.email('Некорректный email'),
-	role: Yup.string().required('Поле не должно быть пустым'),
+	password: Yup.string().required('Поле не должно быть пустым'),
+	newPassword: Yup
+		.string()  
+		.required('Поле не должно быть пустым'),
 })
 
 export default function NewUserPage() {
@@ -70,12 +74,22 @@ export default function NewUserPage() {
 						helperText={errors.email?.message}
 					/>
 					<TextField
+						id='newPas'
 						margin="normal"
-						label="Роль"
-						type="role"
-						{...register('role')}
-						FormHelperTextProps={{error: !!errors.role?.message}}
-						helperText={errors.role?.message}
+						label="Новый пароль"
+						type="password"
+						{...register('password')}
+						FormHelperTextProps={{error: !!errors.password?.message}}
+						helperText={errors.password?.message}
+					/>
+					<TextField
+						id='confirmPas'
+						margin="normal"
+						label="Подтверждение пароля"
+						type="password"
+						{...register('newPassword')}
+						FormHelperTextProps={{error: !!errors.newPassword?.message}}
+						helperText={errors.newPassword?.message}
 					/>
 					<div>
 						<Button
