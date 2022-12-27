@@ -4,6 +4,7 @@ yarn install;\
 yarn build;\
 systemctl stop FHFront;\
 cp -r .next/static .next/standalone/.next/static;\
+cp -r public .next/standalone/public;\
 cp -r .next/standalone /root/srv/FHFront;\
 systemctl daemon-reload;\
 systemctl start FHFront;\
