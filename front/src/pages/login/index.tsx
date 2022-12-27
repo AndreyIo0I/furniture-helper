@@ -1,21 +1,25 @@
-import * as React from 'react'
-import {useRouter} from 'next/router'
-import {Avatar, Box, Button, Container, CssBaseline, TextField, Typography} from '@mui/material'
 import {LockOutlined} from '@mui/icons-material'
+import {Avatar, Box, Button, Container, CssBaseline, TextField, Typography} from '@mui/material'
+import {useRouter} from 'next/router'
+import * as React from 'react'
+import {useRef, useState} from 'react'
 import login from '../../../api/useLogin'
-import { useRef } from 'react'
 
 export default function LoginPage() {
 	const router = useRouter()
 	const emailRef = useRef<HTMLInputElement>(null)
 	const passwordRef = useRef<HTMLInputElement>(null)
+	const [error, setError] = useState(false)
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		
-		await login( emailRef.current!.value, passwordRef.current!.value )
-
-		return router.push('/')
+		const res = await login(emailRef.current!.value, passwordRef.current!.value)
+		if (res.status === 401) {
+			setError(true)
+		}
+		else {
+			await router.push('/')
+		}
 	}
 
 	return (
@@ -46,6 +50,7 @@ export default function LoginPage() {
 						autoComplete="email"
 						autoFocus
 						inputRef={emailRef}
+						error={error}
 					/>
 					<TextField
 						margin="normal"
@@ -57,6 +62,7 @@ export default function LoginPage() {
 						id="password"
 						inputRef={passwordRef}
 						autoComplete="current-password"
+						error={error}
 					/>
 					<Button
 						type="submit"

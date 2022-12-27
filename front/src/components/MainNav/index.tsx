@@ -38,6 +38,11 @@ function AccountButton() {
 	const ref = useRef<HTMLDivElement>(null)
 	const [open, setOpen] = useState(false)
 
+	const onLogout = async () => {
+		await fetch('/api/logout', {method: 'POST'})
+		await router.push('/login')
+	}
+
 	return (
 		<>
 			<div
@@ -61,7 +66,7 @@ function AccountButton() {
 			>
 				<MenuItem
 					autoFocus={false}
-					onClick={() => router.push('/login')}
+					onClick={onLogout}
 				>
 					<ListItemIcon>
 						<Logout fontSize="small"/>

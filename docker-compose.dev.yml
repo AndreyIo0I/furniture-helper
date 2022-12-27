@@ -16,7 +16,7 @@ services:
       context: ./back/FurnitureHelper
       dockerfile: dev.Dockerfile
     ports:
-      - '5000:5070'
+      - '5000:5000'
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:5070
