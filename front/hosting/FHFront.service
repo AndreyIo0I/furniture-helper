@@ -7,7 +7,7 @@ Description=Furniture Helper frontend
 [Service]
 WorkingDirectory=/root/srv/FHFront
 
-ExecStart=yarn start
+ExecStart=node server.js
 
 User=root
 
