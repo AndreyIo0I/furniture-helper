@@ -2,6 +2,7 @@
 using Domain.ClientManagement;
 using Domain.CostsManagement;
 using Domain.ProjectManagement;
+using Domain.UserManagement;
 using Infrastructure.Foundation;
 using Infrastructure.Foundation.EntityFramwork;
 using Infrastructure.Repositories;
@@ -30,6 +31,7 @@ namespace Infrastructure
             services.AddScoped<IProjectDeadlineSettingsRepository, ProjectDeadlineSettingsRepository>();
             services.AddScoped<IBuisnessCostRepository, BuisnessCostRepository>();
             services.AddScoped<IProjectStageRepository, ProjectStageRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

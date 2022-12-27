@@ -6,9 +6,11 @@ using ExtranetAPI.Models.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExtranetAPI.Controllers
 {
+    [Authorize]
     [Route( "projects" )]
     public class ProjectController : ControllerBase
     {
@@ -86,6 +88,7 @@ namespace ExtranetAPI.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpDelete( "{projectId}" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Удалить проект" )]
         public async Task<IActionResult> DeleteProject(
@@ -111,6 +114,7 @@ namespace ExtranetAPI.Controllers
         /// <param name="projectId"></param>
         /// <param name="projectDto"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpPost( "{projectId}/project-updating" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновить основную информацию по проекту" )]
         public async Task<IActionResult> UpdateProject(
@@ -130,6 +134,7 @@ namespace ExtranetAPI.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpPost( "{projectId}/complete" )]
         [SwaggerResponse( statusCode: 200, description: "Завершить проект" )]
         public async Task<IActionResult> Complete(
@@ -147,6 +152,7 @@ namespace ExtranetAPI.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpPost( "{projectId}/stop" )]
         [SwaggerResponse( statusCode: 200, description: "Остановить проект" )]
         public async Task<IActionResult> Stop(
@@ -164,6 +170,7 @@ namespace ExtranetAPI.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpPost( "{projectId}/run" )]
         [SwaggerResponse( statusCode: 200, description: "Возобновить проект" )]
         public async Task<IActionResult> Run(

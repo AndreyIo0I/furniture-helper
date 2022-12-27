@@ -1,11 +1,13 @@
 ﻿using Application.Foundation;
 using Domain.CostsManagement;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExtranetAPI.Controllers
 {
+    [Authorize]
     [Route( "buisness-costs" )]
     public class BuisnessCostController : ControllerBase
     {
@@ -51,6 +53,7 @@ namespace ExtranetAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
         [HttpDelete( "{id}" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Удалить издержку" )]
         public async Task<IActionResult> DeleteCost( [FromRoute, Required] int id )
