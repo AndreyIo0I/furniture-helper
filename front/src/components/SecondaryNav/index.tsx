@@ -21,7 +21,7 @@ export default function SecondaryNav(props: SecondaryNavProps) {
 					<Link
 						key={item.link}
 						href={item.link}
-						underline={router.route === item.link ? 'always' : 'none'}
+						underline={router.asPath === item.link ? 'always' : 'none'}
 					>
 						{item.text}
 					</Link>

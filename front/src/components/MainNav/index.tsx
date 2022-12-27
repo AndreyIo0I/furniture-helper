@@ -83,7 +83,7 @@ export default function MainNav() {
 					<Link
 						key={tab.id}
 						href={tab.link}
-						underline={router.route === tab.link ? 'always' : 'none'}
+						underline={router.asPath === tab.link ? 'always' : 'none'}
 					>
 						{tab.name}
 					</Link>

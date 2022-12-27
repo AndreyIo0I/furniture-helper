@@ -1,5 +1,5 @@
 import * as React from 'react'
-import UsersPage from '../../../src/components/UsersPage'
+import UsersPage from '../../../src/pages/settings/users'
 
 export default function UsersRoute() {
 	return (

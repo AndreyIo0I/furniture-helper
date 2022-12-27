@@ -1,5 +1,5 @@
 import * as React from 'react'
-import LoginPage from '../../src/components/LoginPage'
+import LoginPage from '../../src/pages/login'
 
 export default function LoginRoute() {
 	return (

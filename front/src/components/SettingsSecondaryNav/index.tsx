@@ -17,7 +17,7 @@ export default function SettingsSecondaryNav() {
 			link: '/settings/users',
 		}, {
 			text: 'Мой профиль',
-			link: '/settings/me',
+			link: '/settings/users/me',
 		}]}
 	/>
 }

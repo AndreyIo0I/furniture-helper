@@ -9,13 +9,13 @@ export default function ProjectSecondaryNav(props: ProjectSecondaryNav) {
 	return <SecondaryNav
 		items={[{
 			text: 'Общие',
-			link: `/project/${props.projectId}`,
+			link: `/projects/${props.projectId}`,
 		}, {
 			text: 'Этапы',
-			link: `/project/${props.projectId}/stages`,
+			link: `/projects/${props.projectId}/stages`,
 		}, {
 			text: 'Исполнение бюджета',
-			link: `/project/${props.projectId}/budget`,
+			link: `/projects/${props.projectId}/budget`,
 		}]}
 	/>
 }
