@@ -24,6 +24,9 @@ namespace Infrastructure.Foundation.EntityFramwork
             modelBuilder.ApplyConfiguration( new ClientConfiguration() );
             modelBuilder.ApplyConfiguration( new CostConfiguration() );
             modelBuilder.ApplyConfiguration( new ProjectBudgetCongifuration() );
+            modelBuilder.ApplyConfiguration( new ProjectDeadlineSettingsConfiguration() );
+            modelBuilder.ApplyConfiguration( new BuisnessCostConfiguration() );
+            modelBuilder.ApplyConfiguration( new ProjectStageConfiguration() );
         }
     }
 }

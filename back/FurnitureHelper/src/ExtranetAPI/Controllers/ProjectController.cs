@@ -1,4 +1,5 @@
 ﻿using Application.Foundation;
+using Application.Services;
 using Domain.ProjectManagement;
 using ExtranetAPI.Models;
 using ExtranetAPI.Models.Extensions;
@@ -14,15 +15,18 @@ namespace ExtranetAPI.Controllers
         private readonly IProjectRepository _projectRepository;
         private readonly IProjectBudgetRepository _projectBudgetRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IProjectStageInitializer _projectStageInitializer;
 
         public ProjectController(
             IProjectRepository projectRepository,
             IUnitOfWork unitOfWork,
-            IProjectBudgetRepository projectBudgetRepository )
+            IProjectBudgetRepository projectBudgetRepository,
+            IProjectStageInitializer projectStageInitializer )
         {
             _projectRepository = projectRepository;
             _unitOfWork = unitOfWork;
             _projectBudgetRepository = projectBudgetRepository;
+            _projectStageInitializer = projectStageInitializer;
         }
 
         /// <summary>
@@ -65,6 +69,9 @@ namespace ExtranetAPI.Controllers
         {
             Project project = projectDto.ToDomain();
             _projectRepository.Add( project );
+            await _unitOfWork.Commit();
+
+            await _projectStageInitializer.Init( project.Id );
             await _unitOfWork.Commit();
 
             ProjectBudget newProjectBudget = new( project.Id, 0, new List<ClientPayment> { }, new List<CostPayment> { } );
@@ -113,6 +120,23 @@ namespace ExtranetAPI.Controllers
             Project updatedProject = projectDto.ToDomain();
             Project project = await _projectRepository.GetById( projectId );
             project.Update( updatedProject );
+            await _unitOfWork.Commit();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Завершить проект
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        [HttpPost( "{projectId}/complete" )]
+        [SwaggerResponse( statusCode: 200, description: "Завершить проект" )]
+        public async Task<IActionResult> Complete(
+            [FromRoute, Required] int projectId )
+        {
+            Project project = await _projectRepository.GetById( projectId );
+            project.Complete();
             await _unitOfWork.Commit();
 
             return Ok();

@@ -1,3 +1,4 @@
+using Application.Services;
 using Infrastructure;
 using Infrastructure.Foundation.EntityFramwork;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,7 @@ builder.Services
             } );
     } );
 
+builder.Services.AddScoped<IProjectStageInitializer, ProjectStageInitializer>();
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();

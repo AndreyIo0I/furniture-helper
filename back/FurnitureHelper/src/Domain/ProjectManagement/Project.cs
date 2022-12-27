@@ -9,6 +9,7 @@
         public DateTime DeadLine { get; private set; }
         public int ClientId { get; private set; }
         public string Description { get; private set; }
+        public bool IsCompleted { get; private set; }
 
         public Project( string name, string contractNumber, DateTime dateOfStart, DateTime deadLine, int clientId, string description )
         {
@@ -18,6 +19,7 @@
             DeadLine = deadLine;
             ClientId = clientId;
             Description = description;
+            IsCompleted = false;
         }
 
         public void Update( Project newProject )
@@ -28,6 +30,11 @@
             DeadLine = newProject.DeadLine;
             ClientId = newProject.ClientId;
             Description = newProject.Description;
+        }
+
+        public void Complete()
+        {
+            IsCompleted = true;
         }
     }
 }

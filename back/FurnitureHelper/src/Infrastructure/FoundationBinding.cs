@@ -27,6 +27,9 @@ namespace Infrastructure
             services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<ICostRepository, CostRepository>();
             services.AddScoped<IProjectBudgetRepository, ProjectBudgetRepository>();
+            services.AddScoped<IProjectDeadlineSettingsRepository, ProjectDeadlineSettingsRepository>();
+            services.AddScoped<IBuisnessCostRepository, BuisnessCostRepository>();
+            services.AddScoped<IProjectStageRepository, ProjectStageRepository>();
 
             return services;
         }
