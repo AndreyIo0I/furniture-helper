@@ -1,5 +1,6 @@
 cp FHFront.service /etc/systemd/system/FHFront.service;\
 cd .. ;\
+yarn install;\
 yarn build;\
 systemctl stop FHFront;\
 cp .next/standalone /root/srv/FHFront;\
