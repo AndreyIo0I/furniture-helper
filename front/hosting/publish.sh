@@ -1,4 +1,4 @@
-cp FHFront.service /etc/system/systemd/FHFront.service;\
+cp FHFront.service /etc/systemd/system/FHFront.service;\
 cd .. ;\
 yarn build;\
 systemctl stop FHFront;\
