@@ -74,18 +74,7 @@ export default function UsersPage() {
 			<SettingsSecondaryNav/>
 			<Container maxWidth="lg">
 				<div className={styles.top}>
-					<TextField
-						margin="none"
-						size="small"
-						autoFocus
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<SearchIcon/>
-								</InputAdornment>
-							),
-						}}
-					/>
+					<div></div>
 					<Button
 						onClick={() => router.push(`${location.pathname}/new`)}
 						variant="contained"

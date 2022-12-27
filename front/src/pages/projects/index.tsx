@@ -1,8 +1,6 @@
-import {Search} from '@mui/icons-material'
 import {
 	Button,
 	Container,
-	InputAdornment,
 	Paper,
 	Table,
 	TableBody,
@@ -10,7 +8,6 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	TextField,
 } from '@mui/material'
 import {useRouter} from 'next/router'
 import useClients from '../../../api/useClients'
@@ -52,18 +49,20 @@ export default function ProjectsPage() {
 			<MainNav/>
 			<Container maxWidth="lg">
 				<div className={styles.top}>
-					<TextField
-						margin="none"
-						size="small"
-						autoFocus
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<Search/>
-								</InputAdornment>
-							),
-						}}
-					/>
+					{/* TODO добавить поиск */}
+					{/*<TextField*/}
+					{/*	margin="none"*/}
+					{/*	size="small"*/}
+					{/*	autoFocus*/}
+					{/*	InputProps={{*/}
+					{/*		startAdornment: (*/}
+					{/*			<InputAdornment position="start">*/}
+					{/*				<Search/>*/}
+					{/*			</InputAdornment>*/}
+					{/*		),*/}
+					{/*	}}*/}
+					{/*/>*/}
+					<div></div>
 					<Button
 						onClick={() => router.push('/projects/new')}
 						variant="contained"

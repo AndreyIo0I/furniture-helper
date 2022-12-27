@@ -1,22 +1,19 @@
+import {Container} from '@mui/material'
+import Button from '@mui/material/Button'
+import Paper from '@mui/material/Paper'
+import styled from '@mui/material/styles/styled'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
+import TableCell, {tableCellClasses} from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
+import {useRouter} from 'next/router'
+import React from 'react'
 import useClients from '../../../../api/useClients'
 import MainNav from '../../../components/MainNav'
-import styles from './styles.module.css'
-import {useRouter} from 'next/router'
-import {Search} from '@mui/icons-material'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import Button from '@mui/material/Button'
-import TableCell, {tableCellClasses} from '@mui/material/TableCell'
-import styled from '@mui/material/styles/styled'
 import SettingsSecondaryNav from '../../../components/SettingsSecondaryNav'
-import React from 'react'
-import {Container} from '@mui/material'
+import styles from './styles.module.css'
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -52,18 +49,20 @@ export default function ClientsPage() {
 			<SettingsSecondaryNav/>
 			<Container maxWidth="lg">
 				<div className={styles.top}>
-					<TextField
-						margin="none"
-						size="small"
-						autoFocus
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<Search/>
-								</InputAdornment>
-							),
-						}}
-					/>
+					{/* TODO добавить поиск */}
+					{/*<TextField*/}
+					{/*	margin="none"*/}
+					{/*	size="small"*/}
+					{/*	autoFocus*/}
+					{/*	InputProps={{*/}
+					{/*		startAdornment: (*/}
+					{/*			<InputAdornment position="start">*/}
+					{/*				<Search/>*/}
+					{/*			</InputAdornment>*/}
+					{/*		),*/}
+					{/*	}}*/}
+					{/*/>*/}
+					<div></div>
 					<Button
 						onClick={() => router.push(`${location.pathname}/new`)}
 						variant="contained"
