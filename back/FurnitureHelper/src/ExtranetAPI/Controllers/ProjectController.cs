@@ -141,5 +141,39 @@ namespace ExtranetAPI.Controllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Остановить проект
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        [HttpPost( "{projectId}/stop" )]
+        [SwaggerResponse( statusCode: 200, description: "Остановить проект" )]
+        public async Task<IActionResult> Stop(
+            [FromRoute, Required] int projectId )
+        {
+            Project project = await _projectRepository.GetById( projectId );
+            project.Stop();
+            await _unitOfWork.Commit();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Возобновить проект
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        [HttpPost( "{projectId}/run" )]
+        [SwaggerResponse( statusCode: 200, description: "Возобновить проект" )]
+        public async Task<IActionResult> Run(
+            [FromRoute, Required] int projectId )
+        {
+            Project project = await _projectRepository.GetById( projectId );
+            project.Run();
+            await _unitOfWork.Commit();
+
+            return Ok();
+        }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Foundation.EntityFramwork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infastructure.Migrations.Migrations
 {
     [DbContext(typeof(FurnitureHelperDbContext))]
-    partial class FurnitureHelperDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221227204329_AddIsStopped")]
+    partial class AddIsStopped
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

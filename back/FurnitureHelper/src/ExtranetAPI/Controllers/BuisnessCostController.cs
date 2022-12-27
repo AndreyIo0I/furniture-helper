@@ -23,7 +23,7 @@ namespace ExtranetAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet( "" )]
-        [SwaggerResponse( statusCode: 200, type: typeof( List<Cost> ), description: "Получить все издержки" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( List<BuisnessCost> ), description: "Получить все издержки" )]
         public async Task<IActionResult> GetCosts()
         {
             IReadOnlyList<BuisnessCost> costs = await _buisnessCostRepository.GetAll();
