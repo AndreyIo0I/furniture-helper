@@ -41,7 +41,7 @@ namespace ExtranetAPI.Controllers
         /// <param name="projectStageId"></param>
         /// <param name="stage"></param>
         /// <returns></returns>
-        [HttpPost( "{projecStageId}/project-stage-updating" )]
+        [HttpPost( "{projectStageId}/project-stage-updating" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновить основную информацию по этапу проекта" )]
         public async Task<IActionResult> UpdateProject(
             [FromRoute, Required] int projectStageId,

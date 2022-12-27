@@ -1,4 +1,5 @@
 import {clientApi} from './api'
+import {makeAuthenticatedReq} from './useAuthenticatedSWR'
 
 interface CreateClientParams {
 	name: string;
@@ -9,5 +10,5 @@ interface CreateClientParams {
 }
 
 export default function createClient(params: CreateClientParams): Promise<number> {
-	return clientApi.clientsPost(params)
+	return makeAuthenticatedReq(() => clientApi.clientsPost(params))
 }

@@ -1,5 +1,6 @@
 import useSWR, {SWRResponse} from 'swr'
 import {clientApi, projectApi} from './api'
+import useAuthenticatedSWR from './useAuthenticatedSWR'
 
 export interface Client {
 	id: number
@@ -11,13 +12,15 @@ export interface Client {
 }
 
 export default function useClients(): SWRResponse<Client[]> {
-	return useSWR('useClients', async () =>
-		(await clientApi.clientsGet()).map(client => ({
-			id: client.id!,
-			fullName: client.name!,
-			source: client.communicationChannel || '',
-			phone: client.phoneNumber || '',
-			email: client.mail || '',
-			description: client.description || '',
-		})))
+	return useAuthenticatedSWR(
+		useSWR('useClients', async () =>
+			(await clientApi.clientsGet()).map(client => ({
+				id: client.id!,
+				fullName: client.name!,
+				source: client.communicationChannel || '',
+				phone: client.phoneNumber || '',
+				email: client.mail || '',
+				description: client.description || '',
+			}))),
+	)
 }

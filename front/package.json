@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "back-migrations": "cd ./../back/FurnitureHelper/Infastructure.Migrations && dotnet ef database update"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.5",

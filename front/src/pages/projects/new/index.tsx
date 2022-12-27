@@ -1,13 +1,12 @@
+import {Autocomplete, Box, Button, Container, TextField} from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
 import dayjs from 'dayjs'
-import {useRef, useState} from 'react'
+import {useRouter} from 'next/router'
 import * as React from 'react'
+import {useRef, useState} from 'react'
 import createProject from '../../../../api/createProject'
 import useClients from '../../../../api/useClients'
 import MainNav from '../../../components/MainNav'
-import {useRouter} from 'next/router'
-import {Autocomplete, Box, Button, Container, TextField} from '@mui/material'
-import styles from './styles.module.css'
 
 const DEFAULT_PROJECT_DURATION_IN_DAYS = 42
 
@@ -41,9 +40,15 @@ export default function NewProjectPage() {
 			<MainNav/>
 			<Container maxWidth="lg">
 				<Box
+					sx={{
+						display: 'grid',
+						gridTemplate: 'auto / 1fr',
+						maxWidth: '600px',
+						gap: '16px',
+						padding: '20px 0',
+					}}
 					component="form"
 					onSubmit={createNewProject}
-					className={styles.form}
 				>
 					<TextField
 						inputRef={nameRef}
@@ -107,7 +112,6 @@ export default function NewProjectPage() {
 						<Button
 							type="submit"
 							variant="contained"
-							className={styles.button}
 						>
 							Создать
 						</Button>

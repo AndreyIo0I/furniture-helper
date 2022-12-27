@@ -1,4 +1,5 @@
 import {projectApi} from './api'
+import {makeAuthenticatedReq} from './useAuthenticatedSWR'
 
 interface CreateProjectParams {
 	name: string;
@@ -10,5 +11,5 @@ interface CreateProjectParams {
 }
 
 export default function createProject(params: CreateProjectParams) {
-	return projectApi.projectsPost(params)
+	return makeAuthenticatedReq(() => projectApi.projectsPost(params))
 }
