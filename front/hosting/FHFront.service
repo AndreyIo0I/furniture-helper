@@ -1,0 +1,26 @@
+# описание сервиса для запуска FHFront с помощью systemd
+[Unit]
+Description=Furniture Helper frontend
+
+
+
+[Service]
+WorkingDirectory=/root/srv/FHFront
+
+ExecStart=yarn start
+
+User=root
+
+Restart=always
+
+RestartSec=5
+
+KillSignal=SIGINT
+
+Environment=EXT_TELEMETRY_DISABLED=1
+Environment=NODE_ENV=production
+
+
+
+[Install]
+WantedBy=multi-user.target
