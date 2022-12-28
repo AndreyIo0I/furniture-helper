@@ -284,13 +284,7 @@ public class AnalyticsController : ControllerBase
                 ? new ProjectsPricesDto() 
                 : new ProjectsPricesDto
                     {
-                        ProjectPrices = projectPrices
-                            .GroupBy( x => x.ProjectName )
-                            .Select( pps => new ProjectPriceDto
-                            {
-                                ProjectPrice = pps.Select( pp => pp.ProjectPrice ).Sum(),
-                                ProjectName = pps.Key
-                            } ).ToList(),
+                        ProjectPrices = projectPrices,
                         AveragePrice = decimal.Divide(
                             projectPrices.Select( x => x.ProjectPrice ).Sum(),
                             projectPrices.Count ),
