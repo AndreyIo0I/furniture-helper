@@ -27,7 +27,6 @@ interface Project {
 
 function getColor(project: Project, accountSettings: AccountSettings): 'red' | 'yellow' | undefined {
 	const diff = project.dateOfFinish.diff(dayjs(), 'days')
-	console.log(diff)
 	if (diff < accountSettings.daysForDeadlineRed) {
 		return 'red'
 	}

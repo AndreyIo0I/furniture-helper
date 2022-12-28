@@ -10,7 +10,7 @@ export default function SettingsSecondaryNav() {
 			text: 'Клиенты',
 			link: '/settings/clients',
 		}, {
-			text: 'Издержки',
+			text: 'Типы издержек',
 			link: '/settings/costs',
 		}, {
 			text: 'Пользователи',

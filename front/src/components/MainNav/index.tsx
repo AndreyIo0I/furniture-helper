@@ -27,7 +27,7 @@ const tabs: Tab[] = [{
 	link: '/settings',
 }, {
 	id: 'costs',
-	name: 'Издержки',
+	name: 'Общие издержки',
 	link: '/costs',
 }]
 

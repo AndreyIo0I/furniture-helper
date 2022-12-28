@@ -1,111 +1,99 @@
-import {ExpandMore} from '@mui/icons-material'
+import {ExpandLess, ExpandMore} from '@mui/icons-material'
 import {
 	Button,
+	Checkbox,
+	Collapse,
 	Container,
+	FormControlLabel,
 	IconButton,
 	Paper,
-	SxProps,
 	Table,
 	TableBody,
 	TableCell,
 	TableContainer,
 	TableHead,
 	TableRow,
+	TextField,
 } from '@mui/material'
+import React, {useRef, useState} from 'react'
+import saveStage from '../../../../../api/saveStage'
+import useStages, {Stage} from '../../../../../api/useStages'
 import MainNav from '../../../../components/MainNav'
 import ProjectSecondaryNav from '../../../../components/ProjectSecondaryNav'
 import styles from './styles.module.css'
 
 interface ProjectStagesPageProps {
-	projectId: number,
-}
-
-enum StageState {
-	Open,
-	Completed,
-}
-
-interface StageStateButtonProps {
-	state: StageState,
+	projectId: number
 }
 
 interface ProjectStageProps {
-	name: string,
-	state: StageState,
+	stage: Stage
+	onChange: (stage: Stage) => void
 }
 
-const testStages: ProjectStageProps[] = [{
-	name: 'Замер',
-	state: StageState.Completed,
-}, {
-	name: 'Дизайн',
-	state: StageState.Completed,
-}, {
-	name: 'Договор',
-	state: StageState.Open,
-}, {
-	name: 'Контрольный замер',
-	state: StageState.Completed,
-}, {
-	name: 'Деталировка',
-	state: StageState.Open,
-}, {
-	name: 'Схемы',
-	state: StageState.Open,
-}]
+function ProjectStage({
+	stage,
+	onChange,
+}: ProjectStageProps) {
+	const [open, setOpen] = useState(false)
+	const descriptionRef = useRef<HTMLInputElement>(null)
 
-const stagesListStyle: SxProps = {
-	mt: 3,
-}
-const saveButtonStyle: SxProps = {
-	my: 2,
-}
-
-function StageStateButton(props: StageStateButtonProps) {
-	switch (props.state) {
-	case StageState.Open:
-		return (
-			<Button
-				variant="contained"
-				color="secondary"
-				fullWidth
-			>Завершить этап</Button>
-		)
-	case StageState.Completed:
-		return (
-			<Button
-				color="secondary"
-				fullWidth
-				disabled
-			>Этап завершён</Button>
-		)
-	}
-}
-
-function ProjectStage(props: ProjectStageProps) {
 	return (
-		<TableRow>
-			<TableCell>
-				<IconButton>
-					<ExpandMore/>
-				</IconButton>
-			</TableCell>
-			<TableCell
-				component="th"
-				scope="row"
-				className={styles.col_stage_name}
-			>
-				{props.name}
-			</TableCell>
-			<TableCell className={styles.col_content_sized}>
-				<StageStateButton state={props.state}/>
-			</TableCell>
-		</TableRow>
+		<>
+			<TableRow>
+				<TableCell>
+					<IconButton
+						onClick={() => setOpen(!open)}
+					>
+						{open ? <ExpandLess/> : <ExpandMore/>}
+					</IconButton>
+				</TableCell>
+				<TableCell
+					component="th"
+					scope="row"
+					className={styles.col_stage_name}
+				>
+					{stage.name}
+				</TableCell>
+				<TableCell className={styles.col_content_sized}>
+					<FormControlLabel
+						control={<Checkbox/>}
+						label="Завершить этап"
+						labelPlacement="start"
+						checked={stage.isCompleted}
+					/>
+				</TableCell>
+			</TableRow>
+			<TableRow>
+				<TableCell
+					colSpan={3}
+					style={{ paddingBottom: 0, paddingTop: 0 }}
+				>
+					<Collapse in={open} unmountOnExit>
+						<TextField
+							inputRef={descriptionRef}
+							margin="normal"
+							label="Описание"
+							multiline
+							minRows={4}
+							maxRows={16}
+							fullWidth
+						/>
+					</Collapse>
+				</TableCell>
+			</TableRow>
+		</>
 	)
 }
 
 export default function ProjectStagesPage(props: ProjectStagesPageProps) {
-	const stages = testStages
+	const {data: stages} = useStages(props.projectId)
+
+	const changedStagesRef = useRef<Stage[]>([])
+
+	const onSave = () => {
+		changedStagesRef.current.forEach(stage => saveStage(stage))
+	}
 
 	return (
 		<>
@@ -114,7 +102,9 @@ export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 			<Container maxWidth="lg">
 				<TableContainer
 					component={Paper}
-					sx={stagesListStyle}
+					sx={{
+						mt: 3,
+					}}
 				>
 					<Table>
 						<TableHead>
@@ -125,13 +115,23 @@ export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{stages.map(stage => <ProjectStage key={stage.name} {...stage}/>)}
+							{stages && stages.map(stage => (
+								<ProjectStage
+									key={stage.id}
+									stage={stage}
+									onChange={() => {}}
+								/>
+							))}
 						</TableBody>
 					</Table>
 				</TableContainer>
 				<Button
 					variant="contained"
-					sx={saveButtonStyle}
+					sx={{
+						my: 2,
+					}}
+					onClick={onSave}
+					disabled={!changedStagesRef.current.length}
 				>
 					Сохранить
 				</Button>
