@@ -5,7 +5,7 @@ import {Client, mapApiClientDto} from './useClients'
 
 export default function useClient(clientId: number): SWRResponse<Client> {
 	return useAuthenticatedSWR(
-		useSWR('useClient', async () => {
+		useSWR('useClient' + clientId, async () => {
 			const client = await clientApi.clientsClientIdGet(clientId)
 			return mapApiClientDto(client)
 		}),

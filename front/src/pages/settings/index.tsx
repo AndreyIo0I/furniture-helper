@@ -1,22 +1,18 @@
+import {yupResolver} from '@hookform/resolvers/yup'
 import {Box, Button, TextField} from '@mui/material'
 import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
-import {yupResolver} from '@hookform/resolvers/yup'
-import MainNav from '../../components/MainNav'
 import * as Yup from 'yup'
-import styles from './styles.module.css'
+import saveAccountSettings from '../../../api/saveAccountSettings'
+import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
+import MainNav from '../../components/MainNav'
 import SettingsSecondaryNav from '../../components/SettingsSecondaryNav'
+import styles from './styles.module.css'
 
 type Form = {
 	projectDurationDays: number;
 	beforeDeadlineYellowColorDays: number;
 	beforeDeadlineRedColorDays: number;
-}
-
-const defaultSettings = {
-	projectDurationDays: 42,
-	beforeDeadlineYellowColorDays: 20,
-	beforeDeadlineRedColorDays: 10,
 }
 
 const basedMainSettingsNumberSchema = Yup.number()
@@ -46,7 +42,11 @@ const validationSchema = Yup.object().shape({
 		),
 })
 
-export default function MainSettingsPage() {
+interface ContentProps {
+	accountSettings: AccountSettings,
+}
+
+function Content({accountSettings}: ContentProps) {
 	const {
 		register,
 		handleSubmit,
@@ -57,8 +57,12 @@ export default function MainSettingsPage() {
 		resolver: yupResolver(validationSchema),
 	})
 
-	const handleOnSubmit = (data: Object) => {
-		alert('Form submit success: ' + JSON.stringify(data))
+	const handleOnSubmit = async (data: Form) => {
+		await saveAccountSettings({
+			daysForDeadlineYellow: data.beforeDeadlineYellowColorDays,
+			daysForDeadlineRed: data.beforeDeadlineRedColorDays,
+			defaultProjectDurationDays: data.projectDurationDays,
+		})
 	}
 
 	useEffect(() => {
@@ -68,69 +72,77 @@ export default function MainSettingsPage() {
 	}, [isSubmitSuccessful, reset])
 
 	return (
-		<>
-			<MainNav/>
-			<SettingsSecondaryNav/>
-			<Box
-				component="form"
-				className={styles.form}
-				onSubmit={handleSubmit(handleOnSubmit)}
-			>
+		<Box
+			component="form"
+			className={styles.form}
+			onSubmit={handleSubmit(handleOnSubmit)}
+		>
+			<div>
 				<div>
-					<div>
-						Цвета проектов по дням до дедлайна:
-					</div>
-					<div className={styles.deadlineColorSettingsWrapper}>
-						<div className={styles.deadlineColorSettingWrapper}>
-							<div
-								className={`${styles.deadlineColorPreviewPseudoElement} ${styles.deadlineColorPreviewPseudoElementYellow}`}
-							></div>
-							<TextField
-								className={styles.mainSettingsTextField}
-								label="Желтый"
-								{...register('beforeDeadlineYellowColorDays')}
-								helperText={errors.beforeDeadlineYellowColorDays?.message}
-								defaultValue={defaultSettings.beforeDeadlineYellowColorDays}
-								type="number"
-								FormHelperTextProps={{error: !!errors.beforeDeadlineYellowColorDays?.message}}
-							/>
-						</div>
-						<div className={styles.deadlineColorSettingWrapper}>
-							<div
-								className={`${styles.deadlineColorPreviewPseudoElement} ${styles.deadlineColorPreviewPseudoElementRed}`}
-							></div>
-							<TextField
-								className={styles.mainSettingsTextField}
-								label="Красный"
-								{...register('beforeDeadlineRedColorDays')}
-								helperText={errors.beforeDeadlineRedColorDays?.message}
-								defaultValue={defaultSettings.beforeDeadlineRedColorDays}
-								type="number"
-								FormHelperTextProps={{error: !!errors.beforeDeadlineRedColorDays?.message}}
-							/>
-						</div>
-					</div>
-					<div className={styles.projectDurationWrapper}>
+					Цвета проектов по дням до дедлайна:
+				</div>
+				<div className={styles.deadlineColorSettingsWrapper}>
+					<div className={styles.deadlineColorSettingWrapper}>
+						<div
+							className={`${styles.deadlineColorPreviewPseudoElement} ${styles.deadlineColorPreviewPseudoElementYellow}`}
+						></div>
 						<TextField
 							className={styles.mainSettingsTextField}
-							label="Длительность проектов по умолчанию"
-							{...register('projectDurationDays')}
-							helperText={errors.projectDurationDays?.message}
-							defaultValue={defaultSettings.projectDurationDays}
+							label="Желтый"
+							{...register('beforeDeadlineYellowColorDays')}
+							helperText={errors.beforeDeadlineYellowColorDays?.message}
+							defaultValue={accountSettings.daysForDeadlineYellow}
 							type="number"
-							FormHelperTextProps={{error: !!errors.projectDurationDays?.message}}
+							FormHelperTextProps={{error: !!errors.beforeDeadlineYellowColorDays?.message}}
+						/>
+					</div>
+					<div className={styles.deadlineColorSettingWrapper}>
+						<div
+							className={`${styles.deadlineColorPreviewPseudoElement} ${styles.deadlineColorPreviewPseudoElementRed}`}
+						></div>
+						<TextField
+							className={styles.mainSettingsTextField}
+							label="Красный"
+							{...register('beforeDeadlineRedColorDays')}
+							helperText={errors.beforeDeadlineRedColorDays?.message}
+							defaultValue={accountSettings.daysForDeadlineRed}
+							type="number"
+							FormHelperTextProps={{error: !!errors.beforeDeadlineRedColorDays?.message}}
 						/>
 					</div>
 				</div>
-				<div>
-					<Button
-						type="submit"
-						variant="contained"
-					>
-						Сохранить
-					</Button>
+				<div className={styles.projectDurationWrapper}>
+					<TextField
+						className={styles.mainSettingsTextField}
+						label="Длительность проектов по умолчанию"
+						{...register('projectDurationDays')}
+						helperText={errors.projectDurationDays?.message}
+						defaultValue={accountSettings.defaultProjectDurationDays}
+						type="number"
+						FormHelperTextProps={{error: !!errors.projectDurationDays?.message}}
+					/>
 				</div>
-			</Box>
+			</div>
+			<div>
+				<Button
+					type="submit"
+					variant="contained"
+				>
+					Сохранить
+				</Button>
+			</div>
+		</Box>
+	)
+}
+
+export default function MainSettingsPage() {
+	const {data: accountSettings} = useAccountSettings()
+
+	return (
+		<>
+			<MainNav/>
+			<SettingsSecondaryNav/>
+			{accountSettings && <Content accountSettings={accountSettings}/>}
 		</>
 	)
 }

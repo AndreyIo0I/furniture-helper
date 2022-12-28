@@ -3,7 +3,7 @@ import {Avatar, Box, Button, Container, CssBaseline, TextField, Typography} from
 import {useRouter} from 'next/router'
 import * as React from 'react'
 import {useRef, useState} from 'react'
-import login from '../../../api/useLogin'
+import login from '../../../api/login'
 
 export default function LoginPage() {
 	const router = useRouter()

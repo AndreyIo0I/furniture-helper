@@ -4,14 +4,12 @@ import {ClientDto, ProjectDeadlineSettings} from './typescript-fetch-client-gene
 import useAuthenticatedSWR from './useAuthenticatedSWR'
 
 export interface AccountSettings {
-	id: number;
 	daysForDeadlineYellow: number;
 	daysForDeadlineRed: number;
 	defaultProjectDurationDays: number;
 }
 
 export const mapAccountSettingsDto = (dto: ProjectDeadlineSettings): AccountSettings => ({
-	id: dto.id!,
 	daysForDeadlineYellow: dto.daysForDeadlineYellow!,
 	daysForDeadlineRed: dto.daysForDeadlineRed!,
 	defaultProjectDurationDays: dto.defaultProjectDurationDays!,

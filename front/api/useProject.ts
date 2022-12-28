@@ -6,6 +6,6 @@ import {mapProjectDto, Project} from './useProjects'
 
 export default function useProject(projectId: number): SWRResponse<Project> {
 	return useAuthenticatedSWR(
-		useSWR('useProject', async () => mapProjectDto(await projectApi.projectsProjectIdGet(projectId))),
+		useSWR('useProject' + projectId, async () => mapProjectDto(await projectApi.projectsProjectIdGet(projectId))),
 	)
 }
