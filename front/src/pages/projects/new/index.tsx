@@ -3,8 +3,9 @@ import {DatePicker} from '@mui/x-date-pickers'
 import dayjs from 'dayjs'
 import {useRouter} from 'next/router'
 import * as React from 'react'
-import {useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import createProject from '../../../../api/createProject'
+import useAccountSettings from '../../../../api/useAccountSettings'
 import useClients from '../../../../api/useClients'
 import MainNav from '../../../components/MainNav'
 
@@ -14,11 +15,19 @@ export default function NewProjectPage() {
 	const router = useRouter()
 
 	const nameRef = useRef<HTMLInputElement>(null)
-	const clientIdRef = useRef<number|null>(null)
+	const clientIdRef = useRef<number | null>(null)
 	const [startDate, setStartDate] = useState(dayjs())
 	const [finishDate, setFinishDate] = useState(dayjs().add(DEFAULT_PROJECT_DURATION_IN_DAYS, 'day'))
 	const contractRef = useRef<HTMLInputElement>(null)
 	const descriptionRef = useRef<HTMLInputElement>(null)
+
+	const {data: accountSettings} = useAccountSettings()
+
+	useEffect(() => {
+		if (accountSettings) {
+			setFinishDate(dayjs().add(accountSettings.defaultProjectDurationDays, 'day'))
+		}
+	}, [accountSettings])
 
 	const {data: clients} = useClients()
 

@@ -9,26 +9,38 @@ import {
 	TableHead,
 	TableRow,
 } from '@mui/material'
+import dayjs, {Dayjs} from 'dayjs'
 import {useRouter} from 'next/router'
-import useClients from '../../../api/useClients'
+import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
+import useClients, {Client} from '../../../api/useClients'
 import useProjects from '../../../api/useProjects'
 import MainNav from '../../components/MainNav'
 import styles from './project/styles.module.css'
 
-interface Client {
-	name: string;
-}
-
 interface Project {
 	id: number;
 	name: string;
-	client: Client;
-	deadline: Date;
+	client?: Client;
+	dateOfFinish: Dayjs;
 	deadlineState?: 'red' | 'yellow';
+}
+
+function getColor(project: Project, accountSettings: AccountSettings): 'red' | 'yellow' | undefined {
+	const diff = project.dateOfFinish.diff(dayjs(), 'days')
+	console.log(diff)
+	if (diff < accountSettings.daysForDeadlineRed) {
+		return 'red'
+	}
+	if (diff < accountSettings.daysForDeadlineYellow) {
+		return 'yellow'
+	}
+	return
 }
 
 export default function ProjectsPage() {
 	const router = useRouter()
+
+	const {data: accountSettings} = useAccountSettings()
 
 	const {data: clients} = useClients()
 
@@ -37,10 +49,9 @@ export default function ProjectsPage() {
 		? data.map(project => ({
 			id: project.id!,
 			name: project.name!,
-			client: {
-				name: clients?.find(client => client.id === project.clientId)?.fullName || '...',
-			},
-			deadline: new Date(project.deadLine!),
+			client: clients?.find(client => client.id === project.clientId),
+			dateOfFinish: project.dateOfFinish,
+			deadlineState: accountSettings && getColor(project, accountSettings),
 		}))
 		: []
 
@@ -99,8 +110,8 @@ export default function ProjectsPage() {
 									<TableCell component="th" scope="row">
 										{row.name}
 									</TableCell>
-									<TableCell align="right">{row.client.name}</TableCell>
-									<TableCell align="right">{row.deadline.toDateString()}</TableCell>
+									<TableCell align="right">{row.client?.fullName}</TableCell>
+									<TableCell align="right">{row.dateOfFinish.format()}</TableCell>
 								</TableRow>
 							))}
 						</TableBody>

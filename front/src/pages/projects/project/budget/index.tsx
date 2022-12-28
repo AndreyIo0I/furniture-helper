@@ -9,7 +9,7 @@ import * as model from './model'
 import styles from './styles.module.css'
 
 interface ProjectBudgetPageProps {
-	projectId: string,
+	projectId: number,
 }
 
 const testBudget: model.ProjectBudget = {

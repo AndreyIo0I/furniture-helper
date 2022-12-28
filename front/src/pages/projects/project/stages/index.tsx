@@ -17,7 +17,7 @@ import ProjectSecondaryNav from '../../../../components/ProjectSecondaryNav'
 import styles from './styles.module.css'
 
 interface ProjectStagesPageProps {
-	projectId: string,
+	projectId: number,
 }
 
 enum StageState {

@@ -83,6 +83,58 @@ export class RequiredError extends Error {
 /**
  *
  * @export
+ * @interface AccountDto
+ */
+export interface AccountDto {
+	/**
+	 *
+	 * @type {string}
+	 * @memberof AccountDto
+	 */
+	login?: string;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof AccountDto
+	 */
+	password?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface BuisnessCost
+ */
+export interface BuisnessCost {
+	/**
+	 *
+	 * @type {number}
+	 * @memberof BuisnessCost
+	 */
+	id?: number;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof BuisnessCost
+	 */
+	name?: string;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof BuisnessCost
+	 */
+	amount?: number;
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof BuisnessCost
+	 */
+	date?: Date;
+}
+
+/**
+ *
+ * @export
  * @interface ClientDto
  */
 export interface ClientDto {
@@ -231,6 +283,38 @@ export interface ProjectBudgetDto {
 /**
  *
  * @export
+ * @interface ProjectDeadlineSettings
+ */
+export interface ProjectDeadlineSettings {
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectDeadlineSettings
+	 */
+	id?: number;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectDeadlineSettings
+	 */
+	daysForDeadlineYellow?: number;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectDeadlineSettings
+	 */
+	daysForDeadlineRed?: number;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectDeadlineSettings
+	 */
+	defaultProjectDurationDays?: number;
+}
+
+/**
+ *
+ * @export
  * @interface ProjectDto
  */
 export interface ProjectDto {
@@ -276,6 +360,494 @@ export interface ProjectDto {
 	 * @memberof ProjectDto
 	 */
 	description?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface ProjectStage
+ */
+export interface ProjectStage {
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectStage
+	 */
+	id?: number;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectStage
+	 */
+	projectId?: number;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof ProjectStage
+	 */
+	name?: string;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof ProjectStage
+	 */
+	description?: string;
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof ProjectStage
+	 */
+	completedOn?: Date;
+	/**
+	 *
+	 * @type {boolean}
+	 * @memberof ProjectStage
+	 */
+	isCompleted?: boolean;
+}
+
+/**
+ *
+ * @export
+ * @interface UserDto
+ */
+export interface UserDto {
+	/**
+	 *
+	 * @type {number}
+	 * @memberof UserDto
+	 */
+	id?: number;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof UserDto
+	 */
+	email?: string;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof UserDto
+	 */
+	fullName?: string;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof UserDto
+	 */
+	password?: string;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof UserDto
+	 */
+	role?: number;
+}
+
+/**
+ * AuthentificationApi - fetch parameter creator
+ * @export
+ */
+export const AuthentificationApiFetchParamCreator = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Логинация пользователя
+		 * @param {AccountDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		authentificationPost(body?: AccountDto, options: any = {}): FetchArgs {
+			const localVarPath = `/authentification`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'AccountDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Выход пользователя
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		logoutPost(options: any = {}): FetchArgs {
+			const localVarPath = `/logout`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+	}
+}
+
+/**
+ * AuthentificationApi - functional programming interface
+ * @export
+ */
+export const AuthentificationApiFp = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Логинация пользователя
+		 * @param {AccountDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		authentificationPost(body?: AccountDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = AuthentificationApiFetchParamCreator(configuration).authentificationPost(body, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Выход пользователя
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		logoutPost(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = AuthentificationApiFetchParamCreator(configuration).logoutPost(options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+	}
+}
+
+/**
+ * AuthentificationApi - factory interface
+ * @export
+ */
+export const AuthentificationApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+	return {
+		/**
+		 *
+		 * @summary Логинация пользователя
+		 * @param {AccountDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		authentificationPost(body?: AccountDto, options?: any) {
+			return AuthentificationApiFp(configuration).authentificationPost(body, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Выход пользователя
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		logoutPost(options?: any) {
+			return AuthentificationApiFp(configuration).logoutPost(options)(fetch, basePath)
+		},
+	}
+}
+
+/**
+ * AuthentificationApi - object-oriented interface
+ * @export
+ * @class AuthentificationApi
+ * @extends {BaseAPI}
+ */
+export class AuthentificationApi extends BaseAPI {
+	/**
+	 *
+	 * @summary Логинация пользователя
+	 * @param {AccountDto} [body]
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AuthentificationApi
+	 */
+	public authentificationPost(body?: AccountDto, options?: any) {
+		return AuthentificationApiFp(this.configuration).authentificationPost(body, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Выход пользователя
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AuthentificationApi
+	 */
+	public logoutPost(options?: any) {
+		return AuthentificationApiFp(this.configuration).logoutPost(options)(this.fetch, this.basePath)
+	}
+
+}
+
+/**
+ * BuisnessCostApi - fetch parameter creator
+ * @export
+ */
+export const BuisnessCostApiFetchParamCreator = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Получить все бизнесовые издержки
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		buisnessCostsGet(options: any = {}): FetchArgs {
+			const localVarPath = `/buisness-costs`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'GET'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Удалить бизнесовую издержку
+		 * @param {number} id
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		buisnessCostsIdDelete(id: number, options: any = {}): FetchArgs {
+			// verify required parameter 'id' is not null or undefined
+			if (id === null || id === undefined) {
+				throw new RequiredError('id', 'Required parameter id was null or undefined when calling buisnessCostsIdDelete.')
+			}
+			const localVarPath = `/buisness-costs/{id}`
+				.replace(`{${'id'}}`, encodeURIComponent(String(id)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'DELETE'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Создать бизнесовую издержку
+		 * @param {BuisnessCost} body
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		buisnessCostsPost(body: BuisnessCost, options: any = {}): FetchArgs {
+			// verify required parameter 'body' is not null or undefined
+			if (body === null || body === undefined) {
+				throw new RequiredError('body', 'Required parameter body was null or undefined when calling buisnessCostsPost.')
+			}
+			const localVarPath = `/buisness-costs`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'BuisnessCost' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+	}
+}
+
+/**
+ * BuisnessCostApi - functional programming interface
+ * @export
+ */
+export const BuisnessCostApiFp = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Получить все бизнесовые издержки
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		buisnessCostsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<BuisnessCost>> {
+			const localVarFetchArgs = BuisnessCostApiFetchParamCreator(configuration).buisnessCostsGet(options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Удалить бизнесовую издержку
+		 * @param {number} id
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		buisnessCostsIdDelete(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = BuisnessCostApiFetchParamCreator(configuration).buisnessCostsIdDelete(id, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Создать бизнесовую издержку
+		 * @param {BuisnessCost} body
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		buisnessCostsPost(body: BuisnessCost, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = BuisnessCostApiFetchParamCreator(configuration).buisnessCostsPost(body, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+	}
+}
+
+/**
+ * BuisnessCostApi - factory interface
+ * @export
+ */
+export const BuisnessCostApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+	return {
+		/**
+		 *
+		 * @summary Получить все бизнесовые издержки
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		buisnessCostsGet(options?: any) {
+			return BuisnessCostApiFp(configuration).buisnessCostsGet(options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Удалить бизнесовую издержку
+		 * @param {number} id
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		buisnessCostsIdDelete(id: number, options?: any) {
+			return BuisnessCostApiFp(configuration).buisnessCostsIdDelete(id, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Создать бизнесовую издержку
+		 * @param {BuisnessCost} body
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		buisnessCostsPost(body: BuisnessCost, options?: any) {
+			return BuisnessCostApiFp(configuration).buisnessCostsPost(body, options)(fetch, basePath)
+		},
+	}
+}
+
+/**
+ * BuisnessCostApi - object-oriented interface
+ * @export
+ * @class BuisnessCostApi
+ * @extends {BaseAPI}
+ */
+export class BuisnessCostApi extends BaseAPI {
+	/**
+	 *
+	 * @summary Получить все бизнесовые издержки
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof BuisnessCostApi
+	 */
+	public buisnessCostsGet(options?: any) {
+		return BuisnessCostApiFp(this.configuration).buisnessCostsGet(options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Удалить бизнесовую издержку
+	 * @param {number} id
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof BuisnessCostApi
+	 */
+	public buisnessCostsIdDelete(id: number, options?: any) {
+		return BuisnessCostApiFp(this.configuration).buisnessCostsIdDelete(id, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Создать бизнесовую издержку
+	 * @param {BuisnessCost} body
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof BuisnessCostApi
+	 */
+	public buisnessCostsPost(body: BuisnessCost, options?: any) {
+		return BuisnessCostApiFp(this.configuration).buisnessCostsPost(body, options)(this.fetch, this.basePath)
+	}
+
 }
 
 /**
@@ -457,7 +1029,7 @@ export const ClientApiFp = function (configuration?: Configuration) {
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
-						return response.json()
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
 					} else {
 						throw response
 					}
@@ -476,7 +1048,7 @@ export const ClientApiFp = function (configuration?: Configuration) {
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
-						return response.json()
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
 					} else {
 						throw response
 					}
@@ -818,7 +1390,7 @@ export const CostApiFp = function (configuration?: Configuration) {
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
-						return response.json()
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
 					} else {
 						throw response
 					}
@@ -973,6 +1545,35 @@ export const ProjectApiFetchParamCreator = function (configuration?: Configurati
 		},
 		/**
 		 *
+		 * @summary Завершить проект
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdCompletePost(projectId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling projectsProjectIdCompletePost.')
+			}
+			const localVarPath = `/projects/{projectId}/complete`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
 		 * @summary Удалить проект
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -1067,6 +1668,64 @@ export const ProjectApiFetchParamCreator = function (configuration?: Configurati
 				options: localVarRequestOptions,
 			}
 		},
+		/**
+		 *
+		 * @summary Возобновить проект
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdRunPost(projectId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling projectsProjectIdRunPost.')
+			}
+			const localVarPath = `/projects/{projectId}/run`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Остановить проект
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdStopPost(projectId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling projectsProjectIdStopPost.')
+			}
+			const localVarPath = `/projects/{projectId}/stop`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
 	}
 }
 
@@ -1115,6 +1774,25 @@ export const ProjectApiFp = function (configuration?: Configuration) {
 		},
 		/**
 		 *
+		 * @summary Завершить проект
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdCompletePost(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+			const localVarFetchArgs = ProjectApiFetchParamCreator(configuration).projectsProjectIdCompletePost(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
 		 * @summary Удалить проект
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -1125,7 +1803,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
-						return response.json()
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
 					} else {
 						throw response
 					}
@@ -1164,7 +1842,45 @@ export const ProjectApiFp = function (configuration?: Configuration) {
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
-						return response.json()
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Возобновить проект
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdRunPost(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+			const localVarFetchArgs = ProjectApiFetchParamCreator(configuration).projectsProjectIdRunPost(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Остановить проект
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdStopPost(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+			const localVarFetchArgs = ProjectApiFetchParamCreator(configuration).projectsProjectIdStopPost(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response
 					} else {
 						throw response
 					}
@@ -1201,6 +1917,16 @@ export const ProjectApiFactory = function (configuration?: Configuration, fetch?
 		},
 		/**
 		 *
+		 * @summary Завершить проект
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdCompletePost(projectId: number, options?: any) {
+			return ProjectApiFp(configuration).projectsProjectIdCompletePost(projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
 		 * @summary Удалить проект
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -1229,6 +1955,26 @@ export const ProjectApiFactory = function (configuration?: Configuration, fetch?
 		 */
 		projectsProjectIdProjectUpdatingPost(body: ProjectDto, projectId: number, options?: any) {
 			return ProjectApiFp(configuration).projectsProjectIdProjectUpdatingPost(body, projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Возобновить проект
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdRunPost(projectId: number, options?: any) {
+			return ProjectApiFp(configuration).projectsProjectIdRunPost(projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Остановить проект
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdStopPost(projectId: number, options?: any) {
+			return ProjectApiFp(configuration).projectsProjectIdStopPost(projectId, options)(fetch, basePath)
 		},
 	}
 }
@@ -1261,6 +2007,18 @@ export class ProjectApi extends BaseAPI {
 	 */
 	public projectsPost(body: ProjectDto, options?: any) {
 		return ProjectApiFp(this.configuration).projectsPost(body, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Завершить проект
+	 * @param {number} projectId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectApi
+	 */
+	public projectsProjectIdCompletePost(projectId: number, options?: any) {
+		return ProjectApiFp(this.configuration).projectsProjectIdCompletePost(projectId, options)(this.fetch, this.basePath)
 	}
 
 	/**
@@ -1298,6 +2056,30 @@ export class ProjectApi extends BaseAPI {
 	 */
 	public projectsProjectIdProjectUpdatingPost(body: ProjectDto, projectId: number, options?: any) {
 		return ProjectApiFp(this.configuration).projectsProjectIdProjectUpdatingPost(body, projectId, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Возобновить проект
+	 * @param {number} projectId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectApi
+	 */
+	public projectsProjectIdRunPost(projectId: number, options?: any) {
+		return ProjectApiFp(this.configuration).projectsProjectIdRunPost(projectId, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Остановить проект
+	 * @param {number} projectId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectApi
+	 */
+	public projectsProjectIdStopPost(projectId: number, options?: any) {
+		return ProjectApiFp(this.configuration).projectsProjectIdStopPost(projectId, options)(this.fetch, this.basePath)
 	}
 
 }
@@ -1486,6 +2268,747 @@ export class ProjectBudgetApi extends BaseAPI {
 	 */
 	public projectBudgetsProjectIdProjectBudgetUpdatingPost(body: ProjectBudgetDto, projectId: number, options?: any) {
 		return ProjectBudgetApiFp(this.configuration).projectBudgetsProjectIdProjectBudgetUpdatingPost(body, projectId, options)(this.fetch, this.basePath)
+	}
+
+}
+
+/**
+ * ProjectDeadlineApi - fetch parameter creator
+ * @export
+ */
+export const ProjectDeadlineApiFetchParamCreator = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Получить текущий дедлайн
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectDeadlineSettingsGet(options: any = {}): FetchArgs {
+			const localVarPath = `/project-deadline-settings`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'GET'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Обновить информацию по дедлайну
+		 * @param {ProjectDeadlineSettings} body
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectDeadlineSettingsProjectDeadlineSettingsUpdatingPost(body: ProjectDeadlineSettings, options: any = {}): FetchArgs {
+			// verify required parameter 'body' is not null or undefined
+			if (body === null || body === undefined) {
+				throw new RequiredError('body', 'Required parameter body was null or undefined when calling projectDeadlineSettingsProjectDeadlineSettingsUpdatingPost.')
+			}
+			const localVarPath = `/project-deadline-settings/project-deadline-settings-updating`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'ProjectDeadlineSettings' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+	}
+}
+
+/**
+ * ProjectDeadlineApi - functional programming interface
+ * @export
+ */
+export const ProjectDeadlineApiFp = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Получить текущий дедлайн
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectDeadlineSettingsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ProjectDeadlineSettings> {
+			const localVarFetchArgs = ProjectDeadlineApiFetchParamCreator(configuration).projectDeadlineSettingsGet(options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Обновить информацию по дедлайну
+		 * @param {ProjectDeadlineSettings} body
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectDeadlineSettingsProjectDeadlineSettingsUpdatingPost(body: ProjectDeadlineSettings, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = ProjectDeadlineApiFetchParamCreator(configuration).projectDeadlineSettingsProjectDeadlineSettingsUpdatingPost(body, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+	}
+}
+
+/**
+ * ProjectDeadlineApi - factory interface
+ * @export
+ */
+export const ProjectDeadlineApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+	return {
+		/**
+		 *
+		 * @summary Получить текущий дедлайн
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectDeadlineSettingsGet(options?: any) {
+			return ProjectDeadlineApiFp(configuration).projectDeadlineSettingsGet(options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Обновить информацию по дедлайну
+		 * @param {ProjectDeadlineSettings} body
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectDeadlineSettingsProjectDeadlineSettingsUpdatingPost(body: ProjectDeadlineSettings, options?: any) {
+			return ProjectDeadlineApiFp(configuration).projectDeadlineSettingsProjectDeadlineSettingsUpdatingPost(body, options)(fetch, basePath)
+		},
+	}
+}
+
+/**
+ * ProjectDeadlineApi - object-oriented interface
+ * @export
+ * @class ProjectDeadlineApi
+ * @extends {BaseAPI}
+ */
+export class ProjectDeadlineApi extends BaseAPI {
+	/**
+	 *
+	 * @summary Получить текущий дедлайн
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectDeadlineApi
+	 */
+	public projectDeadlineSettingsGet(options?: any) {
+		return ProjectDeadlineApiFp(this.configuration).projectDeadlineSettingsGet(options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Обновить информацию по дедлайну
+	 * @param {ProjectDeadlineSettings} body
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectDeadlineApi
+	 */
+	public projectDeadlineSettingsProjectDeadlineSettingsUpdatingPost(body: ProjectDeadlineSettings, options?: any) {
+		return ProjectDeadlineApiFp(this.configuration).projectDeadlineSettingsProjectDeadlineSettingsUpdatingPost(body, options)(this.fetch, this.basePath)
+	}
+
+}
+
+/**
+ * ProjectStageApi - fetch parameter creator
+ * @export
+ */
+export const ProjectStageApiFetchParamCreator = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Получить этапы проекта
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectStagesProjectIdGet(projectId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling projectStagesProjectIdGet.')
+			}
+			const localVarPath = `/project-stages/{projectId}`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'GET'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Обновить основную информацию по этапу проекта
+		 * @param {ProjectStage} body
+		 * @param {number} projectStageId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectStagesProjectStageIdProjectStageUpdatingPost(body: ProjectStage, projectStageId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'body' is not null or undefined
+			if (body === null || body === undefined) {
+				throw new RequiredError('body', 'Required parameter body was null or undefined when calling projectStagesProjectStageIdProjectStageUpdatingPost.')
+			}
+			// verify required parameter 'projectStageId' is not null or undefined
+			if (projectStageId === null || projectStageId === undefined) {
+				throw new RequiredError('projectStageId', 'Required parameter projectStageId was null or undefined when calling projectStagesProjectStageIdProjectStageUpdatingPost.')
+			}
+			const localVarPath = `/project-stages/{projectStageId}/project-stage-updating`
+				.replace(`{${'projectStageId'}}`, encodeURIComponent(String(projectStageId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'ProjectStage' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+	}
+}
+
+/**
+ * ProjectStageApi - functional programming interface
+ * @export
+ */
+export const ProjectStageApiFp = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Получить этапы проекта
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectStagesProjectIdGet(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ProjectStage>> {
+			const localVarFetchArgs = ProjectStageApiFetchParamCreator(configuration).projectStagesProjectIdGet(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Обновить основную информацию по этапу проекта
+		 * @param {ProjectStage} body
+		 * @param {number} projectStageId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectStagesProjectStageIdProjectStageUpdatingPost(body: ProjectStage, projectStageId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = ProjectStageApiFetchParamCreator(configuration).projectStagesProjectStageIdProjectStageUpdatingPost(body, projectStageId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+	}
+}
+
+/**
+ * ProjectStageApi - factory interface
+ * @export
+ */
+export const ProjectStageApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+	return {
+		/**
+		 *
+		 * @summary Получить этапы проекта
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectStagesProjectIdGet(projectId: number, options?: any) {
+			return ProjectStageApiFp(configuration).projectStagesProjectIdGet(projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Обновить основную информацию по этапу проекта
+		 * @param {ProjectStage} body
+		 * @param {number} projectStageId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectStagesProjectStageIdProjectStageUpdatingPost(body: ProjectStage, projectStageId: number, options?: any) {
+			return ProjectStageApiFp(configuration).projectStagesProjectStageIdProjectStageUpdatingPost(body, projectStageId, options)(fetch, basePath)
+		},
+	}
+}
+
+/**
+ * ProjectStageApi - object-oriented interface
+ * @export
+ * @class ProjectStageApi
+ * @extends {BaseAPI}
+ */
+export class ProjectStageApi extends BaseAPI {
+	/**
+	 *
+	 * @summary Получить этапы проекта
+	 * @param {number} projectId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectStageApi
+	 */
+	public projectStagesProjectIdGet(projectId: number, options?: any) {
+		return ProjectStageApiFp(this.configuration).projectStagesProjectIdGet(projectId, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Обновить основную информацию по этапу проекта
+	 * @param {ProjectStage} body
+	 * @param {number} projectStageId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectStageApi
+	 */
+	public projectStagesProjectStageIdProjectStageUpdatingPost(body: ProjectStage, projectStageId: number, options?: any) {
+		return ProjectStageApiFp(this.configuration).projectStagesProjectStageIdProjectStageUpdatingPost(body, projectStageId, options)(this.fetch, this.basePath)
+	}
+
+}
+
+/**
+ * UserApi - fetch parameter creator
+ * @export
+ */
+export const UserApiFetchParamCreator = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Удаление пользователя
+		 * @param {number} id
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersIdDelete(id: number, options: any = {}): FetchArgs {
+			// verify required parameter 'id' is not null or undefined
+			if (id === null || id === undefined) {
+				throw new RequiredError('id', 'Required parameter id was null or undefined when calling usersIdDelete.')
+			}
+			const localVarPath = `/users/{id}`
+				.replace(`{${'id'}}`, encodeURIComponent(String(id)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'DELETE'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Получение пользователя
+		 * @param {number} id
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersIdGet(id: number, options: any = {}): FetchArgs {
+			// verify required parameter 'id' is not null or undefined
+			if (id === null || id === undefined) {
+				throw new RequiredError('id', 'Required parameter id was null or undefined when calling usersIdGet.')
+			}
+			const localVarPath = `/users/{id}`
+				.replace(`{${'id'}}`, encodeURIComponent(String(id)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'GET'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Создание пользователя
+		 * @param {UserDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersPost(body?: UserDto, options: any = {}): FetchArgs {
+			const localVarPath = `/users`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'UserDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Обновление пользователя
+		 * @param {UserDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersPut(body?: UserDto, options: any = {}): FetchArgs {
+			const localVarPath = `/users`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'PUT'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'UserDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Поиск пользователей
+		 * @param {string} [fullNameSearchPattern]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersSearchPost(fullNameSearchPattern?: string, options: any = {}): FetchArgs {
+			const localVarPath = `/users/search`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			if (fullNameSearchPattern !== undefined) {
+				localVarQueryParameter['fullNameSearchPattern'] = fullNameSearchPattern
+			}
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+	}
+}
+
+/**
+ * UserApi - functional programming interface
+ * @export
+ */
+export const UserApiFp = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Удаление пользователя
+		 * @param {number} id
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersIdDelete(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = UserApiFetchParamCreator(configuration).usersIdDelete(id, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Получение пользователя
+		 * @param {number} id
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersIdGet(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<UserDto> {
+			const localVarFetchArgs = UserApiFetchParamCreator(configuration).usersIdGet(id, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Создание пользователя
+		 * @param {UserDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersPost(body?: UserDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = UserApiFetchParamCreator(configuration).usersPost(body, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Обновление пользователя
+		 * @param {UserDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersPut(body?: UserDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = UserApiFetchParamCreator(configuration).usersPut(body, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Поиск пользователей
+		 * @param {string} [fullNameSearchPattern]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersSearchPost(fullNameSearchPattern?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<UserDto>> {
+			const localVarFetchArgs = UserApiFetchParamCreator(configuration).usersSearchPost(fullNameSearchPattern, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+	}
+}
+
+/**
+ * UserApi - factory interface
+ * @export
+ */
+export const UserApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+	return {
+		/**
+		 *
+		 * @summary Удаление пользователя
+		 * @param {number} id
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersIdDelete(id: number, options?: any) {
+			return UserApiFp(configuration).usersIdDelete(id, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Получение пользователя
+		 * @param {number} id
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersIdGet(id: number, options?: any) {
+			return UserApiFp(configuration).usersIdGet(id, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Создание пользователя
+		 * @param {UserDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersPost(body?: UserDto, options?: any) {
+			return UserApiFp(configuration).usersPost(body, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Обновление пользователя
+		 * @param {UserDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersPut(body?: UserDto, options?: any) {
+			return UserApiFp(configuration).usersPut(body, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Поиск пользователей
+		 * @param {string} [fullNameSearchPattern]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		usersSearchPost(fullNameSearchPattern?: string, options?: any) {
+			return UserApiFp(configuration).usersSearchPost(fullNameSearchPattern, options)(fetch, basePath)
+		},
+	}
+}
+
+/**
+ * UserApi - object-oriented interface
+ * @export
+ * @class UserApi
+ * @extends {BaseAPI}
+ */
+export class UserApi extends BaseAPI {
+	/**
+	 *
+	 * @summary Удаление пользователя
+	 * @param {number} id
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof UserApi
+	 */
+	public usersIdDelete(id: number, options?: any) {
+		return UserApiFp(this.configuration).usersIdDelete(id, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Получение пользователя
+	 * @param {number} id
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof UserApi
+	 */
+	public usersIdGet(id: number, options?: any) {
+		return UserApiFp(this.configuration).usersIdGet(id, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Создание пользователя
+	 * @param {UserDto} [body]
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof UserApi
+	 */
+	public usersPost(body?: UserDto, options?: any) {
+		return UserApiFp(this.configuration).usersPost(body, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Обновление пользователя
+	 * @param {UserDto} [body]
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof UserApi
+	 */
+	public usersPut(body?: UserDto, options?: any) {
+		return UserApiFp(this.configuration).usersPut(body, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Поиск пользователей
+	 * @param {string} [fullNameSearchPattern]
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof UserApi
+	 */
+	public usersSearchPost(fullNameSearchPattern?: string, options?: any) {
+		return UserApiFp(this.configuration).usersSearchPost(fullNameSearchPattern, options)(this.fetch, this.basePath)
 	}
 
 }

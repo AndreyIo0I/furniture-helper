@@ -2,7 +2,7 @@ import React from 'react'
 import SecondaryNav from '../SecondaryNav'
 
 interface ProjectSecondaryNav {
-	projectId: string,
+	projectId: number,
 }
 
 export default function ProjectSecondaryNav(props: ProjectSecondaryNav) {

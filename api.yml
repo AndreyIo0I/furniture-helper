@@ -3,6 +3,161 @@ info:
   title: ExtranetAPI
   version: '1.0'
 paths:
+  /authentification:
+    post:
+      tags:
+        - Authentification
+      summary: Логинация пользователя
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+      responses:
+        '200':
+          description: Логинация пользователя
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+        '401':
+          description: Не удалось идентифицировать пользователя
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /logout:
+    post:
+      tags:
+        - Authentification
+      summary: Выход пользователя
+      responses:
+        '200':
+          description: Выход пользователя
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /buisness-costs:
+    get:
+      tags:
+        - BuisnessCost
+      summary: Получить все бизнесовые издержки
+      responses:
+        '200':
+          description: Получить все издержки
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BuisnessCost'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BuisnessCost'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BuisnessCost'
+    post:
+      tags:
+        - BuisnessCost
+      summary: Создать бизнесовую издержку
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuisnessCost'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/BuisnessCost'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/BuisnessCost'
+        required: true
+      responses:
+        '200':
+          description: Создать издержку
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /buisness-costs/{id}:
+    delete:
+      tags:
+        - BuisnessCost
+      summary: Удалить бизнесовую издержку
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Удалить издержку
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
   /clients/{clientId}:
     get:
       tags:
@@ -392,6 +547,54 @@ paths:
               schema:
                 type: integer
                 format: int32
+  /projects/{projectId}/complete:
+    post:
+      tags:
+        - Project
+      summary: Завершить проект
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Завершить проект
+  /projects/{projectId}/stop:
+    post:
+      tags:
+        - Project
+      summary: Остановить проект
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Остановить проект
+  /projects/{projectId}/run:
+    post:
+      tags:
+        - Project
+      summary: Возобновить проект
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Возобновить проект
   /project-budgets/{projectId}:
     get:
       tags:
@@ -457,8 +660,309 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProjectBudgetDto'
+  /project-deadline-settings:
+    get:
+      tags:
+        - ProjectDeadline
+      summary: Получить текущий дедлайн
+      responses:
+        '200':
+          description: Получить проект по идентификатору
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProjectDeadlineSettings'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDeadlineSettings'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDeadlineSettings'
+  /project-deadline-settings/project-deadline-settings-updating:
+    post:
+      tags:
+        - ProjectDeadline
+      summary: Обновить информацию по дедлайну
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDeadlineSettings'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDeadlineSettings'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ProjectDeadlineSettings'
+        required: true
+      responses:
+        '200':
+          description: Обновить основную информацию по проекту
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /project-stages/{projectId}:
+    get:
+      tags:
+        - ProjectStage
+      summary: Получить этапы проекта
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Получить этапы проекта
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectStage'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectStage'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectStage'
+  /project-stages/{projectStageId}/project-stage-updating:
+    post:
+      tags:
+        - ProjectStage
+      summary: Обновить основную информацию по этапу проекта
+      parameters:
+        - name: projectStageId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectStage'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ProjectStage'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ProjectStage'
+        required: true
+      responses:
+        '200':
+          description: Обновить основную информацию по этапу проекта
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /users/{id}:
+    get:
+      tags:
+        - User
+      summary: Получение пользователя
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Получение пользователя
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+    delete:
+      tags:
+        - User
+      summary: Удаление пользователя
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Удаление пользователя
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /users/search:
+    post:
+      tags:
+        - User
+      summary: Поиск пользователей
+      parameters:
+        - name: fullNameSearchPattern
+          in: query
+          description: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Поиск пользователей
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDto'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDto'
+  /users:
+    post:
+      tags:
+        - User
+      summary: Создание пользователя
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '200':
+          description: Создание пользователя
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+    put:
+      tags:
+        - User
+      summary: Обновление пользователя
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '200':
+          description: Обновление пользователя
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
 components:
   schemas:
+    AccountDto:
+      type: object
+      properties:
+        login:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+      additionalProperties: false
+    BuisnessCost:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+        amount:
+          type: number
+          format: double
+        date:
+          type: string
+          format: date-time
+      additionalProperties: false
     ClientDto:
       type: object
       properties:
@@ -537,6 +1041,22 @@ components:
             $ref: '#/components/schemas/CostPayment'
           nullable: true
       additionalProperties: false
+    ProjectDeadlineSettings:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        daysForDeadlineYellow:
+          type: integer
+          format: int32
+        daysForDeadlineRed:
+          type: integer
+          format: int32
+        defaultProjectDurationDays:
+          type: integer
+          format: int32
+      additionalProperties: false
     ProjectDto:
       type: object
       properties:
@@ -561,4 +1081,45 @@ components:
         description:
           type: string
           nullable: true
+      additionalProperties: false
+    ProjectStage:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        projectId:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        completedOn:
+          type: string
+          format: date-time
+          nullable: true
+        isCompleted:
+          type: boolean
+      additionalProperties: false
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        email:
+          type: string
+          nullable: true
+        fullName:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+        role:
+          type: integer
+          format: int32
       additionalProperties: false

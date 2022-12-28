@@ -1,5 +1,6 @@
 import useSWR, {SWRResponse} from 'swr'
-import {clientApi, projectApi} from './api'
+import {clientApi} from './api'
+import {ClientDto} from './typescript-fetch-client-generated'
 import useAuthenticatedSWR from './useAuthenticatedSWR'
 
 export interface Client {
@@ -11,16 +12,18 @@ export interface Client {
 	description: string
 }
 
+export const mapApiClientDto = (client: ClientDto) => ({
+	id: client.id!,
+	fullName: client.name!,
+	source: client.communicationChannel || '',
+	phone: client.phoneNumber || '',
+	email: client.mail || '',
+	description: client.description || '',
+})
+
 export default function useClients(): SWRResponse<Client[]> {
 	return useAuthenticatedSWR(
 		useSWR('useClients', async () =>
-			(await clientApi.clientsGet()).map(client => ({
-				id: client.id!,
-				fullName: client.name!,
-				source: client.communicationChannel || '',
-				phone: client.phoneNumber || '',
-				email: client.mail || '',
-				description: client.description || '',
-			}))),
+			(await clientApi.clientsGet()).map(mapApiClientDto)),
 	)
 }
