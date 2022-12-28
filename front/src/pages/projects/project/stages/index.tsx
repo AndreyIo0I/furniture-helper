@@ -69,7 +69,7 @@ function ProjectStage({
 					colSpan={3}
 					style={{ paddingBottom: 0, paddingTop: 0 }}
 				>
-					<Collapse in={open} unmountOnExit>
+					<Collapse in={open}>
 						<TextField
 							inputRef={descriptionRef}
 							margin="normal"
