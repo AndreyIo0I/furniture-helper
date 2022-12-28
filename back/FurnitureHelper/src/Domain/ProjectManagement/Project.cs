@@ -11,6 +11,7 @@
         public string Description { get; private set; }
         public bool IsCompleted { get; private set; }
         public bool IsStopped { get; private set; }
+        public DateTime? EndDate { get; private set; }
 
         public Project( string name, string contractNumber, DateTime dateOfStart, DateTime deadLine, int clientId, string description )
         {
@@ -37,6 +38,7 @@
         public void Complete()
         {
             IsCompleted = true;
+            EndDate = DateTime.Now;
         }
 
         public void Stop()

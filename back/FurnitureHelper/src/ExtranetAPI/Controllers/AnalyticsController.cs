@@ -64,7 +64,7 @@ public class AnalyticsController : ControllerBase
     [SwaggerResponse( statusCode: 200, type: typeof( ProjectsMagrinDto ), description: "Маржа по проектам за период" )]//done
     public async Task<IActionResult> GetProjectMargin( [FromBody] SearchAnalyticDto searchAnalytic )
     {
-        IReadOnlyList<Project> projects = await _projectRepository.GetAll( searchAnalytic.Period.StartDate, searchAnalytic.Period.EndDate );
+        IReadOnlyList<Project> projects = await _projectRepository.GetAll( searchAnalytic.Period.StartDate.Date, searchAnalytic.Period.EndDate.Date );
         
         if ( !String.IsNullOrEmpty( searchAnalytic.Name ) )
         {
@@ -200,15 +200,18 @@ public class AnalyticsController : ControllerBase
     [SwaggerResponse( statusCode: 200, type: typeof( OutdatedProjectsDto ), description: "Просроченные проекты" )]//done
     public async Task<IActionResult> GetOutdatedProjects( [FromBody] SearchAnalyticDto searchAnalytic )
     {
+        DateTime currentDate = DateTime.Now;
+
         IReadOnlyList<Project> projects = await _projectRepository.GetAll( searchAnalytic.Period.StartDate, searchAnalytic.Period.EndDate );
-        projects = projects.Where(x => !x.IsCompleted).ToList();
+        projects = projects
+            .Where(x => ( x.EndDate.HasValue && x.EndDate.Value.Date > x.DeadLine.Date ) 
+                || ( !x.EndDate.HasValue && x.DeadLine.Date < currentDate.Date ) )
+            .ToList();
         
         if ( !String.IsNullOrEmpty( searchAnalytic.Name ) )
         {
             projects = projects.Where( x => x.Name == searchAnalytic.Name ).ToList();
         }
-        
-        DateTime currentDate = DateTime.Now;
 
         List<OutdatedProjectDto> outdatedProjects = new();
 
@@ -289,8 +292,7 @@ public class AnalyticsController : ControllerBase
         
         Dictionary<int, Cost> costsToIds = costs.ToDictionary( x => x.Id, x => x );
         
-        IReadOnlyList<Project> projects = await _projectRepository
-            .GetAll( searchAnalytic.Period.StartDate, searchAnalytic.Period.EndDate );
+        IReadOnlyList<Project> projects = await _projectRepository.GetAll();
 
         IReadOnlyList<ProjectBudget> projectBudgets = await _projectBudgetRepository
             .GetByProjectIds( projects.Select( x => x.Id ).ToList() );
@@ -299,8 +301,12 @@ public class AnalyticsController : ControllerBase
 
         foreach (var costsToId in costsToIds)
         {
-            List<CostPayment> costPayments =
-                projectBudgets.SelectMany( x => x.CostPayments ).Where( cp => cp.CostId == costsToId.Key ).ToList();
+            List<CostPayment> costPayments = projectBudgets
+                    .SelectMany( x => x.CostPayments )
+                    .Where( cp => cp.CostId == costsToId.Key 
+                        && cp.PaymentDate.Date > searchAnalytic.Period.StartDate.Date
+                        && cp.PaymentDate.Date < searchAnalytic.Period.EndDate.Date )
+                    .ToList();
             
             spendingOnCostDtos.AddRange( costPayments.Select( x => new SpendingOnCostDto
             {
@@ -322,7 +328,7 @@ public class AnalyticsController : ControllerBase
     public async Task<IActionResult> GetProjectsPrices( [FromBody] Period period )
     {
         IReadOnlyList<Project> projects = await _projectRepository
-            .GetAll( period.StartDate, period.EndDate );
+            .GetAll( period.StartDate.Date, period.EndDate.Date );
         
         IReadOnlyList<ProjectBudget> projectBudgets = await _projectBudgetRepository
             .GetByProjectIds( projects.Select( x => x.Id ).ToList() );
@@ -334,14 +340,16 @@ public class AnalyticsController : ControllerBase
         } ).OrderBy( x => x.ProjectPrice ).ToList();
 
         return Ok(
-            new ProjectsPricesDto
-            {
-                ProjectPrices = projectPrices,
-                AveragePrice = decimal.Divide(
-                    projectPrices.Select( x => x.ProjectPrice ).Sum(),
-                    projectPrices.Count ),
-                MaxProjectPrice = projectPrices.Last(),
-                MinProjectPrice = projectPrices[ 0 ]
-            } );
+            projectPrices.Count == 0 
+                ? new ProjectsPricesDto() 
+                : new ProjectsPricesDto
+                    {
+                        ProjectPrices = projectPrices,
+                        AveragePrice = decimal.Divide(
+                            projectPrices.Select( x => x.ProjectPrice ).Sum(),
+                            projectPrices.Count ),
+                        MaxProjectPrice = projectPrices.Last(),
+                        MinProjectPrice = projectPrices[ 0 ]
+                    } );
     }
 }
