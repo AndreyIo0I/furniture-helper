@@ -19,5 +19,15 @@ namespace Infrastructure.Repositories
         {
             return await Entities.FirstOrDefaultAsync( x => x.Id == id );
         }
+
+        public async Task<IReadOnlyList<BuisnessCost>> GetAll(DateTime startDate, DateTime endDate)
+        {
+            return await Entities.Where(x => x.Date >= startDate && x.Date <= endDate).ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<BuisnessCost>> GetAll(List<int> ids)
+        {
+            return await Entities.Where(x => ids.Contains(x.Id)).ToListAsync();
+        }
     }
 }
