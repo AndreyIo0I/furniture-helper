@@ -26,9 +26,4 @@ public class UserRepository : Repository<User>, IUserRepository
         
         return await Entities.Where(x => EF.Functions.Like( x.FullName, fullNameSearchString) ).ToListAsync();
     }
-
-    public void Update( User user )
-    {
-        Entities.Update( user );
-    }
 }

@@ -1,7 +1,7 @@
 ﻿using Application.Foundation;
 using Domain.UserManagement;
 using ExtranetAPI.Models;
-using ExtranetAPI.Models.Extensions;
+using ExtranetAPI.Services.Builders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -13,14 +13,17 @@ namespace ExtranetAPI.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;    
-    
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserBuilder _userBuilder;
+
     public UserController(
         IUserRepository userRepository,
-        IUnitOfWork unitOfWork )
+        IUnitOfWork unitOfWork,
+        IUserBuilder userBuilder )
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
+        _userBuilder = userBuilder;
     }
 
     /// <summary>
@@ -34,7 +37,7 @@ public class UserController : ControllerBase
     {
         User user = await _userRepository.Get( id );
 
-        return Ok( user.ToDto() );
+        return Ok( _userBuilder.BuildUserDto( user ) );
     }
 
     /// <summary>
@@ -49,7 +52,7 @@ public class UserController : ControllerBase
     {
         List<User> users = await _userRepository.Search( fullNameSearchPattern );
 
-        return Ok( users.Select( x => x.ToDto() ) );
+        return Ok( users.Select( x => _userBuilder.BuildUserDto( x ) ) );
     }
 
     /// <summary>
@@ -62,7 +65,7 @@ public class UserController : ControllerBase
     [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Создание пользователя" )]
     public async Task<IActionResult> Create( [FromBody] UserDto userDto )
     {
-        User user = userDto.ToDomain();
+        User user = _userBuilder.BuildUser( userDto );
         
         _userRepository.Add( user );
         await _unitOfWork.Commit();
@@ -79,9 +82,10 @@ public class UserController : ControllerBase
     [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновление пользователя" )]
     public async Task<IActionResult> Update( [FromBody] UserDto userDto )
     {
-        User user = userDto.ToDomain();
+        User user = await _userRepository.Get(userDto.Id);
+        User newUser = _userBuilder.BuildUser( userDto );
         
-        _userRepository.Update( user );
+        user.Update( newUser );
         await _unitOfWork.Commit();
         
         return Ok();

@@ -2,6 +2,7 @@
 using ExtranetAPI.Models;
 using ExtranetAPI.Models.Extensions;
 using ExtranetAPI.Services;
+using ExtranetAPI.Services.Builders;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -12,13 +13,19 @@ public class AuthentificationController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
     private readonly IAuthentificationService _authentificationService;
+    private readonly IPasswordCryptionService _passwordCryptionService;
+    private readonly IUserBuilder _userBuilder;
 
     public AuthentificationController(
         IUserRepository userRepository,
-        IAuthentificationService authentificationService )
+        IAuthentificationService authentificationService,
+        IPasswordCryptionService passwordCryptionService,
+        IUserBuilder userBuilder )
     {
         _userRepository = userRepository;
         _authentificationService = authentificationService;
+        _passwordCryptionService = passwordCryptionService;
+        _userBuilder = userBuilder;
     }
 
     /// <summary>
@@ -31,7 +38,7 @@ public class AuthentificationController : ControllerBase
     [SwaggerResponse( statusCode: 401, type: typeof( int ), description: "Не удалось идентифицировать пользователя" )]
     public async Task<IActionResult> Login( [FromBody] AccountDto accountDto )
     {
-        User? user = await _userRepository.Find( accountDto.Login, accountDto.Password );
+        User? user = await _userRepository.Find( accountDto.Login, _passwordCryptionService.EncryptionPassword( accountDto.Password ) );
 
         if ( user == null )
         {
@@ -40,7 +47,7 @@ public class AuthentificationController : ControllerBase
         
         await _authentificationService.SignInAsync( user, HttpContext );
 
-        return Ok( user.ToDto() );
+        return Ok( _userBuilder.BuildUserDto( user ) );
     }
 
     /// <summary>

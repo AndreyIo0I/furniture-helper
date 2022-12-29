@@ -9,6 +9,4 @@ public interface IUserRepository: IRepository<User>
     Task<User?> Find( string login, string password );
 
     Task<List<User>> Search(string fullNameSearchString);
-
-    void Update(User user);
 }

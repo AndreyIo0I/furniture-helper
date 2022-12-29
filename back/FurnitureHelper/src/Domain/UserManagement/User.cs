@@ -19,7 +19,12 @@ public class User
     public string Password { get; private set; }
     
     public UserRole Role { get; private set; }
-}
 
-// озможно несколько ролей
-// макет кривой?
+    public void Update( User newUser )
+    {
+        Email = newUser.Email;
+        FullName = newUser.FullName;
+        Password = String.IsNullOrEmpty(newUser.Password) ? Password : newUser.Password;
+        Role = newUser.Role;
+    }
+}

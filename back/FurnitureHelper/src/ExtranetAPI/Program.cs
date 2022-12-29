@@ -4,6 +4,7 @@ using Infrastructure.Foundation.EntityFramwork;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using ExtranetAPI.Services;
+using ExtranetAPI.Services.Builders;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder( args );
@@ -28,6 +29,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+builder.Services.AddScoped<IUserBuilder, UserBuilder>();
+builder.Services.AddScoped<IPasswordCryptionService, PasswordCryptionService>(
+    sp => new PasswordCryptionService( builder.Configuration["SecurityKey"] ) );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
