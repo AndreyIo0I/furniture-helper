@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
 import React from 'react'
-import {formStyle} from './common'
+import {formStyle, isValidDate, toViewModelNumber, toViewNumber} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
 
@@ -28,7 +28,13 @@ interface ClientPaymentProps {
 }
 
 function ClientPayment(props: ClientPaymentProps) {
-	function setPaymentDate(paymentDate: Date) {
+	function setAmount(amount?: number) {
+		props.setPayment({
+			...props.payment,
+			amount,
+		})
+	}
+	function setPaymentDate(paymentDate: Date | null) {
 		props.setPayment({
 			...props.payment,
 			paymentDate,
@@ -41,17 +47,19 @@ function ClientPayment(props: ClientPaymentProps) {
 				<TextField
 					type="number"
 					variant="standard"
-					defaultValue={props.payment.amount}
+					value={toViewNumber(props.payment.amount)}
+					onChange={event =>
+						setAmount(toViewModelNumber(event.target.value))
+					}
 					className={styles.form_control}
+					error={props.payment.amount === undefined}
 				/>
 			</TableCell>
 			<TableCell>
 				<DatePicker
 					renderInput={props => <TextField {...props}/>}
 					value={props.payment.paymentDate}
-					onChange={date => {
-						if (date !== null) setPaymentDate(date)
-					}}
+					onChange={setPaymentDate}
 					className={styles.form_control}
 				/>
 			</TableCell>
@@ -106,8 +114,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 	}
 
 	function addPayment() {
-		if (newPayment.amount === undefined
-			|| newPayment.paymentDate === null || isNaN(Number(newPayment.paymentDate))) {
+		if (newPayment.amount === undefined || !isValidDate(newPayment.paymentDate)) {
 			setNewPaymentNeedsValidation()
 			return
 		}
@@ -164,11 +171,10 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 							<TextField
 								type="number"
 								variant="standard"
-								value={newPayment.amount !== undefined ? newPayment.amount : ''}
-								onChange={event => {
-									const value = event.target.value
-									setNewPaymentAmount(value !== '' ? Number(value) : undefined)
-								}}
+								value={toViewNumber(newPayment.amount)}
+								onChange={event =>
+									setNewPaymentAmount(toViewModelNumber(event.target.value))
+								}
 								className={styles.form_control}
 								error={
 									newPayment.needsValidation

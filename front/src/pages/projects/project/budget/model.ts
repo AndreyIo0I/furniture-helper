@@ -5,19 +5,19 @@ export interface Cost {
 
 export interface ClientPayment {
 	paymentId: number,
-	amount: number,
-	paymentDate: Date,
+	amount?: number,
+	paymentDate: Date | null,
 }
 
 export interface CostPayment {
 	paymentId: number,
 	costId: number,
-	amount: number,
+	amount?: number,
+	paymentDate: Date | null,
 }
 
 export interface ProjectBudget {
-	projectCost: number,
+	projectCost?: number,
 	clientPayments: ClientPayment[],
 	costPayments: CostPayment[],
-	costs: Cost[],
 }
