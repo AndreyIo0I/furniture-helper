@@ -55,6 +55,7 @@ const mapToApiProjectBudget = (projectBudget: model.ProjectBudget, projectId: nu
 	})),
 	costPayments: projectBudget.costPayments.map(payment => ({
 		costId: payment.costId,
+		paymentDate: toApiModelDate(payment.paymentDate),
 		amount: toApiModelNumber(payment.amount),
 	})),
 })

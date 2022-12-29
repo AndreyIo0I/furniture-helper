@@ -13,6 +13,7 @@ export interface CostPayment {
 	paymentId: number,
 	costId: number,
 	amount?: number,
+	paymentDate: Date | null,
 }
 
 export interface ProjectBudget {

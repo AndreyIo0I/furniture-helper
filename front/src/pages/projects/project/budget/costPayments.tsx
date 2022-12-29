@@ -13,8 +13,9 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
+import {DatePicker} from '@mui/x-date-pickers'
 import React from 'react'
-import {formStyle, toViewModelNumber, toViewNumber} from './common'
+import {formStyle, isValidDate, toViewModelNumber, toViewNumber} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
 
@@ -71,6 +72,12 @@ function CostPayment(props: CostPaymentProps) {
 			amount,
 		})
 	}
+	function setPaymentDate(paymentDate: Date | null) {
+		props.setPayment({
+			...props.payment,
+			paymentDate,
+		})
+	}
 
 	return (
 		<TableRow>
@@ -94,6 +101,14 @@ function CostPayment(props: CostPaymentProps) {
 				/>
 			</TableCell>
 			<TableCell>
+				<DatePicker
+					renderInput={props => <TextField {...props}/>}
+					value={props.payment.paymentDate}
+					onChange={setPaymentDate}
+					className={styles.form_control}
+				/>
+			</TableCell>
+			<TableCell>
 				<IconButton onClick={props.removePayment}>
 					<Delete/>
 				</IconButton>
@@ -108,12 +123,14 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		paymentId: number,
 		costId?: number,
 		amount?: number,
+		paymentDate: Date | null,
 	}
 
 	function makeNewPayment(paymentId: number): NewPaymentState {
 		return {
 			needsValidation: false,
 			paymentId,
+			paymentDate: new Date(),
 		}
 	}
 
@@ -142,8 +159,15 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		})
 	}
 
+	function setNewPaymentDate(paymentDate: Date | null) {
+		setNewPayment({
+			...newPayment,
+			paymentDate,
+		})
+	}
+
 	function addPayment() {
-		if (newPayment.costId === undefined || newPayment.amount === undefined) {
+		if (newPayment.costId === undefined || newPayment.amount === undefined || !isValidDate(newPayment.paymentDate)) {
 			setNewPaymentNeedsValidation()
 			return
 		}
@@ -153,6 +177,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 				paymentId: newPayment.paymentId,
 				costId: newPayment.costId,
 				amount: newPayment.amount,
+				paymentDate: newPayment.paymentDate,
 			},
 		])
 		setNewPayment(makeNewPayment(newPayment.paymentId + 1))
@@ -183,6 +208,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 					<TableRow>
 						<TableCell>Название издержки</TableCell>
 						<TableCell>Сумма</TableCell>
+						<TableCell>Дата платежа</TableCell>
 						<TableCell/>
 					</TableRow>
 				</TableHead>
@@ -224,6 +250,14 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 									newPayment.needsValidation
 									&& newPayment.amount === undefined
 								}
+							/>
+						</TableCell>
+						<TableCell>
+							<DatePicker
+								renderInput={props => <TextField {...props}/>}
+								value={newPayment.paymentDate}
+								onChange={setNewPaymentDate}
+								className={styles.form_control}
 							/>
 						</TableCell>
 						<TableCell>

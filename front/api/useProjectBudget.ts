@@ -10,6 +10,7 @@ interface ClientPayment {
 
 interface CostPayment {
 	costId: number,
+	paymentDate: Date,
 	amount: number,
 }
 
@@ -29,6 +30,7 @@ const mapProjectBudgetDto = (dto: ProjectBudgetDto): ProjectBudget => ({
 	})),
 	costPayments: dto.costPayments!.map(payment => ({
 		costId: payment.costId!,
+		paymentDate: payment.paymentDate!,
 		amount: payment.amount!,
 	})),
 })
