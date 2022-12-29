@@ -1,12 +1,16 @@
-# фронт
+# Фронт
 
-## настройка окружения
+## Развертывание linux
+0) Поставить nodejs и yarn (если сразу не поставится)
+1) Для линуха запустить [publish.sh](hosting%2Fpublish.sh)
+
+## Настройка окружения
 1) nodejs lts https://nodejs.org/en/ (если уже есть, примерно от 14 версии тоже должно работать)
 2) yarn classic `npm install --global yarn`
 3) docker
 
-## разработка
-запукать в папке front
+## Разработка
+Запускать в папке front
 ```bash
 yarn install
 ```
@@ -14,7 +18,7 @@ yarn install
 yarn dev
 ```
 
-## бек
+### Бек
 1) поставить https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 2) чтобы поставить dotnet-ef, выполнить:
 ```bash
