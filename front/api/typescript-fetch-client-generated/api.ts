@@ -311,13 +311,13 @@ export interface Period {
 	 * @type {Date}
 	 * @memberof Period
 	 */
-	startDate?: Date;
+	startDate?: string;
 	/**
 	 *
 	 * @type {Date}
 	 * @memberof Period
 	 */
-	endDate?: Date;
+	endDate?: string;
 }
 
 /**

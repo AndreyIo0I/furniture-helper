@@ -1,4 +1,14 @@
 .container {
-    background: bisque;
-    width: 100%;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+}
+
+.row {
+    cursor: pointer;
 }
