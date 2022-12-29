@@ -1,5 +1,7 @@
-import React, {ChangeEvent, useState} from 'react'
+import React, {ChangeEvent, useRef, useState} from 'react'
 import {
+	Box,
+	Button,
 	Container,
 	IconButton,
 	Paper,
@@ -15,12 +17,12 @@ import MainNav from '../../components/MainNav'
 import {DatePicker} from '@mui/x-date-pickers'
 import dayjs, {Dayjs} from 'dayjs'
 import {styled} from '@mui/material/styles'
+import useBusinessCosts, { BuisnessCostEntity } from '../../../api/useBusinessCosts'
+import createBusinessCost from '../../../api/createBusinessCost'
+import project from '../projects/project'
 
 interface RowProps {
-	cost: string;
-	date: Dayjs;
-	onCostChange: (newValue: string) => void;
-	onDateChange: (newValue: Dayjs) => void;
+	cost: BuisnessCostEntity;
 	onRemove: () => void;
 }
 
@@ -30,9 +32,6 @@ const DatePickerContainer = styled('div')(() => ({
 
 function Row({
 	cost,
-	date,
-	onCostChange,
-	onDateChange,
 	onRemove,
 }: RowProps) {
 
@@ -44,24 +43,24 @@ function Row({
 				sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '40px'}}>
 				<TextField
 					variant="standard"
-					defaultValue={cost}
+					disabled
+					defaultValue={cost.name}
 					fullWidth={true}
-					onChange={e => onCostChange(e.target.value)}
-					onBlur={() => {
-						/* send changes */
-					}}
 				/>
 				<DatePickerContainer>
 					<DatePicker
-						value={date}
-						onChange={newValue => {
-							if (newValue) {
-								onDateChange(newValue)
-							}
-						}}
+						value={cost.date}
+						disabled
+						onChange={() => {}}
 						renderInput={params => <TextField {...params} />}
 					/>
 				</DatePickerContainer>
+				<TextField
+					variant="standard"
+					disabled
+					defaultValue={cost.amount}
+					fullWidth={true}
+				/>
 				<IconButton
 					onClick={() => onRemove()}
 					size="small"
@@ -73,19 +72,36 @@ function Row({
 	)
 }
 
-const mockRows = ['гвозди', 'шурупы', 'доски', 'печенки']
-
 export default function CostsPage() {
-	const [newValue, setNewValue] = useState('')
-	const [rows, setRows] = useState(() => mockRows)
+	const {data: buisnessCosts} = useBusinessCosts()
 
-	const onChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-		setNewValue(event.target.value)
-	}
+	const nameRef = useRef<HTMLInputElement>(null)
+	const amountRef = useRef<HTMLInputElement>(null)
 
-	const add = () => {
-		setRows([newValue, ...rows])
-		setNewValue('')
+	const [date, setDate] = useState(dayjs())
+
+	const [rows, setRows] = useState<BuisnessCostEntity[]>( buisnessCosts || [] )
+
+	const onSaveBuisnessCost = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		
+		const amount: number = amountRef.current?.value ? parseInt(amountRef.current?.value) : 0
+		const name: string = nameRef.current?.value!
+		const newBuisenessCostId: number = await createBusinessCost({
+			amount: amount,
+			date: date.toISOString(),
+			name: name
+		})
+
+		const newBuisenessCost: BuisnessCostEntity = {
+			id: newBuisenessCostId,
+			name: name,
+			amount: amount,
+			date: date
+
+		}
+		
+		setRows([newBuisenessCost, ...rows])
 	}
 
 	const onRemove = (index: number) => {
@@ -101,31 +117,57 @@ export default function CostsPage() {
 						<TableBody>
 							<TableRow>
 								<TableCell>
-									<TextField
-										placeholder="Добавить..."
-										value={newValue}
-										variant="standard"
-										onChange={onChange}
-										onKeyDown={event => {
-											if (event.key === 'Enter') {
-												add()
-											}
+									<Box
+										sx={{
+											display: 'grid',
+											gridTemplate: 'auto / 1fr',
+											maxWidth: '600px',
+											gap: '16px',
+											padding: '20px 0',
 										}}
-										fullWidth={true}
-										autoComplete="off"
-									/>
+										component="form"
+										onSubmit={onSaveBuisnessCost}
+									>
+										<TextField
+											placeholder="Название издержки"
+											inputRef={nameRef}
+											variant="standard"
+											fullWidth={true}
+											autoComplete="off"
+										/>
+										<DatePicker
+											label="Дата"
+											value={date}
+											onChange={newValue => {
+												if (newValue) {
+													setDate(newValue)
+												}
+											}}
+											renderInput={params => <TextField {...params} />}
+										/>
+										<TextField
+											inputRef={amountRef}
+											margin="none"
+											required
+											type="number"
+											defaultValue={0}
+											label="Сумма"
+										/>
+										<div>
+											<Button
+												type="submit"
+												variant="contained"
+											>
+												Сохранить
+											</Button>
+										</div>
+									</Box>
 								</TableCell>
 							</TableRow>
-							{rows.map((row, index) => (
+							{buisnessCosts && buisnessCosts.map((row, index) => (
 								<Row
-									key={row + index}
+									key={row.id}
 									cost={row}
-									date={dayjs()}
-									onCostChange={newCostName => {
-										rows[index] = newCostName
-									}}
-									onDateChange={() => {
-									}}
 									onRemove={() => onRemove(index)}
 								/>
 							))}

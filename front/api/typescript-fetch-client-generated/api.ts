@@ -129,7 +129,7 @@ export interface BuisnessCost {
 	 * @type {Date}
 	 * @memberof BuisnessCost
 	 */
-	date?: Date;
+	date?: string;
 }
 
 /**
