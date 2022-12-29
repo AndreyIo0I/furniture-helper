@@ -19,5 +19,4 @@ export interface ProjectBudget {
 	projectCost: number,
 	clientPayments: ClientPayment[],
 	costPayments: CostPayment[],
-	costs: Cost[],
 }
