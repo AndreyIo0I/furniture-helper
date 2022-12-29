@@ -11,7 +11,7 @@ import * as model from './model'
 import styles from './styles.module.css'
 
 interface ProjectBudgetPageProps {
-	projectId: number,
+	projectId: number
 }
 
 const testCosts: model.Cost[] = [{
@@ -46,6 +46,7 @@ const mapToProjectBudgetViewModel = (projectBudget: ProjectBudget): model.Projec
 		paymentId: index,
 	})),
 })
+
 const mapToApiProjectBudget = (projectBudget: model.ProjectBudget, projectId: number): ProjectBudget => ({
 	projectId,
 	projectCost: toApiModelNumber(projectBudget.projectCost),
@@ -72,8 +73,7 @@ export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
 		let apiProjectBudget
 		try {
 			apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
-		}
-		catch (err) {
+		} catch (err) {
 			return
 		}
 		await saveProjectBudget(apiProjectBudget)
@@ -134,7 +134,7 @@ export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
 					sx={saveButtonStyle}
 					onClick={updateProjectBudget}
 				>
-					Сохранить
+                    Сохранить
 				</Button>
 			</Container>}
 		</>

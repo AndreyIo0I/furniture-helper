@@ -35,7 +35,7 @@ const mapProjectBudgetDto = (dto: ProjectBudgetDto): ProjectBudget => ({
 	})),
 })
 
-export default function(projectId: number): SWRResponse<ProjectBudget> {
+export default function useProjectBudget(projectId: number): SWRResponse<ProjectBudget> {
 	return useAuthenticatedSWR(
 		useSWR(
 			'useProjectBudget' + projectId,

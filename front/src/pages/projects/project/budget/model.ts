@@ -1,23 +1,23 @@
 export interface Cost {
-	costId: number,
-	name: string,
+	costId: number
+	name: string
 }
 
 export interface ClientPayment {
-	paymentId: number,
-	amount?: number,
-	paymentDate: Date | null,
+	paymentId: number
+	amount?: number
+	paymentDate: Date | null
 }
 
 export interface CostPayment {
-	paymentId: number,
-	costId: number,
-	amount?: number,
-	paymentDate: Date | null,
+	paymentId: number
+	costId: number
+	amount?: number
+	paymentDate: Date | null
 }
 
 export interface ProjectBudget {
-	projectCost?: number,
-	clientPayments: ClientPayment[],
-	costPayments: CostPayment[],
+	projectCost?: number
+	clientPayments: ClientPayment[]
+	costPayments: CostPayment[]
 }

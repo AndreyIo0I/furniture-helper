@@ -17,14 +17,14 @@ import * as model from './model'
 import styles from './styles.module.css'
 
 interface ClientPaymentsTableProps {
-	clientPayments: model.ClientPayment[],
-	setClientPayments: (clientPayments: model.ClientPayment[]) => void,
+	clientPayments: model.ClientPayment[]
+	setClientPayments: (clientPayments: model.ClientPayment[]) => void
 }
 
 interface ClientPaymentProps {
-	payment: model.ClientPayment,
-	setPayment: (payment: model.ClientPayment) => void,
-	removePayment: () => void,
+	payment: model.ClientPayment
+	setPayment: (payment: model.ClientPayment) => void
+	removePayment: () => void
 }
 
 function ClientPayment(props: ClientPaymentProps) {
@@ -34,6 +34,7 @@ function ClientPayment(props: ClientPaymentProps) {
 			amount,
 		})
 	}
+
 	function setPaymentDate(paymentDate: Date | null) {
 		props.setPayment({
 			...props.payment,

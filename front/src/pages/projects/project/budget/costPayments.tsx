@@ -20,22 +20,22 @@ import * as model from './model'
 import styles from './styles.module.css'
 
 interface CostPaymentsTableProps {
-	costPayments: model.CostPayment[],
-	setCostPayments: (costPayments: model.CostPayment[]) => void,
-	costs: model.Cost[],
+	costPayments: model.CostPayment[]
+	setCostPayments: (costPayments: model.CostPayment[]) => void
+	costs: model.Cost[]
 }
 
 interface CostSelectProps {
-	costId?: number,
-	setCostId: (costId: number) => void,
-	costs: model.Cost[],
+	costId?: number
+	setCostId: (costId: number) => void
+	costs: model.Cost[]
 }
 
 interface CostPaymentProps {
-	payment: model.CostPayment,
-	setPayment: (payment: model.CostPayment) => void,
-	removePayment: () => void,
-	costs: model.Cost[],
+	payment: model.CostPayment
+	setPayment: (payment: model.CostPayment) => void
+	removePayment: () => void
+	costs: model.Cost[]
 }
 
 function CostSelect(props: CostSelectProps) {
@@ -66,12 +66,14 @@ function CostPayment(props: CostPaymentProps) {
 			costId,
 		})
 	}
+
 	function setAmount(amount?: number) {
 		props.setPayment({
 			...props.payment,
 			amount,
 		})
 	}
+
 	function setPaymentDate(paymentDate: Date | null) {
 		props.setPayment({
 			...props.payment,
