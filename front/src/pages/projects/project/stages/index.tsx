@@ -15,11 +15,12 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
-import React, {useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import saveStage from '../../../../../api/saveStage'
 import useStages, {Stage} from '../../../../../api/useStages'
 import MainNav from '../../../../components/MainNav'
 import ProjectSecondaryNav from '../../../../components/ProjectSecondaryNav'
+import {isDeepEqual} from '../../../../helpers'
 import styles from './styles.module.css'
 
 interface ProjectStagesPageProps {
@@ -33,10 +34,24 @@ interface ProjectStageProps {
 
 function ProjectStage({
 	stage,
-	onChange,
+	onChange: _onChange,
 }: ProjectStageProps) {
 	const [open, setOpen] = useState(false)
+	const [isCompleted, setIsCompleted] = useState(stage.isCompleted)
 	const descriptionRef = useRef<HTMLInputElement>(null)
+
+	const onChange = useCallback(() => {
+		_onChange({
+			...stage,
+			description: descriptionRef.current!.value,
+			isCompleted,
+		})
+	}, [_onChange, isCompleted, stage])
+
+	useEffect(() => {
+		if (isCompleted !== stage.isCompleted)
+			onChange()
+	}, [isCompleted, onChange, stage.isCompleted])
 
 	return (
 		<>
@@ -60,24 +75,27 @@ function ProjectStage({
 						control={<Checkbox/>}
 						label="Завершить этап"
 						labelPlacement="start"
-						checked={stage.isCompleted}
+						checked={isCompleted}
+						onChange={() => setIsCompleted(!isCompleted)}
 					/>
 				</TableCell>
 			</TableRow>
 			<TableRow>
 				<TableCell
 					colSpan={3}
-					style={{ paddingBottom: 0, paddingTop: 0 }}
+					style={{paddingBottom: 0, paddingTop: 0}}
 				>
 					<Collapse in={open}>
 						<TextField
 							inputRef={descriptionRef}
+							defaultValue={stage.description}
 							margin="normal"
 							label="Описание"
 							multiline
 							minRows={4}
 							maxRows={16}
 							fullWidth
+							onBlur={() => onChange()}
 						/>
 					</Collapse>
 				</TableCell>
@@ -88,6 +106,8 @@ function ProjectStage({
 
 export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 	const {data: stages} = useStages(props.projectId)
+
+	const [hasChanges, setHasChanges] = useState(false)
 
 	const changedStagesRef = useRef<Stage[]>([])
 
@@ -119,7 +139,14 @@ export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 								<ProjectStage
 									key={stage.id}
 									stage={stage}
-									onChange={() => {}}
+									onChange={newStage => {
+										if (!isDeepEqual(stage, newStage) && !changedStagesRef.current.find(s => s.id === newStage.id)) {
+											changedStagesRef.current.push(newStage)
+										} else {
+											changedStagesRef.current = changedStagesRef.current.filter(s => s.id !== newStage.id)
+										}
+										setHasChanges(!!changedStagesRef.current.length)
+									}}
 								/>
 							))}
 						</TableBody>
@@ -131,7 +158,7 @@ export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 						my: 2,
 					}}
 					onClick={onSave}
-					disabled={!changedStagesRef.current.length}
+					disabled={!hasChanges}
 				>
 					Сохранить
 				</Button>
