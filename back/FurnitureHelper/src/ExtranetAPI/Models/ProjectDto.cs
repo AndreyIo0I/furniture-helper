@@ -9,5 +9,6 @@
         public DateTime DeadLine { get; set; }
         public int ClientId { get; set; }
         public string Description { get; set; }
+        public bool IsCompleted { get; set; }
     }
 }

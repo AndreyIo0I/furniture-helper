@@ -14,7 +14,8 @@ namespace ExtranetAPI.Models.Extensions
                 DateOfStart = project.DateOfStart,
                 DeadLine = project.DeadLine,
                 Description = project.Description,
-                ClientId = project.ClientId
+                ClientId = project.ClientId,
+                IsCompleted = project.IsCompleted
             };
         }
 
