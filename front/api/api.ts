@@ -1,3 +1,4 @@
+import { AnalyticsApi } from './typescript-fetch-client-generated/api';
 import {
 	AuthentificationApi,
 	BuisnessCostApi,
@@ -21,3 +22,4 @@ export const authenticationApi = new AuthentificationApi({}, basePath)
 export const businessCostApi = new BuisnessCostApi({}, basePath)
 export const projectStageApi = new ProjectStageApi({}, basePath)
 export const userApi = new UserApi({}, basePath)
+export const analyticsApi = new AnalyticsApi({}, basePath)
