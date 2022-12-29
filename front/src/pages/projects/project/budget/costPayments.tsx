@@ -14,7 +14,7 @@ import {
 	TextField,
 } from '@mui/material'
 import React from 'react'
-import {formStyle} from './common'
+import {formStyle, toViewModelNumber, toViewNumber} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
 
@@ -65,6 +65,12 @@ function CostPayment(props: CostPaymentProps) {
 			costId,
 		})
 	}
+	function setAmount(amount?: number) {
+		props.setPayment({
+			...props.payment,
+			amount,
+		})
+	}
 
 	return (
 		<TableRow>
@@ -79,8 +85,12 @@ function CostPayment(props: CostPaymentProps) {
 				<TextField
 					type="number"
 					variant="standard"
-					defaultValue={props.payment.amount}
+					value={toViewNumber(props.payment.amount)}
+					onChange={event =>
+						setAmount(toViewModelNumber(event.target.value))
+					}
 					className={styles.form_control}
+					error={props.payment.amount === undefined}
 				/>
 			</TableCell>
 			<TableCell>
@@ -205,11 +215,10 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 							<TextField
 								type="number"
 								variant="standard"
-								value={newPayment.amount !== undefined ? newPayment.amount : ''}
-								onChange={event => {
-									const value = event.target.value
-									setNewPaymentAmount(value !== '' ? Number(value) : undefined)
-								}}
+								value={toViewNumber(newPayment.amount)}
+								onChange={event =>
+									setNewPaymentAmount(toViewModelNumber(event.target.value))
+								}
 								className={styles.form_control}
 								error={
 									newPayment.needsValidation

@@ -5,7 +5,7 @@ import useProjectBudget, {ProjectBudget} from '../../../../../api/useProjectBudg
 import MainNav from '../../../../components/MainNav'
 import ProjectSecondaryNav from '../../../../components/ProjectSecondaryNav'
 import ClientPaymentsTable from './clientPayments'
-import {formStyle} from './common'
+import {formStyle, toApiModelNumber, toViewModelNumber, toViewNumber} from './common'
 import CostPaymentsTable from './costPayments'
 import * as model from './model'
 import styles from './styles.module.css'
@@ -48,14 +48,14 @@ const mapToProjectBudgetViewModel = (projectBudget: ProjectBudget): model.Projec
 })
 const mapToApiProjectBudget = (projectBudget: model.ProjectBudget, projectId: number): ProjectBudget => ({
 	projectId,
-	projectCost: projectBudget.projectCost,
+	projectCost: toApiModelNumber(projectBudget.projectCost),
 	clientPayments: projectBudget.clientPayments.map(payment => ({
 		paymentDate: payment.paymentDate,
-		amount: payment.amount,
+		amount: toApiModelNumber(payment.amount),
 	})),
 	costPayments: projectBudget.costPayments.map(payment => ({
 		costId: payment.costId,
-		amount: payment.amount,
+		amount: toApiModelNumber(payment.amount),
 	})),
 })
 
@@ -68,9 +68,22 @@ export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
 	}
 
 	async function updateProjectBudget() {
-		const apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
+		let apiProjectBudget
+		try {
+			apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
+		}
+		catch (err) {
+			return
+		}
 		await saveProjectBudget(apiProjectBudget)
 		mutate(apiProjectBudget)
+	}
+
+	function setProjectCost(projectCost?: number) {
+		setBudget({
+			...budget!,
+			projectCost,
+		})
 	}
 
 	function setClientPayments(clientPayments: model.ClientPayment[]) {
@@ -97,9 +110,13 @@ export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
 						type="number"
 						variant="standard"
 						label="Цена для клиента"
-						defaultValue={budget.projectCost}
+						value={toViewNumber(budget.projectCost)}
+						onChange={event =>
+							setProjectCost(toViewModelNumber(event.target.value))
+						}
 						sx={projectCostStyle}
 						className={styles.form_control}
+						error={budget.projectCost === undefined}
 					/>
 				</Paper>
 				<ClientPaymentsTable

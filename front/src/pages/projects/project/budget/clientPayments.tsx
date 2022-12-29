@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
 import React from 'react'
-import {formStyle} from './common'
+import {formStyle, toViewModelNumber, toViewNumber} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
 
@@ -28,6 +28,12 @@ interface ClientPaymentProps {
 }
 
 function ClientPayment(props: ClientPaymentProps) {
+	function setAmount(amount?: number) {
+		props.setPayment({
+			...props.payment,
+			amount,
+		})
+	}
 	function setPaymentDate(paymentDate: Date) {
 		props.setPayment({
 			...props.payment,
@@ -41,8 +47,12 @@ function ClientPayment(props: ClientPaymentProps) {
 				<TextField
 					type="number"
 					variant="standard"
-					defaultValue={props.payment.amount}
+					value={toViewNumber(props.payment.amount)}
+					onChange={event =>
+						setAmount(toViewModelNumber(event.target.value))
+					}
 					className={styles.form_control}
+					error={props.payment.amount === undefined}
 				/>
 			</TableCell>
 			<TableCell>
@@ -164,11 +174,10 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 							<TextField
 								type="number"
 								variant="standard"
-								value={newPayment.amount !== undefined ? newPayment.amount : ''}
-								onChange={event => {
-									const value = event.target.value
-									setNewPaymentAmount(value !== '' ? Number(value) : undefined)
-								}}
+								value={toViewNumber(newPayment.amount)}
+								onChange={event =>
+									setNewPaymentAmount(toViewModelNumber(event.target.value))
+								}
 								className={styles.form_control}
 								error={
 									newPayment.needsValidation
