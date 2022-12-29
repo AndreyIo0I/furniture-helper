@@ -7,11 +7,25 @@ import {styled} from '@mui/material/styles'
 import {DatePicker} from '@mui/x-date-pickers'
 import dayjs, {Dayjs} from 'dayjs'
 import {useEffect, useRef, useState} from 'react'
-import {mapOutdatedProjectsDto, mapProjectMarginDto, mapProjectsMarginDto, mapProjectsPricesDto, mapSpendingOnCostsDto, OutdatedProjects, PeriodParams, ProjectMargin, ProjectsMargin, ProjectsPrices, SearchAnalyticParams, SpendingOnCosts, useOutdatedProjects, useProjectMargin, useProjectsPrices, useSpendingOnCosts} from '../../../api/useAnalytics'
+import {
+	mapOutdatedProjectsDto,
+	mapProjectsMarginDto,
+	mapProjectsPricesDto,
+	mapSpendingOnCostsDto,
+	OutdatedProjects,
+	PeriodParams,
+	ProjectsMargin,
+	ProjectsPrices,
+	SearchAnalyticParams,
+	SpendingOnCosts,
+	getOutdatedProjects,
+	getProjectMargin,
+	getProjectsPrices,
+	getSpendingOnCosts,
+} from '../../../api/useAnalytics'
 import MarginComponent from '../../components/Analytics/Margin'
-import Margin from '../../components/Analytics/Margin'
-import { OutDatedProjectsComponent } from '../../components/Analytics/OutDatedProjects'
-import { ProjectsPricesComponent } from '../../components/Analytics/ProjectsPrices'
+import {OutDatedProjectsComponent} from '../../components/Analytics/OutDatedProjects'
+import {ProjectsPricesComponent} from '../../components/Analytics/ProjectsPrices'
 import SpendingOnCostsComponent from '../../components/Analytics/SpendingOnCosts'
 import MainNav from '../../components/MainNav'
 import styles from './styles.module.css'
@@ -39,52 +53,48 @@ export default function AnalyticsPage() {
 	const [dateOfStartState, setDateOfStartState] = useState<Dayjs | null>(dayjs())
 	const [endDateState, setEndDateState] = useState<Dayjs | null>(dayjs())
 
-	const [analyticsState, setAnalyticsState] = useState<ProjectsPrices | OutdatedProjects | SpendingOnCosts | ProjectsMargin | undefined >(undefined)
+	const [analyticsState, setAnalyticsState] = useState<ProjectsPrices | OutdatedProjects | SpendingOnCosts | ProjectsMargin | undefined>(undefined)
 
 	const analyzeOnClickHandler = async () => {
-		switch(analyticsKindState) {
-			case AnalyticsKind.ProjectsPrices:
-			{
+		switch (analyticsKindState) {
+			case AnalyticsKind.ProjectsPrices: {
 				const periodParams: PeriodParams = createPeriodParams()
-				const projectPrices: ProjectsPrices = mapProjectsPricesDto((await useProjectsPrices(periodParams)))
+				const projectPrices: ProjectsPrices = mapProjectsPricesDto((await getProjectsPrices(periodParams)))
 				setAnalyticsState(projectPrices)
 				break
 			}
-			case AnalyticsKind.SpendingOnCosts:
-			{
+			case AnalyticsKind.SpendingOnCosts: {
 				const searchAnalyticParams: SearchAnalyticParams = createSearchAnalyticParams()
-				const spendingOnCosts: SpendingOnCosts = mapSpendingOnCostsDto((await useSpendingOnCosts(searchAnalyticParams)))
+				const spendingOnCosts: SpendingOnCosts = mapSpendingOnCostsDto((await getSpendingOnCosts(searchAnalyticParams)))
 				setAnalyticsState(spendingOnCosts)
 				break
 			}
-			case AnalyticsKind.OutDatedProjects:
-			{
+			case AnalyticsKind.OutDatedProjects: {
 				const searchAnalyticParams: SearchAnalyticParams = createSearchAnalyticParams()
-				const outDatedProjects: OutdatedProjects = mapOutdatedProjectsDto((await useOutdatedProjects(searchAnalyticParams)))
+				const outDatedProjects: OutdatedProjects = mapOutdatedProjectsDto((await getOutdatedProjects(searchAnalyticParams)))
 				setAnalyticsState(outDatedProjects)
 				break
 			}
-			case AnalyticsKind.Margin:
-			{
+			case AnalyticsKind.Margin: {
 				const searchAnalyticParams: SearchAnalyticParams = createSearchAnalyticParams()
-				const projectsMargin: ProjectsMargin = mapProjectsMarginDto((await useProjectMargin(searchAnalyticParams)))
+				const projectsMargin: ProjectsMargin = mapProjectsMarginDto((await getProjectMargin(searchAnalyticParams)))
 				setAnalyticsState(projectsMargin)
 				break
 			}
 		}
 	}
 
-	const createPeriodParams = () : PeriodParams => {
+	const createPeriodParams = (): PeriodParams => {
 		return {
 			startDate: dateOfStartState?.toISOString()!,
-			endDate: endDateState?.toISOString()!
+			endDate: endDateState?.toISOString()!,
 		}
 	}
 
-	const createSearchAnalyticParams = () : SearchAnalyticParams => {
+	const createSearchAnalyticParams = (): SearchAnalyticParams => {
 		return {
 			name: searchText.current?.value!,
-			period: createPeriodParams()
+			period: createPeriodParams(),
 		}
 	}
 
@@ -165,26 +175,26 @@ export default function AnalyticsPage() {
 			{!analyticsState && <h2>Проанализируйте ваши проекты по разным критериям</h2>}
 			{analyticsState && analyticsKindState === AnalyticsKind.Margin
 				&& <MarginComponent
-						projectMargins={ ( analyticsState as ProjectsMargin ).projectMargins! }
-						totalMargin={ ( analyticsState as ProjectsMargin ).totalMargin! }
-						period={ ( analyticsState as ProjectsMargin ).period! }
+					projectMargins={(analyticsState as ProjectsMargin).projectMargins!}
+					totalMargin={(analyticsState as ProjectsMargin).totalMargin!}
+					period={(analyticsState as ProjectsMargin).period!}
 				/>}
 			{analyticsState && analyticsKindState === AnalyticsKind.ProjectsPrices
 				&& <ProjectsPricesComponent
-						averagePrice={ ( analyticsState as ProjectsPrices ).averagePrice! }
-						projectPrices={ ( analyticsState as ProjectsPrices ).projectPrices! }
-						maxProjectPrice={ ( analyticsState as ProjectsPrices ).maxProjectPrice! }
-						minProjectPrice={ ( analyticsState as ProjectsPrices ).minProjectPrice! }
+					averagePrice={(analyticsState as ProjectsPrices).averagePrice!}
+					projectPrices={(analyticsState as ProjectsPrices).projectPrices!}
+					maxProjectPrice={(analyticsState as ProjectsPrices).maxProjectPrice!}
+					minProjectPrice={(analyticsState as ProjectsPrices).minProjectPrice!}
 				/>}
 			{analyticsState && analyticsKindState === AnalyticsKind.OutDatedProjects
 				&& <OutDatedProjectsComponent
-						outdatedProjects={ ( analyticsState as OutdatedProjects ).outdatedProjects! }
-						averageAmount={ ( analyticsState as OutdatedProjects ).averageAmount! }
-						period={ ( analyticsState as OutdatedProjects ).period! }
+					outdatedProjects={(analyticsState as OutdatedProjects).outdatedProjects!}
+					averageAmount={(analyticsState as OutdatedProjects).averageAmount!}
+					period={(analyticsState as OutdatedProjects).period!}
 				/>}
 			{analyticsState && analyticsKindState === AnalyticsKind.SpendingOnCosts
 				&& <SpendingOnCostsComponent
-						spendingOnCosts={ ( analyticsState as SpendingOnCosts ).spendingOnCosts! }
+					spendingOnCosts={(analyticsState as SpendingOnCosts).spendingOnCosts!}
 				/>}
 		</>
 	)
