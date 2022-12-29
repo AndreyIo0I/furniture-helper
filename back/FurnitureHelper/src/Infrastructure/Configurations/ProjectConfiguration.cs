@@ -18,6 +18,7 @@ namespace Infrastructure.Configurations
             builder.Property( item => item.Description ).IsRequired();
             builder.Property( item => item.IsCompleted ).IsRequired().HasDefaultValue( false );
             builder.Property( item => item.IsStopped ).IsRequired().HasDefaultValue( false );
+            builder.Property( item => item.EndDate );
         }
     }
 }

@@ -141,6 +141,10 @@ namespace Infastructure.Migrations.Migrations
                         .HasColumnType("text")
                         .HasColumnName("description");
 
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_date");
+
                     b.Property<bool>("IsCompleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -270,16 +274,6 @@ namespace Infastructure.Migrations.Migrations
                     b.ToTable("project_stage", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.ProjectManagement.ProjectStage", b =>
-                {
-                    b.HasOne("Domain.ProjectManagement.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_project_stage_project_project_id");
-                });
-
             modelBuilder.Entity("Domain.UserManagement.User", b =>
                 {
                     b.Property<int>("Id")
@@ -319,6 +313,16 @@ namespace Infastructure.Migrations.Migrations
                         .HasDatabaseName("ix_user_email");
 
                     b.ToTable("user", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.ProjectManagement.ProjectStage", b =>
+                {
+                    b.HasOne("Domain.ProjectManagement.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_project_stage_project_project_id");
                 });
 #pragma warning restore 612, 618
         }

@@ -19,5 +19,10 @@ namespace Infrastructure.Repositories
         {
             return await Entities.ToListAsync();
         }
+
+        public async Task<List<Cost>> GetAll( List<int> ids )
+        {
+            return await Entities.Where( x => ids.Contains( x.Id ) ).ToListAsync();
+        }
     }
 }

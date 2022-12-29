@@ -15,6 +15,11 @@ namespace Infrastructure.Repositories
             return await Entities.FirstOrDefaultAsync( item => item.ProjectId == projectId );
         }
 
+        public async Task<IReadOnlyList<ProjectBudget>> GetByProjectIds(List<int> projectIds)
+        {
+            return await Entities.Where( x => projectIds.Contains( x.ProjectId ) ).ToListAsync();
+        }
+
         public async Task RemoveProjectBudgetByProjectId( int projectId )
         {
             ProjectBudget projectBudget = await Entities.FirstOrDefaultAsync( item => item.ProjectId == projectId );

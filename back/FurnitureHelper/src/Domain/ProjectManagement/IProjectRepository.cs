@@ -6,5 +6,6 @@ namespace Domain.ProjectManagement
     {
         public Task<Project> GetById( int id );
         public Task<IReadOnlyList<Project>> GetAll();
+        public Task<IReadOnlyList<Project>> GetAll( DateTime startDate, DateTime endDate );
     }
 }

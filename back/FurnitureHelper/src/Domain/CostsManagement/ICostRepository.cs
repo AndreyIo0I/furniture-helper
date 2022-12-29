@@ -6,5 +6,6 @@ namespace Domain.CostsManagement
     {
         public Task<Cost> Get(int Id);
         public Task<List<Cost>> GetAll();
+        public Task<List<Cost>> GetAll(List<int> ids);
     }
 }

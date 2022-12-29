@@ -1,0 +1,18 @@
+.form {
+    display: grid;
+    grid-template: auto / 1fr;
+    max-width: 1200px;
+    margin: auto;
+    gap: 8px;
+    padding: 20px;
+}
+
+.panelWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.panelControlsWrapper {
+    display: flex;
+    justify-content: center;
+}

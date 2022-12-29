@@ -110,7 +110,7 @@ export default function ProjectsPage() {
 										{row.name}
 									</TableCell>
 									<TableCell align="right">{row.client?.fullName}</TableCell>
-									<TableCell align="right">{row.dateOfFinish.format()}</TableCell>
+									<TableCell align="right">{row.dateOfFinish.format('DD/MM/YYYY')}</TableCell>
 								</TableRow>
 							))}
 						</TableBody>
