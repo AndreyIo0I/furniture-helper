@@ -245,6 +245,84 @@ export interface CostPayment {
 /**
  *
  * @export
+ * @interface OutdatedProjectDto
+ */
+export interface OutdatedProjectDto {
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof OutdatedProjectDto
+	 */
+	startDate?: Date;
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof OutdatedProjectDto
+	 */
+	deadLine?: Date;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof OutdatedProjectDto
+	 */
+	projectName?: string;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof OutdatedProjectDto
+	 */
+	wastedDays?: number;
+}
+
+/**
+ *
+ * @export
+ * @interface OutdatedProjectsDto
+ */
+export interface OutdatedProjectsDto {
+	/**
+	 *
+	 * @type {Array<OutdatedProjectDto>}
+	 * @memberof OutdatedProjectsDto
+	 */
+	outdatedProjects?: Array<OutdatedProjectDto>;
+	/**
+	 *
+	 * @type {Period}
+	 * @memberof OutdatedProjectsDto
+	 */
+	period?: Period;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof OutdatedProjectsDto
+	 */
+	averageAmount?: number;
+}
+
+/**
+ *
+ * @export
+ * @interface Period
+ */
+export interface Period {
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof Period
+	 */
+	startDate?: Date;
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof Period
+	 */
+	endDate?: Date;
+}
+
+/**
+ *
+ * @export
  * @interface ProjectBudgetDto
  */
 export interface ProjectBudgetDto {
@@ -365,6 +443,58 @@ export interface ProjectDto {
 /**
  *
  * @export
+ * @interface ProjectMarginDto
+ */
+export interface ProjectMarginDto {
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof ProjectMarginDto
+	 */
+	projectStartdate?: Date;
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof ProjectMarginDto
+	 */
+	projectDeadLine?: Date;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof ProjectMarginDto
+	 */
+	projectName?: string;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectMarginDto
+	 */
+	projectMargin?: number;
+}
+
+/**
+ *
+ * @export
+ * @interface ProjectPriceDto
+ */
+export interface ProjectPriceDto {
+	/**
+	 *
+	 * @type {string}
+	 * @memberof ProjectPriceDto
+	 */
+	projectName?: string;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectPriceDto
+	 */
+	projectPrice?: number;
+}
+
+/**
+ *
+ * @export
  * @interface ProjectStage
  */
 export interface ProjectStage {
@@ -409,6 +539,124 @@ export interface ProjectStage {
 /**
  *
  * @export
+ * @interface ProjectsMagrinDto
+ */
+export interface ProjectsMagrinDto {
+	/**
+	 *
+	 * @type {Array<ProjectMarginDto>}
+	 * @memberof ProjectsMagrinDto
+	 */
+	projectMargins?: Array<ProjectMarginDto>;
+	/**
+	 *
+	 * @type {Period}
+	 * @memberof ProjectsMagrinDto
+	 */
+	period?: Period;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectsMagrinDto
+	 */
+	totalMargin?: number;
+}
+
+/**
+ *
+ * @export
+ * @interface ProjectsPricesDto
+ */
+export interface ProjectsPricesDto {
+	/**
+	 *
+	 * @type {number}
+	 * @memberof ProjectsPricesDto
+	 */
+	averagePrice?: number;
+	/**
+	 *
+	 * @type {Array<ProjectPriceDto>}
+	 * @memberof ProjectsPricesDto
+	 */
+	projectPrices?: Array<ProjectPriceDto>;
+	/**
+	 *
+	 * @type {ProjectPriceDto}
+	 * @memberof ProjectsPricesDto
+	 */
+	maxProjectPrice?: ProjectPriceDto;
+	/**
+	 *
+	 * @type {ProjectPriceDto}
+	 * @memberof ProjectsPricesDto
+	 */
+	minProjectPrice?: ProjectPriceDto;
+}
+
+/**
+ *
+ * @export
+ * @interface SearchAnalyticDto
+ */
+export interface SearchAnalyticDto {
+	/**
+	 *
+	 * @type {string}
+	 * @memberof SearchAnalyticDto
+	 */
+	name?: string;
+	/**
+	 *
+	 * @type {Period}
+	 * @memberof SearchAnalyticDto
+	 */
+	period?: Period;
+}
+
+/**
+ *
+ * @export
+ * @interface SpendingOnCostDto
+ */
+export interface SpendingOnCostDto {
+	/**
+	 *
+	 * @type {string}
+	 * @memberof SpendingOnCostDto
+	 */
+	name?: string;
+	/**
+	 *
+	 * @type {number}
+	 * @memberof SpendingOnCostDto
+	 */
+	amount?: number;
+}
+
+/**
+ *
+ * @export
+ * @interface SpendingOnProjectCostsDto
+ */
+export interface SpendingOnProjectCostsDto {
+	/**
+	 *
+	 * @type {Array<SpendingOnCostDto>}
+	 * @memberof SpendingOnProjectCostsDto
+	 */
+	spendingOnCosts?: Array<SpendingOnCostDto>;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof SpendingOnProjectCostsDto
+	 */
+	projectName?: string;
+}
+
+/**
+ *
+ * @export
  * @interface UserDto
  */
 export interface UserDto {
@@ -442,6 +690,598 @@ export interface UserDto {
 	 * @memberof UserDto
 	 */
 	role?: number;
+}
+
+/**
+ * AnalyticsApi - fetch parameter creator
+ * @export
+ */
+export const AnalyticsApiFetchParamCreator = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Маржа по проектам за период
+		 * @param {SearchAnalyticDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsMarginPost(body?: SearchAnalyticDto, options: any = {}): FetchArgs {
+			const localVarPath = `/analytics/margin`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'SearchAnalyticDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Маржа по проекту
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsMarginProjectIdGet(projectId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling analyticsMarginProjectIdGet.')
+			}
+			const localVarPath = `/analytics/margin/{projectId}`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'GET'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Просроченные проекты
+		 * @param {SearchAnalyticDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsOutDatedProjectsPost(body?: SearchAnalyticDto, options: any = {}): FetchArgs {
+			const localVarPath = `/analytics/outDatedProjects`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'SearchAnalyticDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Норма прибыли
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsProfitNormProjectIdGet(projectId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling analyticsProfitNormProjectIdGet.')
+			}
+			const localVarPath = `/analytics/profitNorm/{projectId}`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'GET'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Цены проектов
+		 * @param {Period} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsProjectsPricesPost(body?: Period, options: any = {}): FetchArgs {
+			const localVarPath = `/analytics/projectsPrices`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'Period' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Норма прибавочной стоимости
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsRateOfSurplusValueProjectIdGet(projectId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling analyticsRateOfSurplusValueProjectIdGet.')
+			}
+			const localVarPath = `/analytics/rateOfSurplusValue/{projectId}`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'GET'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Траты на издержки
+		 * @param {SearchAnalyticDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsSpendingOnCostsPost(body?: SearchAnalyticDto, options: any = {}): FetchArgs {
+			const localVarPath = `/analytics/spendingOnCosts`
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarHeaderParameter['Content-Type'] = 'application/json'
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+			const needsSerialization = (<any>'SearchAnalyticDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Траты на издержки по проекту
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsSpendingOnCostsProjectIdGet(projectId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling analyticsSpendingOnCostsProjectIdGet.')
+			}
+			const localVarPath = `/analytics/spendingOnCosts/{projectId}`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'GET'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+	}
+}
+
+/**
+ * AnalyticsApi - functional programming interface
+ * @export
+ */
+export const AnalyticsApiFp = function (configuration?: Configuration) {
+	return {
+		/**
+		 *
+		 * @summary Маржа по проектам за период
+		 * @param {SearchAnalyticDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsMarginPost(body?: SearchAnalyticDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ProjectsMagrinDto> {
+			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsMarginPost(body, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Маржа по проекту
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsMarginProjectIdGet(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsMarginProjectIdGet(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Просроченные проекты
+		 * @param {SearchAnalyticDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsOutDatedProjectsPost(body?: SearchAnalyticDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<OutdatedProjectsDto> {
+			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsOutDatedProjectsPost(body, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Норма прибыли
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsProfitNormProjectIdGet(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsProfitNormProjectIdGet(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Цены проектов
+		 * @param {Period} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsProjectsPricesPost(body?: Period, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ProjectsPricesDto> {
+			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsProjectsPricesPost(body, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Норма прибавочной стоимости
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsRateOfSurplusValueProjectIdGet(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsRateOfSurplusValueProjectIdGet(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Траты на издержки
+		 * @param {SearchAnalyticDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsSpendingOnCostsPost(body?: SearchAnalyticDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<SpendingOnCostDto>> {
+			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsSpendingOnCostsPost(body, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Траты на издержки по проекту
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsSpendingOnCostsProjectIdGet(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<SpendingOnProjectCostsDto> {
+			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsSpendingOnCostsProjectIdGet(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+	}
+}
+
+/**
+ * AnalyticsApi - factory interface
+ * @export
+ */
+export const AnalyticsApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+	return {
+		/**
+		 *
+		 * @summary Маржа по проектам за период
+		 * @param {SearchAnalyticDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsMarginPost(body?: SearchAnalyticDto, options?: any) {
+			return AnalyticsApiFp(configuration).analyticsMarginPost(body, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Маржа по проекту
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsMarginProjectIdGet(projectId: number, options?: any) {
+			return AnalyticsApiFp(configuration).analyticsMarginProjectIdGet(projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Просроченные проекты
+		 * @param {SearchAnalyticDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsOutDatedProjectsPost(body?: SearchAnalyticDto, options?: any) {
+			return AnalyticsApiFp(configuration).analyticsOutDatedProjectsPost(body, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Норма прибыли
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsProfitNormProjectIdGet(projectId: number, options?: any) {
+			return AnalyticsApiFp(configuration).analyticsProfitNormProjectIdGet(projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Цены проектов
+		 * @param {Period} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsProjectsPricesPost(body?: Period, options?: any) {
+			return AnalyticsApiFp(configuration).analyticsProjectsPricesPost(body, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Норма прибавочной стоимости
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsRateOfSurplusValueProjectIdGet(projectId: number, options?: any) {
+			return AnalyticsApiFp(configuration).analyticsRateOfSurplusValueProjectIdGet(projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Траты на издержки
+		 * @param {SearchAnalyticDto} [body]
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsSpendingOnCostsPost(body?: SearchAnalyticDto, options?: any) {
+			return AnalyticsApiFp(configuration).analyticsSpendingOnCostsPost(body, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Траты на издержки по проекту
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		analyticsSpendingOnCostsProjectIdGet(projectId: number, options?: any) {
+			return AnalyticsApiFp(configuration).analyticsSpendingOnCostsProjectIdGet(projectId, options)(fetch, basePath)
+		},
+	}
+}
+
+/**
+ * AnalyticsApi - object-oriented interface
+ * @export
+ * @class AnalyticsApi
+ * @extends {BaseAPI}
+ */
+export class AnalyticsApi extends BaseAPI {
+	/**
+	 *
+	 * @summary Маржа по проектам за период
+	 * @param {SearchAnalyticDto} [body]
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AnalyticsApi
+	 */
+	public analyticsMarginPost(body?: SearchAnalyticDto, options?: any) {
+		return AnalyticsApiFp(this.configuration).analyticsMarginPost(body, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Маржа по проекту
+	 * @param {number} projectId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AnalyticsApi
+	 */
+	public analyticsMarginProjectIdGet(projectId: number, options?: any) {
+		return AnalyticsApiFp(this.configuration).analyticsMarginProjectIdGet(projectId, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Просроченные проекты
+	 * @param {SearchAnalyticDto} [body]
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AnalyticsApi
+	 */
+	public analyticsOutDatedProjectsPost(body?: SearchAnalyticDto, options?: any) {
+		return AnalyticsApiFp(this.configuration).analyticsOutDatedProjectsPost(body, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Норма прибыли
+	 * @param {number} projectId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AnalyticsApi
+	 */
+	public analyticsProfitNormProjectIdGet(projectId: number, options?: any) {
+		return AnalyticsApiFp(this.configuration).analyticsProfitNormProjectIdGet(projectId, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Цены проектов
+	 * @param {Period} [body]
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AnalyticsApi
+	 */
+	public analyticsProjectsPricesPost(body?: Period, options?: any) {
+		return AnalyticsApiFp(this.configuration).analyticsProjectsPricesPost(body, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Норма прибавочной стоимости
+	 * @param {number} projectId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AnalyticsApi
+	 */
+	public analyticsRateOfSurplusValueProjectIdGet(projectId: number, options?: any) {
+		return AnalyticsApiFp(this.configuration).analyticsRateOfSurplusValueProjectIdGet(projectId, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Траты на издержки
+	 * @param {SearchAnalyticDto} [body]
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AnalyticsApi
+	 */
+	public analyticsSpendingOnCostsPost(body?: SearchAnalyticDto, options?: any) {
+		return AnalyticsApiFp(this.configuration).analyticsSpendingOnCostsPost(body, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Траты на издержки по проекту
+	 * @param {number} projectId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof AnalyticsApi
+	 */
+	public analyticsSpendingOnCostsProjectIdGet(projectId: number, options?: any) {
+		return AnalyticsApiFp(this.configuration).analyticsSpendingOnCostsProjectIdGet(projectId, options)(this.fetch, this.basePath)
+	}
+
 }
 
 /**

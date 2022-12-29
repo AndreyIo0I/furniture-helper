@@ -1,99 +1,106 @@
-import {yupResolver} from '@hookform/resolvers/yup'
-import {Box, Button, Container, TextField} from '@mui/material'
-import React, {useEffect} from 'react'
-import {useForm} from 'react-hook-form'
-import * as Yup from 'yup'
+import {Box, Button, Container, MenuItem, Select, TextField} from '@mui/material'
+import React, {useRef, useState} from 'react'
+import {User, UserRole} from '../../../../../api/users/createUser'
+import updateUser from '../../../../../api/users/updateUser'
+import useUser from '../../../../../api/users/useUser'
 import MainNav from '../../../../components/MainNav'
 import styles from './styles.module.css'
 
-type Form = {
-	fullName: string;
-	role: string;
-	email: string;
+interface UserPageContentProps {
+	user: User
 }
 
-const validationSchema = Yup.object().shape({
-	fullName: Yup.string().required('Поле не должно быть пустым'),
-	email: Yup
-		.string()
-		.required('Поле не должно быть пустым')
-		.email('Некорректный email'),
-	role: Yup.string().required('Поле не должно быть пустым'),
-})
+function Content({user}: UserPageContentProps) {
+	const nameRef = useRef<HTMLInputElement>()
+	const emailRef = useRef<HTMLInputElement>()
+	const [role, setRole] = useState(UserRole.Manager)
+	const passwordRef = useRef<HTMLInputElement>()
 
-export default function ClientPage() {
-	const {
-		register,
-		handleSubmit,
-		reset,
-		formState: {errors, isSubmitSuccessful},
-	} = useForm<Form>({
-		mode: 'onBlur',
-		resolver: yupResolver(validationSchema),
-	})
-
-	const handleOnSubmit = (data: Object) => {
-		alert('Form submit success: ' + JSON.stringify(data))
+	const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		await updateUser({
+			name: nameRef.current!.value,
+			email: emailRef.current!.value,
+			role: role,
+			password: passwordRef.current!.value,
+		})
 	}
 
-	useEffect(() => {
-		reset(formValues => ({
-			...formValues,
-		}))
-	}, [isSubmitSuccessful, reset])
+	const onUserRemove = () => {
+		alert()
+	}
+
+	return (
+		<Box
+			component="form"
+			onSubmit={handleOnSubmit}
+			className={styles.form}
+		>
+			<TextField
+				inputRef={nameRef}
+				defaultValue={user.name}
+				margin="normal"
+				label="ФИО"
+				required
+				autoFocus
+			/>
+			<TextField
+				inputRef={emailRef}
+				defaultValue={user.email}
+				margin="normal"
+				label="Почта"
+				required
+				type="email"
+			/>
+			<Select
+				value={user.role}
+				label="Роль"
+				onChange={e => {
+					if (typeof e.target.value !== 'string') {
+						setRole(e.target.value)
+					}
+				}}
+			>
+				<MenuItem value={UserRole.Admin}>Администратор</MenuItem>
+				<MenuItem value={UserRole.Manager}>Менеджер</MenuItem>
+			</Select>
+			<TextField
+				inputRef={passwordRef}
+				margin="normal"
+				label="Пароль"
+			/>
+			<div>
+				<Button
+					type="submit"
+					variant="contained"
+					style={{marginRight: '20px'}}
+				>
+					Сохранить изменения
+				</Button>
+				<Button
+					type="submit"
+					variant="contained"
+					onClick={onUserRemove}
+				>
+					Удалить пользователя
+				</Button>
+			</div>
+		</Box>
+	)
+}
+
+interface UserPageProps {
+	userId: number
+}
+
+export default function UserPage({userId}: UserPageProps) {
+	const {data: user} = useUser(userId)
 
 	return (
 		<>
 			<MainNav/>
 			<Container maxWidth="lg">
-				<Box
-					component="form"
-					onSubmit={handleSubmit(handleOnSubmit)}
-					className={styles.form}
-				>
-					<TextField
-						margin="normal"
-						label="ФИО"
-						defaultValue="Васнецов С.В."
-						autoFocus
-						{...register('fullName')}
-						FormHelperTextProps={{error: !!errors.fullName?.message}}
-						helperText={errors.fullName?.message}
-					/>
-					<TextField
-						margin="normal"
-						label="Почта"
-						defaultValue="test@gmail.com"
-						type="email"
-						{...register('email')}
-						FormHelperTextProps={{error: !!errors.email?.message}}
-						helperText={errors.email?.message}
-					/>
-					<TextField
-						margin="normal"
-						label="Роль"
-						defaultValue="Менеджер"
-						type="role"
-						{...register('role')}
-						FormHelperTextProps={{error: !!errors.role?.message}}
-						helperText={errors.role?.message}
-					/>
-					<div>
-						<Button
-							type="submit"
-							variant="contained"
-							style={{marginRight: '20px'}}
-						>
-							Сохранить
-						</Button>
-						<Button
-							type="submit"
-							variant="contained"
-						>
-							Удалить пользователя
-						</Button>
-					</div>
-				</Box>
+				{user && <Content user={user}/>}
 			</Container>
 		</>
 	)

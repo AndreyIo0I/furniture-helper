@@ -5,6 +5,6 @@ module.exports = {
 		'comma-dangle': ['error', 'always-multiline'],
 		'quotes': ['error', 'single'],
 		'linebreak-style': ['error', 'unix'],
-		'indent': ['error', 'tab'],
+		'indent': ['error', 'tab', {'SwitchCase': 1}],
 	},
 }

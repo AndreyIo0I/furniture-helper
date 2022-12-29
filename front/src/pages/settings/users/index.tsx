@@ -1,10 +1,8 @@
 import DeleteIcon from '@mui/icons-material/Delete'
-import SearchIcon from '@mui/icons-material/Search'
 import {
 	Button,
 	Container,
 	IconButton,
-	InputAdornment,
 	Paper,
 	Table,
 	TableBody,
@@ -12,35 +10,28 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	TextField,
 } from '@mui/material'
 import {styled} from '@mui/material/styles'
 import {tableCellClasses} from '@mui/material/TableCell'
 import {useRouter} from 'next/router'
 import React from 'react'
+import {UserRole} from '../../../../api/users/createUser'
+import useUsers from '../../../../api/users/useUsers'
 import MainNav from '../../../components/MainNav'
 import SettingsSecondaryNav from '../../../components/SettingsSecondaryNav'
 import styles from './styles.module.css'
 
-interface User {
-	id: number
-	fullName: string
-	role: string
-	email: string
+function mapUserRoleToString(role: UserRole): string {
+	switch (role) {
+		case UserRole.Owner:
+			return 'Владелец'
+		case UserRole.Admin:
+			return 'Администратор'
+		case UserRole.Manager:
+			return 'Менеджер'
+	}
+	return 'Леди Баг'
 }
-
-const rows: User[] = [{
-	id: 1,
-	fullName: 'Васнецов С.В.',
-	role: 'Владелец, администратор',
-	email: '',
-}, {
-	id: 2,
-	fullName: 'Попов А.И.',
-	role: 'Менеджер',
-	email: '',
-},
-]
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -67,6 +58,8 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
 
 export default function UsersPage() {
 	const router = useRouter()
+
+	const {data: users} = useUsers()
 
 	return (
 		<>
@@ -98,15 +91,15 @@ export default function UsersPage() {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{rows.map(row => (
+							{users && users.map(user => (
 								<StyledTableRow
-									key={row.id}
-									onClick={() => router.push(`/settings/user/${row.id}`)}
+									key={user.id}
+									onClick={() => router.push(`/settings/users/${user.id}`)}
 								>
 									<StyledTableCell component="th" scope="row">
-										{row.fullName}
+										{user.name}
 									</StyledTableCell>
-									<StyledTableCell align="center">{row.role}</StyledTableCell>
+									<StyledTableCell align="center">{mapUserRoleToString(user.role)}</StyledTableCell>
 									<StyledTableCell align="center">
 										<IconButton
 											size="small"

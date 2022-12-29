@@ -5,11 +5,11 @@ import UserPage from '../../../../src/pages/settings/users/user'
 export default function UserIdRoute() {
 	const router = useRouter()
 
-	// noinspection JSUnusedLocalSymbols
-	const userId = router.query.userId as string
+	const userId = parseInt(router.query.userId as string)
 
-	return (
-		<UserPage/>
-	)
+	if (isNaN(userId))
+		return null
+
+	return <UserPage userId={userId}/>
 }
 
