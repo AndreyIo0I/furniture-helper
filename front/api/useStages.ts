@@ -8,7 +8,7 @@ export interface Stage {
 	projectId: number;
 	name: string;
 	description: string;
-	completedOn?: Date;
+	completedOn: Date | null;
 	isCompleted: boolean;
 }
 
@@ -17,7 +17,7 @@ const mapStageDto = (dto: ProjectStage): Stage => ({
 	projectId: dto.projectId!,
 	name: dto.name!,
 	description: dto.description!,
-	completedOn: dto.completedOn,
+	completedOn: dto.completedOn || null,
 	isCompleted: !!dto.isCompleted,
 })
 

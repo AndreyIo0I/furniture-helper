@@ -6,9 +6,8 @@ export default function ProjectIdRoute() {
 
 	const projectId = parseInt(router.query.projectId as string)
 
-	if (isNaN(projectId)) {
+	if (isNaN(projectId))
 		return null
-	}
 
 	return <ProjectPage projectId={projectId}/>
 }

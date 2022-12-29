@@ -6,5 +6,8 @@ export default function ProjectBudgetRoute() {
 
 	const projectId = parseInt(router.query.projectId as string)
 
+	if (isNaN(projectId))
+		return null
+
 	return <ProjectBudgetPage projectId={projectId}/>
 }

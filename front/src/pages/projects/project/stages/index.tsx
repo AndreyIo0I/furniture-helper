@@ -15,7 +15,9 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import {DatePicker} from '@mui/x-date-pickers'
+import dayjs from 'dayjs'
+import React, {useEffect, useRef, useState} from 'react'
 import saveStage from '../../../../../api/saveStage'
 import useStages, {Stage} from '../../../../../api/useStages'
 import MainNav from '../../../../components/MainNav'
@@ -34,36 +36,40 @@ interface ProjectStageProps {
 
 function ProjectStage({
 	stage,
-	onChange: _onChange,
+	onChange,
 }: ProjectStageProps) {
 	const [open, setOpen] = useState(false)
 	const [isCompleted, setIsCompleted] = useState(stage.isCompleted)
-	const descriptionRef = useRef<HTMLInputElement>(null)
-
-	const onChange = useCallback(() => {
-		_onChange({
-			...stage,
-			description: descriptionRef.current!.value,
-			isCompleted,
-		})
-	}, [_onChange, isCompleted, stage])
+	const [completedOn, setCompletedOn] = useState(dayjs())
+	const [description, setDescription] = useState(stage.description)
 
 	useEffect(() => {
-		if (isCompleted !== stage.isCompleted)
-			onChange()
-	}, [isCompleted, onChange, stage.isCompleted])
+		onChange({
+			...stage,
+			description,
+			isCompleted,
+			completedOn: isCompleted ? completedOn.toDate() : null,
+		})
+	})
 
 	return (
 		<>
-			<TableRow>
-				<TableCell>
-					<IconButton
-						onClick={() => setOpen(!open)}
-					>
+			<TableRow
+				style={{
+					background: isCompleted ? 'lightgreen' : 'white',
+				}}
+			>
+				<TableCell
+					onClick={() => setOpen(!open)}
+					sx={{cursor: 'pointer'}}
+				>
+					<IconButton>
 						{open ? <ExpandLess/> : <ExpandMore/>}
 					</IconButton>
 				</TableCell>
 				<TableCell
+					sx={{cursor: 'pointer'}}
+					onClick={() => setOpen(!open)}
 					component="th"
 					scope="row"
 					className={styles.col_stage_name}
@@ -76,7 +82,9 @@ function ProjectStage({
 						label="Завершить этап"
 						labelPlacement="start"
 						checked={isCompleted}
-						onChange={() => setIsCompleted(!isCompleted)}
+						onChange={() => {
+							setIsCompleted(!isCompleted)
+						}}
 					/>
 				</TableCell>
 			</TableRow>
@@ -86,16 +94,28 @@ function ProjectStage({
 					style={{paddingBottom: 0, paddingTop: 0}}
 				>
 					<Collapse in={open}>
+						<DatePicker
+							label="Дата завершения"
+							value={completedOn}
+							onChange={newValue => {
+								if (newValue) {
+									setCompletedOn(newValue)
+								}
+							}}
+							renderInput={params => (
+								<TextField {...params} margin="normal" />
+							)}
+						/>
 						<TextField
-							inputRef={descriptionRef}
-							defaultValue={stage.description}
+							value={description}
+							onChange={event => setDescription(event.target.value)}
 							margin="normal"
 							label="Описание"
 							multiline
 							minRows={4}
 							maxRows={16}
 							fullWidth
-							onBlur={() => onChange()}
+							style={{marginBottom: 24}}
 						/>
 					</Collapse>
 				</TableCell>
@@ -106,13 +126,20 @@ function ProjectStage({
 
 export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 	const {data: stages} = useStages(props.projectId)
+	const stagesRef = useRef<Stage[]>()
+	if (!stagesRef.current)
+		stagesRef.current = stages
 
-	const [hasChanges, setHasChanges] = useState(false)
-
-	const changedStagesRef = useRef<Stage[]>([])
+	const changedStagesRef = useRef<Record<number, Stage>>({})
 
 	const onSave = () => {
-		changedStagesRef.current.forEach(stage => saveStage(stage))
+		Object.values(changedStagesRef.current).forEach(async newStage => {
+			const stageIndex = stagesRef.current && stagesRef.current.findIndex(stage => stage.id === newStage.id)!
+			if (stagesRef.current && stageIndex && !isDeepEqual(newStage, stagesRef.current[stageIndex])) {
+				stagesRef.current[stageIndex] = newStage
+				await saveStage(newStage)
+			}
+		})
 	}
 
 	return (
@@ -120,11 +147,25 @@ export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 			<MainNav/>
 			<ProjectSecondaryNav projectId={props.projectId}/>
 			<Container maxWidth="lg">
+				<div
+					style={{
+						display: 'flex',
+						width: '100%',
+						justifyContent: 'flex-end',
+					}}
+				>
+					<Button
+						variant="contained"
+						sx={{
+							my: 2,
+						}}
+						onClick={onSave}
+					>
+						Сохранить
+					</Button>
+				</div>
 				<TableContainer
 					component={Paper}
-					sx={{
-						mt: 3,
-					}}
 				>
 					<Table>
 						<TableHead>
@@ -135,33 +176,18 @@ export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{stages && stages.map(stage => (
+							{stagesRef.current && stagesRef.current.map(stage => (
 								<ProjectStage
 									key={stage.id}
 									stage={stage}
 									onChange={newStage => {
-										if (!isDeepEqual(stage, newStage) && !changedStagesRef.current.find(s => s.id === newStage.id)) {
-											changedStagesRef.current.push(newStage)
-										} else {
-											changedStagesRef.current = changedStagesRef.current.filter(s => s.id !== newStage.id)
-										}
-										setHasChanges(!!changedStagesRef.current.length)
+										changedStagesRef.current[stage.id] = newStage
 									}}
 								/>
 							))}
 						</TableBody>
 					</Table>
 				</TableContainer>
-				<Button
-					variant="contained"
-					sx={{
-						my: 2,
-					}}
-					onClick={onSave}
-					disabled={!hasChanges}
-				>
-					Сохранить
-				</Button>
 			</Container>
 		</>
 	)
