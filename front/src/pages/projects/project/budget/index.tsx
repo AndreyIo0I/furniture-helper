@@ -5,7 +5,7 @@ import useProjectBudget, {ProjectBudget} from '../../../../../api/useProjectBudg
 import MainNav from '../../../../components/MainNav'
 import ProjectSecondaryNav from '../../../../components/ProjectSecondaryNav'
 import ClientPaymentsTable from './clientPayments'
-import {formStyle, toApiModelNumber, toViewModelNumber, toViewNumber} from './common'
+import {formStyle, toApiModelDate, toApiModelNumber, toViewModelNumber, toViewNumber} from './common'
 import CostPaymentsTable from './costPayments'
 import * as model from './model'
 import styles from './styles.module.css'
@@ -50,7 +50,7 @@ const mapToApiProjectBudget = (projectBudget: model.ProjectBudget, projectId: nu
 	projectId,
 	projectCost: toApiModelNumber(projectBudget.projectCost),
 	clientPayments: projectBudget.clientPayments.map(payment => ({
-		paymentDate: payment.paymentDate,
+		paymentDate: toApiModelDate(payment.paymentDate),
 		amount: toApiModelNumber(payment.amount),
 	})),
 	costPayments: projectBudget.costPayments.map(payment => ({

@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
 import React from 'react'
-import {formStyle, toViewModelNumber, toViewNumber} from './common'
+import {formStyle, isValidDate, toViewModelNumber, toViewNumber} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
 
@@ -34,7 +34,7 @@ function ClientPayment(props: ClientPaymentProps) {
 			amount,
 		})
 	}
-	function setPaymentDate(paymentDate: Date) {
+	function setPaymentDate(paymentDate: Date | null) {
 		props.setPayment({
 			...props.payment,
 			paymentDate,
@@ -59,9 +59,7 @@ function ClientPayment(props: ClientPaymentProps) {
 				<DatePicker
 					renderInput={props => <TextField {...props}/>}
 					value={props.payment.paymentDate}
-					onChange={date => {
-						if (date !== null) setPaymentDate(date)
-					}}
+					onChange={setPaymentDate}
 					className={styles.form_control}
 				/>
 			</TableCell>
@@ -116,8 +114,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 	}
 
 	function addPayment() {
-		if (newPayment.amount === undefined
-			|| newPayment.paymentDate === null || isNaN(Number(newPayment.paymentDate))) {
+		if (newPayment.amount === undefined || !isValidDate(newPayment.paymentDate)) {
 			setNewPaymentNeedsValidation()
 			return
 		}

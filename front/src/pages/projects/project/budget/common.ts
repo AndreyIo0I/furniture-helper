@@ -5,6 +5,17 @@ export const formStyle: SxProps = {
 	maxWidth: 'fit-content',
 }
 
+export function isValidDate(date: Date | null): boolean {
+	return date !== null && !isNaN(Number(date))
+}
+
+export function toApiModelDate(date: Date | null): Date {
+	if (!isValidDate(date)) {
+		throw 'invalid date'
+	}
+	return date!
+}
+
 export function toApiModelNumber(value?: number): number {
 	if (value === undefined) {
 		throw 'required field is missing'

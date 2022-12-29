@@ -6,7 +6,7 @@ export interface Cost {
 export interface ClientPayment {
 	paymentId: number,
 	amount?: number,
-	paymentDate: Date,
+	paymentDate: Date | null,
 }
 
 export interface CostPayment {
