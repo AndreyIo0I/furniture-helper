@@ -45,7 +45,7 @@ export default function TypeCostsPage() {
 						<TableHead>
 							<TableRow>
 								<TableCell>
-									<Typography>Виды издержек</Typography>
+									<Typography>Типы издержек</Typography>
 								</TableCell>
 							</TableRow>
 						</TableHead>
