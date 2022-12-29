@@ -1,47 +1,25 @@
-import {yupResolver} from '@hookform/resolvers/yup'
-import {Box, Button, Container, TextField} from '@mui/material'
-import React, {useEffect} from 'react'
-import {useForm} from 'react-hook-form'
-import * as Yup from 'yup'
+import {Box, Button, Container, MenuItem, Select, TextField} from '@mui/material'
+import React, {useRef, useState} from 'react'
+import createUser, {UserRole} from '../../../../../api/createUser'
 import MainNav from '../../../../components/MainNav'
 import SettingsSecondaryNav from '../../../../components/SettingsSecondaryNav'
 import styles from './styles.module.css'
 
-type Form = {
-	fullName: string;
-	role: string;
-	email: string;
-}
-
-const validationSchema = Yup.object().shape({
-	fullName: Yup.string().required('Поле не должно быть пустым'),
-	email: Yup
-		.string()
-		.required('Поле не должно быть пустым')
-		.email('Некорректный email'),
-	role: Yup.string().required('Поле не должно быть пустым'),
-})
-
 export default function NewUserPage() {
-	const {
-		register,
-		handleSubmit,
-		reset,
-		formState: {errors, isSubmitSuccessful},
-	} = useForm<Form>({
-		mode: 'onBlur',
-		resolver: yupResolver(validationSchema),
-	})
+	const nameRef = useRef<HTMLInputElement>()
+	const emailRef = useRef<HTMLInputElement>()
+	const [role, setRole] = useState(UserRole.Manager)
+	const passwordRef = useRef<HTMLInputElement>()
 
-	const handleOnSubmit = (data: Object) => {
-		alert('Form submit success: ' + JSON.stringify(data))
+	const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		await createUser({
+			name: nameRef.current!.value,
+			email: emailRef.current!.value,
+			role: role,
+			password: passwordRef.current!.value,
+		})
 	}
-
-	useEffect(() => {
-		reset(formValues => ({
-			...formValues,
-		}))
-	}, [isSubmitSuccessful, reset])
 
 	return (
 		<>
@@ -50,32 +28,40 @@ export default function NewUserPage() {
 			<Container maxWidth="lg">
 				<Box
 					component="form"
-					onSubmit={handleSubmit(handleOnSubmit)}
+					onSubmit={handleOnSubmit}
 					className={styles.form}
 				>
 					<TextField
+						inputRef={nameRef}
 						margin="normal"
 						label="ФИО"
+						required
 						autoFocus
-						{...register('fullName')}
-						FormHelperTextProps={{error: !!errors.fullName?.message}}
-						helperText={errors.fullName?.message}
 					/>
 					<TextField
+						inputRef={emailRef}
 						margin="normal"
 						label="Почта"
+						required
 						type="email"
-						{...register('email')}
-						FormHelperTextProps={{error: !!errors.email?.message}}
-						helperText={errors.email?.message}
 					/>
-					<TextField
-						margin="normal"
+					<Select
+						value={role}
 						label="Роль"
-						type="role"
-						{...register('role')}
-						FormHelperTextProps={{error: !!errors.role?.message}}
-						helperText={errors.role?.message}
+						onChange={e => {
+							if (typeof e.target.value !== 'string') {
+								setRole(e.target.value)
+							}
+						}}
+					>
+						<MenuItem value={UserRole.Admin}>Администратор</MenuItem>
+						<MenuItem value={UserRole.Manager}>Менеджер</MenuItem>
+					</Select>
+					<TextField
+						inputRef={passwordRef}
+						margin="normal"
+						label="Пароль"
+						required
 					/>
 					<div>
 						<Button
