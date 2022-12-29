@@ -2,6 +2,7 @@ import {Box, Button, Container, MenuItem, Select, TextField} from '@mui/material
 import React, {useRef, useState} from 'react'
 import {User, UserRole} from '../../../../../api/users/createUser'
 import updateUser from '../../../../../api/users/updateUser'
+import useCurrentUser from '../../../../../api/users/useCurrentUser'
 import useUser from '../../../../../api/users/useUser'
 import MainNav from '../../../../components/MainNav'
 import styles from './styles.module.css'
@@ -14,21 +15,30 @@ function Content({user}: UserPageContentProps) {
 	const nameRef = useRef<HTMLInputElement>()
 	const emailRef = useRef<HTMLInputElement>()
 	const [role, setRole] = useState(UserRole.Manager)
-	const passwordRef = useRef<HTMLInputElement>()
+	const [password, setPassword] = useState('')
+	const [passwordConfirmation, setPasswordConfirmation] = useState('')
 
 	const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		await updateUser({
+			id: user.id,
 			name: nameRef.current!.value,
 			email: emailRef.current!.value,
 			role: role,
-			password: passwordRef.current!.value,
+			password: password || undefined,
 		})
 	}
 
 	const onUserRemove = () => {
 		alert()
 	}
+
+	const confirmError = passwordConfirmation !== password
+		? 'Пароли не совпадают'
+		: null
+
+	const {data: currentUser} = useCurrentUser()
+	const isMe = currentUser && currentUser.role === user.id
 
 	return (
 		<Box
@@ -52,28 +62,42 @@ function Content({user}: UserPageContentProps) {
 				required
 				type="email"
 			/>
-			<Select
-				value={user.role}
-				label="Роль"
-				onChange={e => {
-					if (typeof e.target.value !== 'string') {
-						setRole(e.target.value)
-					}
-				}}
-			>
-				<MenuItem value={UserRole.Admin}>Администратор</MenuItem>
-				<MenuItem value={UserRole.Manager}>Менеджер</MenuItem>
-			</Select>
-			<TextField
-				inputRef={passwordRef}
-				margin="normal"
-				label="Пароль"
-			/>
-			<div>
+			{user.role !== UserRole.Owner && (
+				<Select
+					value={user.role}
+					label="Роль"
+					onChange={e => {
+						if (typeof e.target.value !== 'string') {
+							setRole(e.target.value)
+						}
+					}}
+				>
+					<MenuItem value={UserRole.Admin}>Администратор</MenuItem>
+					<MenuItem value={UserRole.Manager}>Менеджер</MenuItem>
+				</Select>
+			)}
+			{isMe && (<>
+				<TextField
+					value={password}
+					onChange={e => setPassword(e.target.value)}
+					margin="normal"
+					label="Новый пароль"
+				/>
+				<TextField
+					value={passwordConfirmation}
+					onChange={e => setPasswordConfirmation(e.target.value)}
+					margin="normal"
+					label="Подтверждение пароля"
+					error={!!confirmError}
+					helperText={confirmError}
+				/>
+			</>)}
+			<div style={{marginTop: '24px'}}>
 				<Button
 					type="submit"
 					variant="contained"
 					style={{marginRight: '20px'}}
+					disabled={!!confirmError}
 				>
 					Сохранить изменения
 				</Button>

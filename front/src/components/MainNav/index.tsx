@@ -1,9 +1,10 @@
-import {useRef, useState} from 'react'
-import styles from './styles.module.css'
-import Link from '../Link'
-import {useRouter} from 'next/router'
 import {Logout} from '@mui/icons-material'
 import {ListItemIcon, Menu, MenuItem, Typography} from '@mui/material'
+import {useRouter} from 'next/router'
+import {useRef, useState} from 'react'
+import useCurrentUser from '../../../api/users/useCurrentUser'
+import Link from '../Link'
+import styles from './styles.module.css'
 
 type TabType = 'projects' | 'analytics' | 'settings' | 'costs'
 
@@ -32,7 +33,8 @@ const tabs: Tab[] = [{
 }]
 
 function AccountButton() {
-	const userEmail = 'user@gmail.com'
+	const {data: currentUser} = useCurrentUser()
+	const userEmail = currentUser?.email
 	const router = useRouter()
 
 	const ref = useRef<HTMLDivElement>(null)

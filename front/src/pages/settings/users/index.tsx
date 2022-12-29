@@ -15,7 +15,8 @@ import {styled} from '@mui/material/styles'
 import {tableCellClasses} from '@mui/material/TableCell'
 import {useRouter} from 'next/router'
 import React from 'react'
-import {UserRole} from '../../../../api/users/createUser'
+import {User, UserRole} from '../../../../api/users/createUser'
+import useCurrentUser from '../../../../api/users/useCurrentUser'
 import useUsers from '../../../../api/users/useUsers'
 import MainNav from '../../../components/MainNav'
 import SettingsSecondaryNav from '../../../components/SettingsSecondaryNav'
@@ -51,15 +52,17 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
 	'&:last-child td, &:last-child th': {
 		border: 0,
 	},
-	'&:hover': {
-		cursor: 'pointer',
-	},
 }))
 
 export default function UsersPage() {
 	const router = useRouter()
 
+	const {data: currentUser} = useCurrentUser()
 	const {data: users} = useUsers()
+
+	const isUserAvailable = (user: User) => {
+		return (currentUser && currentUser.role === UserRole.Owner) || user.role !== UserRole.Owner
+	}
 
 	return (
 		<>
@@ -94,7 +97,10 @@ export default function UsersPage() {
 							{users && users.map(user => (
 								<StyledTableRow
 									key={user.id}
-									onClick={() => router.push(`/settings/users/${user.id}`)}
+									style={{
+										cursor: isUserAvailable(user) ? 'pointer' : 'unset',
+									}}
+									onClick={() => isUserAvailable(user) && router.push(`/settings/users/${user.id}`)}
 								>
 									<StyledTableCell component="th" scope="row">
 										{user.name}

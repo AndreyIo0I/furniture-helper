@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_DB: 'furnitureHelper'
       POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'mydevpassword'
+      POSTGRES_PASSWORD: '1234'
   back:
     build:
       context: ./back/FurnitureHelper

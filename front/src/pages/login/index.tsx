@@ -4,6 +4,7 @@ import {useRouter} from 'next/router'
 import * as React from 'react'
 import {useRef, useState} from 'react'
 import login from '../../../api/login'
+import {User} from '../../../api/users/createUser'
 
 export default function LoginPage() {
 	const router = useRouter()
@@ -16,9 +17,11 @@ export default function LoginPage() {
 		const res = await login(emailRef.current!.value, passwordRef.current!.value)
 		if (res.status === 401) {
 			setError(true)
-		}
-		else {
-			await router.push('/')
+		} else if (res.status === 200) {
+			res.json().then(async user => {
+				window.localStorage.setItem('currentUserId', (user as User).id.toString())
+				await router.push('/')
+			})
 		}
 	}
 

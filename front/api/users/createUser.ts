@@ -15,7 +15,7 @@ export interface User {
 	role: UserRole
 }
 
-export function mapUserToDto(user: User | NewUser): UserDto {
+export function mapUserToDto(user: User | NewUser | UpdatingUser): UserDto {
 	return {
 		id: 'id' in user ? user.id : undefined,
 		fullName: user.name,
@@ -27,6 +27,10 @@ export function mapUserToDto(user: User | NewUser): UserDto {
 
 export type NewUser = Omit<User, 'id'> & {
 	password: string
+}
+
+export type UpdatingUser = User & {
+	password?: string
 }
 
 export default function createUser(user: NewUser): Promise<number> {
