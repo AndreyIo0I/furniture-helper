@@ -15,6 +15,7 @@ import {
 } from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
 import React from 'react'
+import {CostType} from '../../../../../api/costTypes/useCostTypes'
 import {formStyle, isValidDate, toViewModelNumber, toViewNumber} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
@@ -22,20 +23,20 @@ import styles from './styles.module.css'
 interface CostPaymentsTableProps {
 	costPayments: model.CostPayment[]
 	setCostPayments: (costPayments: model.CostPayment[]) => void
-	costs: model.Cost[]
+	costs: CostType[]
 }
 
 interface CostSelectProps {
 	costId?: number
 	setCostId: (costId: number) => void
-	costs: model.Cost[]
+	costs: CostType[]
 }
 
 interface CostPaymentProps {
 	payment: model.CostPayment
 	setPayment: (payment: model.CostPayment) => void
 	removePayment: () => void
-	costs: model.Cost[]
+	costs: CostType[]
 }
 
 function CostSelect(props: CostSelectProps) {
@@ -49,8 +50,8 @@ function CostSelect(props: CostSelectProps) {
 		>
 			{props.costs.map(cost => (
 				<MenuItem
-					key={cost.costId}
-					value={cost.costId}
+					key={cost.id}
+					value={cost.id}
 				>
 					{cost.name}
 				</MenuItem>
@@ -208,22 +209,13 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 			<Table>
 				<TableHead>
 					<TableRow>
-						<TableCell>Название издержки</TableCell>
+						<TableCell>Тип издержки</TableCell>
 						<TableCell>Сумма</TableCell>
 						<TableCell>Дата платежа</TableCell>
 						<TableCell/>
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{props.costPayments.map(payment => (
-						<CostPayment
-							key={payment.paymentId}
-							payment={payment}
-							setPayment={setPayment}
-							removePayment={() => removePayment(payment.paymentId)}
-							costs={props.costs}
-						/>
-					))}
 					<TableRow>
 						<TableCell>
 							<FormControl
@@ -268,6 +260,15 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 							</IconButton>
 						</TableCell>
 					</TableRow>
+					{props.costPayments.map(payment => (
+						<CostPayment
+							key={payment.paymentId}
+							payment={payment}
+							setPayment={setPayment}
+							removePayment={() => removePayment(payment.paymentId)}
+							costs={props.costs}
+						/>
+					))}
 				</TableBody>
 			</Table>
 		</TableContainer>

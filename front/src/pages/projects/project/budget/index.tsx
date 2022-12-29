@@ -1,5 +1,6 @@
 import {Button, Container, Paper, SxProps, TextField} from '@mui/material'
 import React from 'react'
+import useCostTypes, {CostType} from '../../../../../api/costTypes/useCostTypes'
 import saveProjectBudget from '../../../../../api/saveProjectBudget'
 import useProjectBudget, {ProjectBudget} from '../../../../../api/useProjectBudget'
 import MainNav from '../../../../components/MainNav'
@@ -9,24 +10,6 @@ import {formStyle, toApiModelDate, toApiModelNumber, toViewModelNumber, toViewNu
 import CostPaymentsTable from './costPayments'
 import * as model from './model'
 import styles from './styles.module.css'
-
-interface ProjectBudgetPageProps {
-	projectId: number
-}
-
-const testCosts: model.Cost[] = [{
-	costId: 0,
-	name: 'гвозди',
-}, {
-	costId: 1,
-	name: 'шурупы',
-}, {
-	costId: 2,
-	name: 'доски',
-}, {
-	costId: 3,
-	name: 'печенки',
-}]
 
 const projectCostStyle: SxProps = {
 	m: 2,
@@ -61,7 +44,12 @@ const mapToApiProjectBudget = (projectBudget: model.ProjectBudget, projectId: nu
 	})),
 })
 
-export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
+interface ContentProps {
+	projectId: number
+	costTypes: CostType[]
+}
+
+function Content(props: ContentProps) {
 	const [budget, setBudget] = React.useState<model.ProjectBudget>()
 	const {data: apiProjectBudget, mutate} = useProjectBudget(props.projectId)
 
@@ -77,7 +65,7 @@ export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
 			return
 		}
 		await saveProjectBudget(apiProjectBudget)
-		mutate(apiProjectBudget)
+		await mutate(apiProjectBudget)
 	}
 
 	function setProjectCost(projectCost?: number) {
@@ -127,7 +115,7 @@ export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
 				<CostPaymentsTable
 					costPayments={budget.costPayments}
 					setCostPayments={setCostPayments}
-					costs={testCosts}
+					costs={props.costTypes}
 				/>
 				<Button
 					variant="contained"
@@ -139,4 +127,17 @@ export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
 			</Container>}
 		</>
 	)
+}
+
+interface ProjectBudgetPageProps {
+	projectId: number
+}
+
+export default function ProjectBudgetPage(props: ProjectBudgetPageProps) {
+	const {data: costTypes} = useCostTypes()
+
+	if (!costTypes)
+		return null
+
+	return <Content projectId={props.projectId} costTypes={costTypes}/>
 }

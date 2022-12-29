@@ -1,5 +1,5 @@
-import { AnalyticsApi } from './typescript-fetch-client-generated/api';
 import {
+	AnalyticsApi,
 	AuthentificationApi,
 	BuisnessCostApi,
 	ClientApi,

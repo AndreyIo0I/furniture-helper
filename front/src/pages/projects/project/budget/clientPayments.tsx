@@ -159,14 +159,6 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{props.clientPayments.map(payment => (
-						<ClientPayment
-							key={payment.paymentId}
-							payment={payment}
-							setPayment={setPayment}
-							removePayment={() => removePayment(payment.paymentId)}
-						/>
-					))}
 					<TableRow>
 						<TableCell>
 							<TextField
@@ -197,6 +189,14 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 							</IconButton>
 						</TableCell>
 					</TableRow>
+					{props.clientPayments.map(payment => (
+						<ClientPayment
+							key={payment.paymentId}
+							payment={payment}
+							setPayment={setPayment}
+							removePayment={() => removePayment(payment.paymentId)}
+						/>
+					))}
 				</TableBody>
 			</Table>
 		</TableContainer>

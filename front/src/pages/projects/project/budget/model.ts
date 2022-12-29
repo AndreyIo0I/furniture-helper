@@ -1,8 +1,3 @@
-export interface Cost {
-	costId: number
-	name: string
-}
-
 export interface ClientPayment {
 	paymentId: number
 	amount?: number
