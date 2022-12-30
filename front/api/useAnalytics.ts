@@ -158,6 +158,21 @@ export function getProjectMargin(params: SearchAnalyticParams) {
 
 /* ##################### */
 
+/* Маржа по проекту по ID*/
+export function useProjectMarginById(projectId: number) {
+	return makeAuthenticatedReq(() => analyticsApi.analyticsMarginProjectIdGet(projectId))
+}
+
+/* Норма прибыли по проекту по ID*/
+export function useProjectProfitNormById(projectId: number) {
+	return makeAuthenticatedReq(() => analyticsApi.analyticsProfitNormProjectIdGet(projectId))
+}
+
+/* Норма прибавочной стоимости по проекту по ID*/
+export function useProjectRateOfSurplusValueById(projectId: number) {
+	return makeAuthenticatedReq(() => analyticsApi.analyticsRateOfSurplusValueProjectIdGet(projectId))
+}
+
 
 
 
