@@ -18,15 +18,15 @@ import MainNav from '../../components/MainNav'
 import styles from './project/styles.module.css'
 
 interface Project {
-	id: number;
-	name: string;
-	client?: Client;
-	dateOfFinish: Dayjs;
-	deadlineState?: 'red' | 'yellow';
+	id: number
+	name: string
+	client?: Client
+	dateOfFinish: Dayjs
+	deadlineState?: 'red' | 'yellow'
+	isCompleted: boolean
 }
 
-function getColor(project: Project, accountSettings: AccountSettings): 'red' | 'yellow' | undefined {
-	const diff = project.dateOfFinish.diff(dayjs(), 'days')
+function getColor(diff: number, accountSettings: AccountSettings): 'red' | 'yellow' | undefined {
 	if (diff < accountSettings.daysForDeadlineRed) {
 		return 'red'
 	}
@@ -50,7 +50,8 @@ export default function ProjectsPage() {
 			name: project.name!,
 			client: clients?.find(client => client.id === project.clientId),
 			dateOfFinish: project.dateOfFinish,
-			deadlineState: accountSettings && getColor(project, accountSettings),
+			deadlineState: accountSettings && getColor(project.dateOfFinish.diff(dayjs(), 'days'), accountSettings),
+			isCompleted: !!project.isCompleted,
 		}))
 		: []
 
@@ -105,6 +106,9 @@ export default function ProjectsPage() {
 										row.deadlineState === 'yellow' && styles.row_yellow,
 									].filter(x => !!x).join(' ')}
 									onClick={() => router.push(`/projects/${row.id}`)}
+									style={{
+										background: row.isCompleted ? 'lightgreen' : undefined,
+									}}
 								>
 									<TableCell component="th" scope="row">
 										{row.name}

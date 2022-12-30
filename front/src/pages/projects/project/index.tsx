@@ -31,6 +31,7 @@ function Content({
 	const [finishDate, setFinishDate] = useState(project.dateOfFinish)
 	const contractRef = useRef<HTMLInputElement>(null)
 	const descriptionRef = useRef<HTMLInputElement>(null)
+	const [isCompleted, setIsCompleted] = useState(project.isCompleted)
 
 	const onSaveProject = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -42,6 +43,7 @@ function Content({
 			dateOfFinish: finishDate,
 			clientId: clientIdRef.current!,
 			description: descriptionRef.current!.value,
+			isCompleted,
 		})
 	}
 
@@ -63,14 +65,33 @@ function Content({
 				component="form"
 				onSubmit={onSaveProject}
 			>
-				<TextField
-					inputRef={nameRef}
-					margin="none"
-					required
-					label="Название проекта"
-					autoFocus
-					defaultValue={project.name}
-				/>
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						gap: '24px',
+					}}
+				>
+					<TextField
+						inputRef={nameRef}
+						margin="none"
+						required
+						label="Название проекта"
+						autoFocus
+						defaultValue={project.name}
+						sx={{
+							width: '100%',
+						}}
+						disabled={isCompleted}
+					/>
+					<Button
+						onClick={() => setIsCompleted(!isCompleted)}
+						variant="contained"
+						disabled={project.isCompleted}
+					>
+						Завершить
+					</Button>
+				</div>
 				<Autocomplete
 					disablePortal
 					onChange={(event, newValue) => {
@@ -83,6 +104,7 @@ function Content({
 					defaultValue={clientsOptions.find(v => v.id === project.clientId)}
 					renderInput={(params) => <TextField {...params} label="Клиент"/>}
 					isOptionEqualToValue={areClientsEqual}
+					disabled={isCompleted}
 				/>
 				<DatePicker
 					label="Дата начала"
@@ -93,6 +115,7 @@ function Content({
 						}
 					}}
 					renderInput={params => <TextField {...params} />}
+					disabled={isCompleted}
 				/>
 				<DatePicker
 					label="Дата планируемого завершения"
@@ -103,6 +126,7 @@ function Content({
 						}
 					}}
 					renderInput={params => <TextField {...params} />}
+					disabled={isCompleted}
 				/>
 				<TextField
 					inputRef={contractRef}
@@ -110,6 +134,7 @@ function Content({
 					required
 					label="Номер контракта"
 					defaultValue={project.contractNumber}
+					disabled={isCompleted}
 				/>
 				<TextField
 					inputRef={descriptionRef}
@@ -119,11 +144,13 @@ function Content({
 					minRows={4}
 					maxRows={16}
 					defaultValue={project.description}
+					disabled={isCompleted}
 				/>
 				<div>
 					<Button
 						type="submit"
 						variant="contained"
+						disabled={project.isCompleted}
 					>
 						Сохранить
 					</Button>

@@ -25,10 +25,6 @@ import ProjectSecondaryNav from '../../../../components/ProjectSecondaryNav'
 import {isDeepEqual} from '../../../../helpers'
 import styles from './styles.module.css'
 
-interface ProjectStagesPageProps {
-	projectId: number
-}
-
 interface ProjectStageProps {
 	stage: Stage
 	onChange: (stage: Stage) => void
@@ -103,7 +99,7 @@ function ProjectStage({
 								}
 							}}
 							renderInput={params => (
-								<TextField {...params} margin="normal" />
+								<TextField {...params} margin="normal"/>
 							)}
 						/>
 						<TextField
@@ -124,28 +120,32 @@ function ProjectStage({
 	)
 }
 
-export default function ProjectStagesPage(props: ProjectStagesPageProps) {
-	const {data: stages} = useStages(props.projectId)
-	const stagesRef = useRef<Stage[]>()
-	if (!stagesRef.current)
-		stagesRef.current = stages
+interface ContentProps {
+	projectId: number
+	stages: Stage[]
+}
+
+function Content({projectId, stages: _stages}: ContentProps) {
+	const [stages, setStages] = useState<Stage[]>(_stages)
 
 	const changedStagesRef = useRef<Record<number, Stage>>({})
 
 	const onSave = () => {
+		const mutatable = JSON.parse(JSON.stringify(stages))
 		Object.values(changedStagesRef.current).forEach(async newStage => {
-			const stageIndex = stagesRef.current && stagesRef.current.findIndex(stage => stage.id === newStage.id)!
-			if (stagesRef.current && stageIndex && !isDeepEqual(newStage, stagesRef.current[stageIndex])) {
-				stagesRef.current[stageIndex] = newStage
+			const stageIndex = stages.findIndex(stage => stage.id === newStage.id)!
+			if (stageIndex !== -1 && !isDeepEqual(newStage, stages[stageIndex])) {
+				mutatable[stageIndex] = newStage
 				await saveStage(newStage)
 			}
 		})
+		setStages(mutatable)
 	}
 
 	return (
 		<>
 			<MainNav/>
-			<ProjectSecondaryNav projectId={props.projectId}/>
+			<ProjectSecondaryNav projectId={projectId}/>
 			<Container maxWidth="lg">
 				<div
 					style={{
@@ -176,7 +176,7 @@ export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{stagesRef.current && stagesRef.current.map(stage => (
+							{stages.map(stage => (
 								<ProjectStage
 									key={stage.id}
 									stage={stage}
@@ -191,4 +191,17 @@ export default function ProjectStagesPage(props: ProjectStagesPageProps) {
 			</Container>
 		</>
 	)
+}
+
+interface ProjectStagesPageProps {
+	projectId: number
+}
+
+export default function ProjectStagesPage(props: ProjectStagesPageProps) {
+	const {data: _stages} = useStages(props.projectId)
+
+	if (!_stages)
+		return null
+
+	return <Content projectId={props.projectId} stages={_stages}/>
 }

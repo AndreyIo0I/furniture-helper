@@ -12,6 +12,7 @@ export interface Project {
 	dateOfStart: Dayjs
 	dateOfFinish: Dayjs
 	description: string
+	isCompleted?: boolean
 }
 
 export const mapProjectDto = (dto: ProjectDto): Project => ({
@@ -22,6 +23,7 @@ export const mapProjectDto = (dto: ProjectDto): Project => ({
 	dateOfStart: dayjs(dto.dateOfStart!),
 	dateOfFinish: dayjs(dto.deadLine!),
 	description: dto.description!,
+	isCompleted: dto.isCompleted!,
 })
 
 export const mapToProjectDto = (project: Project): ProjectDto => ({
@@ -32,6 +34,7 @@ export const mapToProjectDto = (project: Project): ProjectDto => ({
 	dateOfStart: project.dateOfStart.toISOString(),
 	deadLine: project.dateOfFinish.toISOString(),
 	description: project.description,
+	isCompleted: project.isCompleted,
 })
 
 export default function useProjects(): SWRResponse<Project[]> {
