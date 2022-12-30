@@ -1,11 +1,15 @@
 import {yupResolver} from '@hookform/resolvers/yup'
 import {Box, Button, Container, TextField} from '@mui/material'
+import {useRouter} from 'next/router'
 import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import * as Yup from 'yup'
+import deleteClient from '../../../../../api/clients/deleteClient'
 import updateClient from '../../../../../api/clients/updateClient'
 import useClient from '../../../../../api/clients/useClient'
 import {Client} from '../../../../../api/clients/useClients'
+import {UserRole} from '../../../../../api/users/createUser'
+import useCurrentUser from '../../../../../api/users/useCurrentUser'
 import MainNav from '../../../../components/MainNav'
 import SettingsSecondaryNav from '../../../../components/SettingsSecondaryNav'
 import styles from './styles.module.css'
@@ -18,19 +22,8 @@ type Form = {
 	description?: string;
 }
 
-const phoneRegExp = /^[\d()\-+\s]+$/
-
 const validationSchema = Yup.object().shape({
 	fullName: Yup.string().required('Поле не должно быть пустым'),
-	source: Yup.string().required('Поле не должно быть пустым'),
-	phone: Yup
-		.string()
-		.matches(phoneRegExp, 'Некорректный номер телефона'),
-	email: Yup
-		.string()
-		.required('Поле не должно быть пустым')
-		.email('Некорректный email'),
-	description: Yup.string().nullable(true),
 })
 
 function Content({client}: { client: Client }) {
@@ -47,10 +40,10 @@ function Content({client}: { client: Client }) {
 	const handleOnSubmit = async (data: Form) => {
 		await updateClient({
 			id: client.id,
-			fullName: data.fullName,
-			source: data.source,
-			phone: data.phone,
-			email: data.email,
+			name: data.fullName,
+			communicationChannel: data.source,
+			phoneNumber: data.phone,
+			mail: data.email,
 			description: data.description || '',
 		})
 	}
@@ -60,6 +53,12 @@ function Content({client}: { client: Client }) {
 			...formValues,
 		}))
 	}, [isSubmitSuccessful, reset])
+
+	const router = useRouter()
+
+	const {data: currentUser} = useCurrentUser()
+
+	const isEditable = currentUser && currentUser.role !== UserRole.Manager
 
 	return (
 		<>
@@ -79,6 +78,7 @@ function Content({client}: { client: Client }) {
 						{...register('fullName')}
 						FormHelperTextProps={{error: !!errors.fullName?.message}}
 						helperText={errors.fullName?.message}
+						disabled={!isEditable}
 					/>
 					<TextField
 						margin="normal"
@@ -87,6 +87,7 @@ function Content({client}: { client: Client }) {
 						{...register('source')}
 						FormHelperTextProps={{error: !!errors.source?.message}}
 						helperText={errors.source?.message}
+						disabled={!isEditable}
 					/>
 					<TextField
 						margin="normal"
@@ -95,6 +96,7 @@ function Content({client}: { client: Client }) {
 						{...register('phone')}
 						FormHelperTextProps={{error: !!errors.phone?.message}}
 						helperText={errors.phone?.message}
+						disabled={!isEditable}
 					/>
 					<TextField
 						margin="normal"
@@ -104,6 +106,7 @@ function Content({client}: { client: Client }) {
 						{...register('email')}
 						FormHelperTextProps={{error: !!errors.email?.message}}
 						helperText={errors.email?.message}
+						disabled={!isEditable}
 					/>
 					<TextField
 						label="Описание"
@@ -114,14 +117,30 @@ function Content({client}: { client: Client }) {
 						{...register('description')}
 						FormHelperTextProps={{error: !!errors.description?.message}}
 						helperText={errors.description?.message}
+						disabled={!isEditable}
 					/>
-					<div>
+					<div
+						style={{
+							display: 'flex',
+							gap: '16px',
+						}}
+					>
 						<Button
 							type="submit"
 							variant="contained"
 						>
 							Сохранить
 						</Button>
+						{isEditable && (
+							<Button
+								onClick={async () => {
+									await deleteClient(client.id)
+									await router.push('/settings/clients')
+								}}
+							>
+								Удалить
+							</Button>
+						)}
 					</div>
 				</Box>
 			</Container>

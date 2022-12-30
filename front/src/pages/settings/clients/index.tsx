@@ -11,6 +11,8 @@ import TableRow from '@mui/material/TableRow'
 import {useRouter} from 'next/router'
 import React from 'react'
 import useClients from '../../../../api/clients/useClients'
+import {UserRole} from '../../../../api/users/createUser'
+import useCurrentUser from '../../../../api/users/useCurrentUser'
 import MainNav from '../../../components/MainNav'
 import SettingsSecondaryNav from '../../../components/SettingsSecondaryNav'
 import styles from './styles.module.css'
@@ -43,6 +45,10 @@ export default function ClientsPage() {
 
 	const {data: clients} = useClients()
 
+	const {data: currentUser} = useCurrentUser()
+
+	const isEditable = currentUser && currentUser.role !== UserRole.Manager
+
 	return (
 		<>
 			<MainNav/>
@@ -63,12 +69,14 @@ export default function ClientsPage() {
 					{/*	}}*/}
 					{/*/>*/}
 					<div></div>
-					<Button
-						onClick={() => router.push(`${location.pathname}/new`)}
-						variant="contained"
-					>
-						Добавить клиента
-					</Button>
+					{isEditable && (
+						<Button
+							onClick={() => router.push(`${location.pathname}/new`)}
+							variant="contained"
+						>
+							Добавить клиента
+						</Button>
+					)}
 				</div>
 				<TableContainer
 					component={Paper}

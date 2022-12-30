@@ -1,7 +1,7 @@
 import {clientApi} from '../api'
+import {ClientDto} from '../typescript-fetch-client-generated'
 import {makeAuthenticatedReq} from '../useAuthenticatedSWR'
-import {Client} from './useClients'
 
-export default function updateClient(params: Client): Promise<number> {
+export default function updateClient(params: Required<ClientDto>): Promise<number> {
 	return makeAuthenticatedReq(() => clientApi.clientsClientIdClientUpdatingPost(params, params.id))
 }

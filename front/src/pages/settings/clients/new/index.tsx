@@ -17,19 +17,8 @@ type Form = {
 	description?: string;
 }
 
-const phoneRegExp = /^[\d()\-+\s]+$/
-
 const validationSchema = Yup.object().shape({
 	fullName: Yup.string().required('Поле не должно быть пустым'),
-	source: Yup.string().required('Поле не должно быть пустым'),
-	phone: Yup
-		.string()
-		.matches(phoneRegExp, 'Некорректный номер телефона'),
-	email: Yup
-		.string()
-		.required('Поле не должно быть пустым')
-		.email('Некорректный email'),
-	description: Yup.string().nullable(true),
 })
 
 export default function NewClientPage() {
