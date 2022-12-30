@@ -45,7 +45,7 @@ dotnet run -c Release
 
 ### Publish
 *компилируем приложение в папку, из которой оно будет развернуто*
-dotnet publish -c Release --runtime ubuntu.22.04-x64 -o /root/srv/FurnitureHelper --self-contained false \p:EnvironmentName=prod
+dotnet publish -c Release --runtime ubuntu.22.04-x64 -o /root/srv/FurnitureHelper --self-contained false /p:EnvironmentName=prod
 
 ### Запуск
 
