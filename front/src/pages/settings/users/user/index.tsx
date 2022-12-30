@@ -101,13 +101,13 @@ function Content({user}: UserPageContentProps) {
 				>
 					Сохранить изменения
 				</Button>
-				<Button
+				{!isMe && <Button
 					type="submit"
 					variant="contained"
 					onClick={onUserRemove}
 				>
 					Удалить пользователя
-				</Button>
+				</Button>}
 			</div>
 		</Box>
 	)

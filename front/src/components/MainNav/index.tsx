@@ -1,5 +1,5 @@
-import {Logout} from '@mui/icons-material'
-import {ListItemIcon, Menu, MenuItem, Typography} from '@mui/material'
+import {Logout, ArrowBackIosNew} from '@mui/icons-material'
+import {IconButton, ListItemIcon, Menu, MenuItem, Typography} from '@mui/material'
 import {useRouter} from 'next/router'
 import {useRef, useState} from 'react'
 import useCurrentUser from '../../../api/users/useCurrentUser'
@@ -86,6 +86,11 @@ export default function MainNav() {
 	return (
 		<div className={styles.container}>
 			<div className={styles.content}>
+				<IconButton
+					onClick={() => router.back()}
+				>
+					<ArrowBackIosNew/>
+				</IconButton>
 				{tabs.map(tab => (
 					<Link
 						key={tab.id}
