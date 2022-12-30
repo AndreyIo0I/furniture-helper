@@ -12,7 +12,7 @@ import {
 import dayjs, {Dayjs} from 'dayjs'
 import {useRouter} from 'next/router'
 import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
-import useClients, {Client} from '../../../api/useClients'
+import useClients, {Client} from '../../../api/clients/useClients'
 import useProjects from '../../../api/useProjects'
 import MainNav from '../../components/MainNav'
 import styles from './project/styles.module.css'

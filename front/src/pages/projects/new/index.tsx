@@ -6,7 +6,7 @@ import * as React from 'react'
 import {useEffect, useRef, useState} from 'react'
 import createProject from '../../../../api/createProject'
 import useAccountSettings from '../../../../api/useAccountSettings'
-import useClients from '../../../../api/useClients'
+import useClients from '../../../../api/clients/useClients'
 import MainNav from '../../../components/MainNav'
 
 const DEFAULT_PROJECT_DURATION_IN_DAYS = 42

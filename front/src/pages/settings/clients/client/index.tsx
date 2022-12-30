@@ -1,11 +1,14 @@
-import * as Yup from 'yup'
+import {yupResolver} from '@hookform/resolvers/yup'
 import {Box, Button, Container, TextField} from '@mui/material'
-import SettingsSecondaryNav from '../../../../components/SettingsSecondaryNav'
-import styles from './styles.module.css'
 import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
-import {yupResolver} from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
+import updateClient from '../../../../../api/clients/updateClient'
+import useClient from '../../../../../api/clients/useClient'
+import {Client} from '../../../../../api/clients/useClients'
 import MainNav from '../../../../components/MainNav'
+import SettingsSecondaryNav from '../../../../components/SettingsSecondaryNav'
+import styles from './styles.module.css'
 
 type Form = {
 	fullName: string;
@@ -30,7 +33,7 @@ const validationSchema = Yup.object().shape({
 	description: Yup.string().nullable(true),
 })
 
-export default function ClientPage() {
+function Content({client}: { client: Client }) {
 	const {
 		register,
 		handleSubmit,
@@ -41,8 +44,15 @@ export default function ClientPage() {
 		resolver: yupResolver(validationSchema),
 	})
 
-	const handleOnSubmit = (data: Object) => {
-		alert('Form submit success: ' + JSON.stringify(data))
+	const handleOnSubmit = async (data: Form) => {
+		await updateClient({
+			id: client.id,
+			fullName: data.fullName,
+			source: data.source,
+			phone: data.phone,
+			email: data.email,
+			description: data.description || '',
+		})
 	}
 
 	useEffect(() => {
@@ -64,7 +74,7 @@ export default function ClientPage() {
 					<TextField
 						margin="normal"
 						label="ФИО"
-						defaultValue="Васнецов С.В."
+						defaultValue={client.fullName}
 						autoFocus
 						{...register('fullName')}
 						FormHelperTextProps={{error: !!errors.fullName?.message}}
@@ -72,7 +82,7 @@ export default function ClientPage() {
 					/>
 					<TextField
 						margin="normal"
-						label="Канал привлечения"
+						label={client.source}
 						defaultValue="Реклама в вк"
 						{...register('source')}
 						FormHelperTextProps={{error: !!errors.source?.message}}
@@ -81,7 +91,7 @@ export default function ClientPage() {
 					<TextField
 						margin="normal"
 						label="Телефон"
-						defaultValue="8-800-555-35-35"
+						defaultValue={client.phone}
 						{...register('phone')}
 						FormHelperTextProps={{error: !!errors.phone?.message}}
 						helperText={errors.phone?.message}
@@ -89,7 +99,7 @@ export default function ClientPage() {
 					<TextField
 						margin="normal"
 						label="Почта"
-						defaultValue="ObamaMAMA@gmail.com"
+						defaultValue={client.email}
 						type="email"
 						{...register('email')}
 						FormHelperTextProps={{error: !!errors.email?.message}}
@@ -100,7 +110,7 @@ export default function ClientPage() {
 						multiline
 						minRows={4}
 						maxRows={16}
-						defaultValue="Ну такое"
+						defaultValue={client.description}
 						{...register('description')}
 						FormHelperTextProps={{error: !!errors.description?.message}}
 						helperText={errors.description?.message}
@@ -117,4 +127,17 @@ export default function ClientPage() {
 			</Container>
 		</>
 	)
+}
+
+interface ClientPageProps {
+	clientId: number
+}
+
+export default function ClientPage({clientId}: ClientPageProps) {
+	const {data: client} = useClient(clientId)
+
+	if (!client)
+		return null
+
+	return <Content client={client}/>
 }

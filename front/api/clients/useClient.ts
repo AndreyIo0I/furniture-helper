@@ -1,6 +1,6 @@
 import useSWR, {SWRResponse} from 'swr'
-import {clientApi} from './api'
-import useAuthenticatedSWR from './useAuthenticatedSWR'
+import {clientApi} from '../api'
+import useAuthenticatedSWR from '../useAuthenticatedSWR'
 import {Client, mapApiClientDto} from './useClients'
 
 export default function useClient(clientId: number): SWRResponse<Client> {

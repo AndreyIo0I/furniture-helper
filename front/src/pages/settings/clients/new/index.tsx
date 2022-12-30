@@ -1,6 +1,6 @@
 import {useRouter} from 'next/router'
 import * as Yup from 'yup'
-import createClient from '../../../../../api/createClient'
+import createClient from '../../../../../api/clients/createClient'
 import MainNav from '../../../../components/MainNav'
 import {Box, Button, Container, TextField} from '@mui/material'
 import SettingsSecondaryNav from '../../../../components/SettingsSecondaryNav'

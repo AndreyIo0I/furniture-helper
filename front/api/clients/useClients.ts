@@ -1,7 +1,7 @@
 import useSWR, {SWRResponse} from 'swr'
-import {clientApi} from './api'
-import {ClientDto} from './typescript-fetch-client-generated'
-import useAuthenticatedSWR from './useAuthenticatedSWR'
+import {clientApi} from '../api'
+import {ClientDto} from '../typescript-fetch-client-generated'
+import useAuthenticatedSWR from '../useAuthenticatedSWR'
 
 export interface Client {
 	id: number

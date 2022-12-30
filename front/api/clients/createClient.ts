@@ -1,5 +1,5 @@
-import {clientApi} from './api'
-import {makeAuthenticatedReq} from './useAuthenticatedSWR'
+import {clientApi} from '../api'
+import {makeAuthenticatedReq} from '../useAuthenticatedSWR'
 
 interface CreateClientParams {
 	name: string;
