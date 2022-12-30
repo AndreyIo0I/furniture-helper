@@ -39,7 +39,7 @@ function Content({user}: UserPageContentProps) {
 		: null
 
 	const {data: currentUser} = useCurrentUser()
-	const isMe = currentUser && currentUser.role === user.id
+	const isMe = currentUser && currentUser.id === user.id
 
 	return (
 		<Box
