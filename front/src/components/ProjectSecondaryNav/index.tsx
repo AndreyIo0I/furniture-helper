@@ -16,8 +16,7 @@ export default function ProjectSecondaryNav(props: ProjectSecondaryNav) {
 		}, {
 			text: 'Исполнение бюджета',
 			link: `/projects/${props.projectId}/budget`,
-		},
-		{
+		}, {
 			text: 'Аналитика по проекту',
 			link: `/projects/${props.projectId}/analytics`,
 		}]}
