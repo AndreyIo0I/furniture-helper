@@ -1,19 +1,19 @@
-import { BuisnessCost } from './typescript-fetch-client-generated/api';
-import { businessCostApi } from './api';
-import { BuisnessCostEntity } from './useBusinessCosts';
-import { makeAuthenticatedReq } from './useAuthenticatedSWR';
+import {businessCostApi} from './api'
+import {BuisnessCost} from './typescript-fetch-client-generated'
+import {makeAuthenticatedReq} from './useAuthenticatedSWR'
+import {BusinessCostEntity} from './useBusinessCosts'
 
 interface CreateBusinessCostParams {
 	name: string
 	date: string
-    amount: number
+	amount: number
 }
 
-export const mapToBuisnessCostDto = (dto: BuisnessCostEntity): BuisnessCost => ({
+export const mapToBusinessCostDto = (dto: BusinessCostEntity): BuisnessCost => ({
 	id: dto.id,
-    name: dto.name!,
-    amount: dto.amount!,
-    date: dto.date?.toISOString()
+	name: dto.name!,
+	amount: dto.amount!,
+	date: dto.date?.toISOString(),
 })
 
 

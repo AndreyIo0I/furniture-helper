@@ -1,7 +1,7 @@
-import React, {ChangeEvent, useRef, useState} from 'react'
+import {AddCircleOutline} from '@mui/icons-material'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
 	Box,
-	Button,
 	Container,
 	IconButton,
 	Paper,
@@ -12,17 +12,17 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
-import MainNav from '../../components/MainNav'
-import {DatePicker} from '@mui/x-date-pickers'
-import dayjs, {Dayjs} from 'dayjs'
 import {styled} from '@mui/material/styles'
-import useBusinessCosts, { BuisnessCostEntity } from '../../../api/useBusinessCosts'
+import {DatePicker} from '@mui/x-date-pickers'
+import dayjs from 'dayjs'
+import React, {useRef, useState} from 'react'
 import createBusinessCost from '../../../api/createBusinessCost'
-import project from '../projects/project'
+import deleteBusinessCost from '../../../api/deleteBusinessCost'
+import useBusinessCosts, {BusinessCostEntity} from '../../../api/useBusinessCosts'
+import MainNav from '../../components/MainNav'
 
 interface RowProps {
-	cost: BuisnessCostEntity;
+	cost: BusinessCostEntity;
 	onRemove: () => void;
 }
 
@@ -51,11 +51,15 @@ function Row({
 					<DatePicker
 						value={cost.date}
 						disabled
-						onChange={() => {}}
+						onChange={() => {
+						}}
 						renderInput={params => <TextField {...params} />}
 					/>
 				</DatePickerContainer>
 				<TextField
+					sx={{
+						flex: '160px 0 0',
+					}}
 					variant="standard"
 					disabled
 					defaultValue={cost.amount}
@@ -72,61 +76,62 @@ function Row({
 	)
 }
 
-export default function CostsPage() {
-	const {data: buisnessCosts} = useBusinessCosts()
+interface ContentProps {
+	businessCosts: BusinessCostEntity[]
+}
 
+function Content({businessCosts}: ContentProps) {
 	const nameRef = useRef<HTMLInputElement>(null)
 	const amountRef = useRef<HTMLInputElement>(null)
 
 	const [date, setDate] = useState(dayjs())
 
-	const [rows, setRows] = useState<BuisnessCostEntity[]>( buisnessCosts || [] )
+	const [rows, setRows] = useState<BusinessCostEntity[]>(businessCosts)
 
-	const onSaveBuisnessCost = async (event: React.FormEvent<HTMLFormElement>) => {
+	const onSaveBusinessCost = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		
+
 		const amount: number = amountRef.current?.value ? parseInt(amountRef.current?.value) : 0
 		const name: string = nameRef.current?.value!
-		const newBuisenessCostId: number = await createBusinessCost({
+		const newBusinessCostId: number = await createBusinessCost({
 			amount: amount,
 			date: date.toISOString(),
-			name: name
+			name: name,
 		})
 
-		const newBuisenessCost: BuisnessCostEntity = {
-			id: newBuisenessCostId,
+		const newBusinessCost: BusinessCostEntity = {
+			id: newBusinessCostId,
 			name: name,
 			amount: amount,
-			date: date
-
+			date: date,
 		}
-		
-		setRows([newBuisenessCost, ...rows])
+
+		setRows([newBusinessCost, ...rows])
 	}
 
-	const onRemove = (index: number) => {
+	const onRemove = async (index: number, id: number) => {
 		setRows([...rows.slice(0, index), ...rows.slice(index + 1)])
+		await deleteBusinessCost(id)
 	}
 
 	return (
 		<>
 			<MainNav/>
 			<Container maxWidth="lg">
-				<TableContainer component={Paper} sx={{maxWidth: '600px', margin: '24px 0'}}>
+				<TableContainer component={Paper} sx={{maxWidth: '800px', margin: '24px 0'}}>
 					<Table>
 						<TableBody>
 							<TableRow>
 								<TableCell>
 									<Box
 										sx={{
-											display: 'grid',
-											gridTemplate: 'auto / 1fr',
-											maxWidth: '600px',
-											gap: '16px',
-											padding: '20px 0',
+											display: 'flex',
+											alignItems: 'center',
+											justifyContent: 'space-between',
+											gap: '40px',
 										}}
 										component="form"
-										onSubmit={onSaveBuisnessCost}
+										onSubmit={onSaveBusinessCost}
 									>
 										<TextField
 											placeholder="Название издержки"
@@ -135,16 +140,18 @@ export default function CostsPage() {
 											fullWidth={true}
 											autoComplete="off"
 										/>
-										<DatePicker
-											label="Дата"
-											value={date}
-											onChange={newValue => {
-												if (newValue) {
-													setDate(newValue)
-												}
-											}}
-											renderInput={params => <TextField {...params} />}
-										/>
+										<DatePickerContainer>
+											<DatePicker
+												label="Дата"
+												value={date}
+												onChange={newValue => {
+													if (newValue) {
+														setDate(newValue)
+													}
+												}}
+												renderInput={params => <TextField {...params} />}
+											/>
+										</DatePickerContainer>
 										<TextField
 											inputRef={amountRef}
 											margin="none"
@@ -152,23 +159,23 @@ export default function CostsPage() {
 											type="number"
 											defaultValue={0}
 											label="Сумма"
+											sx={{
+												flex: '160px 0 0',
+											}}
 										/>
-										<div>
-											<Button
-												type="submit"
-												variant="contained"
-											>
-												Сохранить
-											</Button>
-										</div>
+										<IconButton
+											type="submit"
+										>
+											<AddCircleOutline/>
+										</IconButton>
 									</Box>
 								</TableCell>
 							</TableRow>
-							{buisnessCosts && buisnessCosts.map((row, index) => (
+							{rows.map((row, index) => (
 								<Row
 									key={row.id}
 									cost={row}
-									onRemove={() => onRemove(index)}
+									onRemove={() => onRemove(index, row.id!)}
 								/>
 							))}
 						</TableBody>
@@ -177,4 +184,13 @@ export default function CostsPage() {
 			</Container>
 		</>
 	)
+}
+
+export default function CostsPage() {
+	const {data: businessCosts} = useBusinessCosts()
+
+	if (!businessCosts)
+		return null
+
+	return <Content businessCosts={businessCosts}/>
 }

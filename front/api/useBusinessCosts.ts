@@ -1,26 +1,26 @@
-import { BuisnessCost } from './typescript-fetch-client-generated/api';
 import dayjs, {Dayjs} from 'dayjs'
 import useSWR, {SWRResponse} from 'swr'
-import {businessCostApi, projectApi} from './api'
+import {businessCostApi} from './api'
+import {BuisnessCost} from './typescript-fetch-client-generated'
 import useAuthenticatedSWR from './useAuthenticatedSWR'
 
-export interface BuisnessCostEntity {
+export interface BusinessCostEntity {
 	id: number | undefined
-    name: string | undefined
-    amount: number | undefined
-    date: Dayjs
+	name: string | undefined
+	amount: number | undefined
+	date: Dayjs
 }
 
-export const mapBuisnessCostDto = (dto: BuisnessCost): BuisnessCostEntity => ({
+export const mapBusinessCostDto = (dto: BuisnessCost): BusinessCostEntity => ({
 	id: dto.id,
-    name: dto.name!,
-    amount: dto.amount!,
-    date: dayjs(dto.date!)
+	name: dto.name!,
+	amount: dto.amount!,
+	date: dayjs(dto.date!),
 })
 
 
-export default function useBusinessCosts(): SWRResponse<BuisnessCostEntity[]> {
+export default function useBusinessCosts(): SWRResponse<BusinessCostEntity[]> {
 	return useAuthenticatedSWR(
-		useSWR('useBusinessCosts', async () => (await businessCostApi.buisnessCostsGet()).map(mapBuisnessCostDto)),
+		useSWR('useBusinessCosts', async () => (await businessCostApi.buisnessCostsGet()).map(mapBusinessCostDto)),
 	)
 }
