@@ -1,8 +1,6 @@
-import DeleteIcon from '@mui/icons-material/Delete'
 import {
 	Button,
 	Container,
-	IconButton,
 	Paper,
 	Table,
 	TableBody,
@@ -81,7 +79,7 @@ export default function UsersPage() {
 				<TableContainer
 					component={Paper}
 					sx={{
-						maxWidth: '1440px',
+						maxWidth: '800px',
 						margin: 'auto',
 					}}
 				>
@@ -90,7 +88,6 @@ export default function UsersPage() {
 							<TableRow>
 								<StyledTableCell>ФИО</StyledTableCell>
 								<StyledTableCell align="center">Роль</StyledTableCell>
-								<StyledTableCell align="right"></StyledTableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -106,13 +103,6 @@ export default function UsersPage() {
 										{user.name}
 									</StyledTableCell>
 									<StyledTableCell align="center">{mapUserRoleToString(user.role)}</StyledTableCell>
-									<StyledTableCell align="center">
-										<IconButton
-											size="small"
-										>
-											<DeleteIcon fontSize="small"/>
-										</IconButton>
-									</StyledTableCell>
 								</StyledTableRow>
 							))}
 						</TableBody>

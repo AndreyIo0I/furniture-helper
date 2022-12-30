@@ -1,6 +1,7 @@
 import {Box, Button, Container, MenuItem, Select, TextField} from '@mui/material'
 import React, {useRef, useState} from 'react'
 import {User, UserRole} from '../../../../../api/users/createUser'
+import deleteUser from '../../../../../api/users/deleteUser'
 import updateUser from '../../../../../api/users/updateUser'
 import useCurrentUser from '../../../../../api/users/useCurrentUser'
 import useUser from '../../../../../api/users/useUser'
@@ -29,8 +30,8 @@ function Content({user}: UserPageContentProps) {
 		})
 	}
 
-	const onUserRemove = () => {
-		alert()
+	const onUserRemove = async () => {
+		await deleteUser(user.id)
 	}
 
 	const confirmError = passwordConfirmation !== password
