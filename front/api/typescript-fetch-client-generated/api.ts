@@ -438,6 +438,12 @@ export interface ProjectDto {
 	 * @memberof ProjectDto
 	 */
 	description?: string;
+	/**
+	 *
+	 * @type {boolean}
+	 * @memberof ProjectDto
+	 */
+	isCompleted?: boolean;
 }
 
 /**
