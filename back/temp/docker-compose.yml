@@ -1,0 +1,19 @@
+# docker compose version
+version: '3.8'
+
+services:
+
+  db:
+    image: postgres:14.5
+    container_name: fh_postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    ports:
+      - "5432:5432"
+    volumes:
+      - fh-data:/var/lib/postgresql/data/
+
+volumes:
+  fh-data:

@@ -5,7 +5,7 @@ set -e
 systemctl stop FHExtranetAPI
 
 # publish application
-cd ../../src/ExtranetAPI
+cd /root/src/app/furniture-helper/back/FurnitureHelper
 dotnet publish -c Release --runtime ubuntu.22.04-x64 -o /root/srv/FurnitureHelper --self-contained false /p:EnvironmentName=prod
 
 # apply database migrations
@@ -19,3 +19,4 @@ cp FHExtranetAPI.service /etc/systemd/system/FHExtranetAPI.service
 # run
 systemctl daemon-reload
 systemctl start FHExtranetAPI
+systemctl status FHExtranetAPI

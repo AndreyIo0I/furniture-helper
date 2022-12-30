@@ -38,7 +38,7 @@
         public void Complete()
         {
             IsCompleted = true;
-            EndDate = DateTime.Now;
+            EndDate = DateTime.UtcNow;
         }
 
         public void Stop()
