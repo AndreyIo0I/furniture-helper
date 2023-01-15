@@ -1,10 +1,11 @@
 import {Search} from '@mui/icons-material'
-import {Button, InputAdornment, MenuItem, Stack, TextField} from '@mui/material'
+import {InputAdornment, MenuItem, Stack, TextField} from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import {styled} from '@mui/material/styles'
 import {DatePicker} from '@mui/x-date-pickers'
+import {Button} from 'antd'
 import dayjs, {Dayjs} from 'dayjs'
 import {useEffect, useRef, useState} from 'react'
 import {
@@ -162,7 +163,7 @@ export default function AnalyticsPage() {
 					</div>
 					<div>
 						<Button
-							variant="contained"
+							type="primary"
 							onClick={() => analyzeOnClickHandler()}
 						>
 							Анализировать

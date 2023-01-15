@@ -1,4 +1,5 @@
-import {Button, Container, Paper, SxProps, TextField} from '@mui/material'
+import {Container, Paper, SxProps, TextField} from '@mui/material'
+import {Button} from 'antd'
 import React from 'react'
 import useCostTypes, {CostType} from '../../../../../api/costTypes/useCostTypes'
 import saveProjectBudget from '../../../../../api/saveProjectBudget'
@@ -12,9 +13,6 @@ import styles from './styles.module.css'
 
 const projectCostStyle: SxProps = {
 	m: 2,
-}
-const saveButtonStyle: SxProps = {
-	my: 2,
 }
 
 const mapToProjectBudgetViewModel = (projectBudget: ProjectBudget): model.ProjectBudget => ({
@@ -117,9 +115,9 @@ function Content(props: ContentProps) {
 					costs={props.costTypes}
 				/>
 				<Button
-					variant="contained"
-					sx={saveButtonStyle}
+					type="primary"
 					onClick={updateProjectBudget}
+					style={{margin: '16px 0'}}
 				>
                     Сохранить
 				</Button>

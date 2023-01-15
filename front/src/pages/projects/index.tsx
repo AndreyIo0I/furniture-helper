@@ -1,16 +1,8 @@
-import {
-	Button,
-	Container,
-	Paper,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-} from '@mui/material'
+import {Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
+import {Button} from 'antd'
 import dayjs, {Dayjs} from 'dayjs'
 import {useRouter} from 'next/router'
+import React from 'react'
 import useClients, {Client} from '../../../api/clients/useClients'
 import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
 import useProjects from '../../../api/useProjects'
@@ -59,23 +51,10 @@ export default function ProjectsPage() {
 		<MainLayout>
 			<Container maxWidth="lg">
 				<div className={styles.top}>
-					{/* TODO добавить поиск */}
-					{/*<TextField*/}
-					{/*	margin="none"*/}
-					{/*	size="small"*/}
-					{/*	autoFocus*/}
-					{/*	InputProps={{*/}
-					{/*		startAdornment: (*/}
-					{/*			<InputAdornment position="start">*/}
-					{/*				<Search/>*/}
-					{/*			</InputAdornment>*/}
-					{/*		),*/}
-					{/*	}}*/}
-					{/*/>*/}
 					<div></div>
 					<Button
 						onClick={() => router.push('/projects/new')}
-						variant="contained"
+						type="primary"
 					>
 						Добавить новый проект
 					</Button>

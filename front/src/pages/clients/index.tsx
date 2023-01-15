@@ -1,12 +1,13 @@
-import {Button, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
+import {Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
 import styled from '@mui/material/styles/styled'
 import {tableCellClasses} from '@mui/material/TableCell'
+import {Button} from 'antd'
 import {useRouter} from 'next/router'
 import React from 'react'
-import useClients from '../../../../api/clients/useClients'
-import {UserRole} from '../../../../api/users/createUser'
-import useCurrentUser from '../../../../api/users/useCurrentUser'
-import MainLayout from '../../../components/MainLayout'
+import useClients from '../../../api/clients/useClients'
+import {UserRole} from '../../../api/users/createUser'
+import useCurrentUser from '../../../api/users/useCurrentUser'
+import MainLayout from '../../components/MainLayout'
 import styles from './styles.module.css'
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
@@ -45,24 +46,11 @@ export default function ClientsPage() {
 		<MainLayout>
 			<Container maxWidth="lg">
 				<div className={styles.top}>
-					{/* TODO добавить поиск */}
-					{/*<TextField*/}
-					{/*	margin="none"*/}
-					{/*	size="small"*/}
-					{/*	autoFocus*/}
-					{/*	InputProps={{*/}
-					{/*		startAdornment: (*/}
-					{/*			<InputAdornment position="start">*/}
-					{/*				<Search/>*/}
-					{/*			</InputAdornment>*/}
-					{/*		),*/}
-					{/*	}}*/}
-					{/*/>*/}
 					<div></div>
 					{isEditable && (
 						<Button
 							onClick={() => router.push(`${location.pathname}/new`)}
-							variant="contained"
+							type="primary"
 						>
 							Добавить клиента
 						</Button>
@@ -87,7 +75,7 @@ export default function ClientsPage() {
 							{clients && clients.map(row => (
 								<StyledTableRow
 									key={row.id}
-									onClick={() => router.push(`/settings/clients/${row.id}`)}
+									onClick={() => router.push(`/clients/${row.id}`)}
 								>
 									<StyledTableCell component="th" scope="row">
 										{row.fullName}

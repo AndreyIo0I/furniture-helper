@@ -1,6 +1,6 @@
 import {useRouter} from 'next/router'
 import * as React from 'react'
-import ClientPage from '../../../src/pages/settings/clients/client'
+import ClientPage from '../../src/pages/clients/client'
 
 export default function ClientIdRoute() {
 	const router = useRouter()

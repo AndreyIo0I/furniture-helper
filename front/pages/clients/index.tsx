@@ -1,4 +1,4 @@
-import ClientsPage from '../../../src/pages/settings/clients'
+import ClientsPage from '../../src/pages/clients'
 
 export default function ClientsRoute() {
 	return <ClientsPage/>

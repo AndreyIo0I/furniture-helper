@@ -1,5 +1,6 @@
-import {Autocomplete, Box, Button, Container, TextField} from '@mui/material'
+import {Autocomplete, Box, Container, TextField} from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
+import { Button } from 'antd'
 import dayjs from 'dayjs'
 import {useRouter} from 'next/router'
 import * as React from 'react'
@@ -118,8 +119,8 @@ export default function NewProjectPage() {
 					/>
 					<div>
 						<Button
-							type="submit"
-							variant="contained"
+							htmlType="submit"
+							type="primary"
 						>
 							Создать
 						</Button>

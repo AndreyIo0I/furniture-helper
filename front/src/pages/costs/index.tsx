@@ -1,5 +1,5 @@
+import {DeleteOutlined} from '@ant-design/icons'
 import {AddCircleOutline} from '@mui/icons-material'
-import DeleteIcon from '@mui/icons-material/Delete'
 import {
 	Box,
 	Container,
@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import {styled} from '@mui/material/styles'
 import {DatePicker} from '@mui/x-date-pickers'
+import {Button} from 'antd'
 import dayjs from 'dayjs'
 import React, {useRef, useState} from 'react'
 import createBusinessCost from '../../../api/createBusinessCost'
@@ -65,12 +66,12 @@ function Row({
 					defaultValue={cost.amount}
 					fullWidth={true}
 				/>
-				<IconButton
+				<Button
+					shape="circle"
+					icon={<DeleteOutlined />}
+					type="link"
 					onClick={() => onRemove()}
-					size="small"
-				>
-					<DeleteIcon fontSize="small"/>
-				</IconButton>
+				/>
 			</TableCell>
 		</TableRow>
 	)

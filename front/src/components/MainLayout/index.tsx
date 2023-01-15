@@ -1,47 +1,68 @@
+import {ArrowLeftOutlined} from '@ant-design/icons'
 import {Layout, Menu, theme, Button} from 'antd'
 import {useRouter} from 'next/router'
 import React, {ReactNode} from 'react'
 
-const routes = [{
+type Route = {
+	label: string
+	key: string
+	regexp: RegExp
+	items?: Route[]
+}
+
+const routes: Route[] = [{
 	label: 'Проекты',
 	key: '/projects',
+	regexp: /^\/projects(?:\/.*)?$/,
 	items: [{
 		label: 'Общее',
 		key: '',
+		regexp: /^\/projects\/[^\/]*$/,
 	}, {
 		label: 'Этапы',
 		key: '/stages',
+		regexp: /^\/projects\/.*\/stages$/,
 	}, {
 		label: 'Исполнение бюджета',
 		key: '/budget',
+		regexp: /^\/projects\/.*\/budget$/,
 	}, {
 		label: 'Аналитика по проекту',
 		key: '/analytics',
+		regexp: /^\/projects\/.*\/analytics$/,
 	}],
+}, {
+	label: 'Клиенты',
+	key: '/clients',
+	regexp: /^\/clients(?:\/.*)?$/,
 }, {
 	label: 'Аналитика',
 	key: '/analytics',
+	regexp: /^\/analytics$/,
 }, {
 	label: 'Настройки',
 	key: '/settings',
+	regexp: /^\/settings(?:\/.*)?$/,
 	items: [{
-		label: 'Общее',
+		label: 'Общие',
 		key: '',
-	}, {
-		label: 'Клиенты',
-		key: '/clients',
+		regexp: /^\/settings$/,
 	}, {
 		label: 'Типы издержек',
 		key: '/costs',
+		regexp: /^\/settings\/costs$/,
 	}, {
 		label: 'Пользователи',
 		key: '/users',
+		regexp: /^\/settings\/users(?:\/(?!me).*)?$/,
 	}, {
 		label: 'Мой профиль',
-		key: '/clients/me',
+		key: '/users/me',
+		regexp: /^\/settings\/users\/me$/,
 	}],
 }, {
 	label: 'Общие издержки',
+	regexp: /^\/costs$/,
 	key: '/costs',
 }]
 
@@ -59,7 +80,7 @@ export default function MainLayout({
 		token: {colorBgContainer},
 	} = theme.useToken()
 
-	const currentTopItem = routes.find(item => router.asPath.startsWith(item.key))!
+	const currentTopItem = routes.find(item => item.regexp.test(router.asPath))!
 	const sidebarItems = currentTopItem.key === '/projects' && projectId
 		? currentTopItem.items!.map(item => ({
 			...item,
@@ -75,12 +96,18 @@ export default function MainLayout({
 	return (
 		<Layout style={{height: '100vh'}}>
 			<Layout.Header className="header">
-				<div style={{
-					float: 'left',
-					width: '120px',
-					height: '31px',
-					margin: '16px 24px 16px 0',
-				}}/>
+				<Button
+					style={{
+						float: 'left',
+						width: '120px',
+						height: '31px',
+						margin: '16px 24px 16px 0',
+					}}
+					onClick={() => router.back()}
+					type="link"
+				>
+					<ArrowLeftOutlined/>
+				</Button>
 				<Menu
 					theme="dark"
 					mode="horizontal"
@@ -94,7 +121,7 @@ export default function MainLayout({
 					{!!sidebarItems && (
 						<Menu
 							mode="inline"
-							defaultSelectedKeys={[sidebarItems.find(item => currentTopItem.key + item.key === router.asPath)!.key]}
+							defaultSelectedKeys={[sidebarItems.find(item => item.regexp.test(router.asPath))!.key]}
 							style={{height: '100%', borderRight: 0}}
 							items={sidebarItems}
 							onClick={item => router.push(currentTopItem.key + item.key)}

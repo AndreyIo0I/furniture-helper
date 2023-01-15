@@ -1,5 +1,6 @@
 import {yupResolver} from '@hookform/resolvers/yup'
-import {Box, Button, TextField} from '@mui/material'
+import {Box, TextField} from '@mui/material'
+import {Button} from 'antd'
 import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import * as Yup from 'yup'
@@ -124,8 +125,8 @@ function Content({accountSettings}: ContentProps) {
 			</div>
 			<div>
 				<Button
-					type="submit"
-					variant="contained"
+					type="primary"
+					htmlType="submit"
 				>
 					Сохранить
 				</Button>

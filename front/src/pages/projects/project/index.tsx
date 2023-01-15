@@ -1,5 +1,6 @@
-import {Autocomplete, Box, Button, Container, TextField} from '@mui/material'
+import {Autocomplete, Box, Container, TextField} from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
+import {Button} from 'antd'
 import * as React from 'react'
 import {useRef, useState} from 'react'
 import useClients, {Client} from '../../../../api/clients/useClients'
@@ -85,7 +86,7 @@ function Content({
 					/>
 					<Button
 						onClick={() => setIsCompleted(!isCompleted)}
-						variant="contained"
+						type="primary"
 						disabled={project.isCompleted}
 					>
 						Завершить
@@ -147,8 +148,8 @@ function Content({
 				/>
 				<div>
 					<Button
-						type="submit"
-						variant="contained"
+						type="primary"
+						htmlType="submit"
 						disabled={project.isCompleted}
 					>
 						Сохранить

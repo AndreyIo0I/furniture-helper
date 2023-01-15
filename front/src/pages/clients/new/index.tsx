@@ -1,10 +1,11 @@
 import {yupResolver} from '@hookform/resolvers/yup'
-import {Box, Button, Container, TextField} from '@mui/material'
+import {Box, Container, TextField} from '@mui/material'
+import {Button} from 'antd'
 import {useRouter} from 'next/router'
 import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import * as Yup from 'yup'
-import createClient from '../../../../../api/clients/createClient'
+import createClient from '../../../../api/clients/createClient'
 import styles from './styles.module.css'
 
 type Form = {
@@ -97,8 +98,8 @@ export default function NewClientPage() {
 					/>
 					<div>
 						<Button
-							type="submit"
-							variant="contained"
+							htmlType="submit"
+							type="primary"
 							className={styles.button}
 						>
 							Создать

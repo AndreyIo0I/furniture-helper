@@ -1,16 +1,17 @@
 import {yupResolver} from '@hookform/resolvers/yup'
-import {Box, Button, Container, TextField} from '@mui/material'
+import {Box, Container, TextField} from '@mui/material'
+import {Button} from 'antd'
 import {useRouter} from 'next/router'
 import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import * as Yup from 'yup'
-import deleteClient from '../../../../../api/clients/deleteClient'
-import updateClient from '../../../../../api/clients/updateClient'
-import useClient from '../../../../../api/clients/useClient'
-import {Client} from '../../../../../api/clients/useClients'
-import {UserRole} from '../../../../../api/users/createUser'
-import useCurrentUser from '../../../../../api/users/useCurrentUser'
-import MainLayout from '../../../../components/MainLayout'
+import deleteClient from '../../../../api/clients/deleteClient'
+import updateClient from '../../../../api/clients/updateClient'
+import useClient from '../../../../api/clients/useClient'
+import {Client} from '../../../../api/clients/useClients'
+import {UserRole} from '../../../../api/users/createUser'
+import useCurrentUser from '../../../../api/users/useCurrentUser'
+import MainLayout from '../../../components/MainLayout'
 import styles from './styles.module.css'
 
 type Form = {
@@ -122,8 +123,8 @@ function Content({client}: { client: Client }) {
 					}}
 				>
 					<Button
-						type="submit"
-						variant="contained"
+						htmlType="submit"
+						type="primary"
 					>
 						Сохранить
 					</Button>

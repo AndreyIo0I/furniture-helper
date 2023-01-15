@@ -1,11 +1,9 @@
-import {ExpandLess, ExpandMore} from '@mui/icons-material'
+import {DownOutlined, UpOutlined} from '@ant-design/icons'
 import {
-	Button,
 	Checkbox,
 	Collapse,
 	Container,
 	FormControlLabel,
-	IconButton,
 	Paper,
 	Table,
 	TableBody,
@@ -16,6 +14,7 @@ import {
 	TextField,
 } from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
+import {Button} from 'antd'
 import dayjs from 'dayjs'
 import React, {useEffect, useRef, useState} from 'react'
 import saveStage from '../../../../../api/saveStage'
@@ -58,9 +57,11 @@ function ProjectStage({
 					onClick={() => setOpen(!open)}
 					sx={{cursor: 'pointer'}}
 				>
-					<IconButton>
-						{open ? <ExpandLess/> : <ExpandMore/>}
-					</IconButton>
+					<Button
+						shape="circle"
+						icon={open ? <DownOutlined/> : <UpOutlined/>}
+						type="link"
+					/>
 				</TableCell>
 				<TableCell
 					sx={{cursor: 'pointer'}}
@@ -152,11 +153,9 @@ function Content({projectId, stages: _stages}: ContentProps) {
 					}}
 				>
 					<Button
-						variant="contained"
-						sx={{
-							my: 2,
-						}}
+						type="primary"
 						onClick={onSave}
+						style={{margin: '16px 0'}}
 					>
 						Сохранить
 					</Button>
