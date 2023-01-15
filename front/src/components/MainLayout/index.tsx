@@ -1,4 +1,4 @@
-import {Layout, Menu, theme} from 'antd'
+import {Layout, Menu, theme, Button} from 'antd'
 import {useRouter} from 'next/router'
 import React, {ReactNode} from 'react'
 
@@ -67,6 +67,11 @@ export default function MainLayout({
 		}))
 		: currentTopItem.key !== '/projects' && currentTopItem.items
 
+	const onLogout = async () => {
+		await fetch('/api/logout', {method: 'POST'})
+		await router.push('/login')
+	}
+
 	return (
 		<Layout style={{height: '100vh'}}>
 			<Layout.Header className="header">
@@ -95,6 +100,19 @@ export default function MainLayout({
 							onClick={item => router.push(currentTopItem.key + item.key)}
 						/>
 					)}
+					<Button
+						onClick={onLogout}
+						type="link"
+						danger
+						style={{
+							position: 'absolute',
+							left: '50%',
+							bottom: '24px',
+							transform: 'translateX(-50%)',
+						}}
+					>
+						Выход
+					</Button>
 				</Layout.Sider>
 				<Layout style={{padding: '24px'}}>
 					<Layout.Content
