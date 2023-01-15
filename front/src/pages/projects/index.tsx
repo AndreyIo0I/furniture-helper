@@ -11,10 +11,10 @@ import {
 } from '@mui/material'
 import dayjs, {Dayjs} from 'dayjs'
 import {useRouter} from 'next/router'
-import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
 import useClients, {Client} from '../../../api/clients/useClients'
+import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
 import useProjects from '../../../api/useProjects'
-import MainNav from '../../components/MainNav'
+import MainLayout from '../../components/MainLayout'
 import styles from './project/styles.module.css'
 
 interface Project {
@@ -56,8 +56,7 @@ export default function ProjectsPage() {
 		: []
 
 	return (
-		<>
-			<MainNav/>
+		<MainLayout>
 			<Container maxWidth="lg">
 				<div className={styles.top}>
 					{/* TODO добавить поиск */}
@@ -121,6 +120,6 @@ export default function ProjectsPage() {
 					</Table>
 				</TableContainer>
 			</Container>
-		</>
+		</MainLayout>
 	)
 }

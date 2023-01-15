@@ -4,10 +4,10 @@ import dayjs from 'dayjs'
 import {useRouter} from 'next/router'
 import * as React from 'react'
 import {useEffect, useRef, useState} from 'react'
+import useClients from '../../../../api/clients/useClients'
 import createProject from '../../../../api/createProject'
 import useAccountSettings from '../../../../api/useAccountSettings'
-import useClients from '../../../../api/clients/useClients'
-import MainNav from '../../../components/MainNav'
+import MainLayout from '../../../components/MainLayout'
 
 const DEFAULT_PROJECT_DURATION_IN_DAYS = 42
 
@@ -45,8 +45,7 @@ export default function NewProjectPage() {
 	}
 
 	return (
-		<>
-			<MainNav/>
+		<MainLayout>
 			<Container maxWidth="lg">
 				<Box
 					sx={{
@@ -81,7 +80,7 @@ export default function NewProjectPage() {
 							: []
 						}
 						sx={{width: 300}}
-						renderInput={(params) => <TextField {...params} label="Клиент"/>}
+						renderInput={params => <TextField {...params} label="Клиент"/>}
 					/>
 					<DatePicker
 						label="Дата начала"
@@ -127,6 +126,6 @@ export default function NewProjectPage() {
 					</div>
 				</Box>
 			</Container>
-		</>
+		</MainLayout>
 	)
 }

@@ -16,8 +16,7 @@ import React from 'react'
 import {User, UserRole} from '../../../../api/users/createUser'
 import useCurrentUser from '../../../../api/users/useCurrentUser'
 import useUsers from '../../../../api/users/useUsers'
-import MainNav from '../../../components/MainNav'
-import SettingsSecondaryNav from '../../../components/SettingsSecondaryNav'
+import MainLayout from '../../../components/MainLayout'
 import styles from './styles.module.css'
 
 function mapUserRoleToString(role: UserRole): string {
@@ -63,9 +62,7 @@ export default function UsersPage() {
 	}
 
 	return (
-		<>
-			<MainNav/>
-			<SettingsSecondaryNav/>
+		<MainLayout>
 			<Container maxWidth="lg">
 				<div className={styles.top}>
 					<div></div>
@@ -109,6 +106,6 @@ export default function UsersPage() {
 					</Table>
 				</TableContainer>
 			</Container>
-		</>
+		</MainLayout>
 	)
 }

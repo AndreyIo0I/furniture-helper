@@ -15,8 +15,7 @@ import {
 import React, {useState} from 'react'
 import createCostType from '../../../../api/costTypes/createCostType'
 import useCostTypes, {CostType} from '../../../../api/costTypes/useCostTypes'
-import MainNav from '../../../components/MainNav'
-import SettingsSecondaryNav from '../../../components/SettingsSecondaryNav'
+import MainLayout from '../../../components/MainLayout'
 
 interface ContentProps {
 	rows: CostType[]
@@ -62,9 +61,7 @@ export default function CostTypesPage() {
 	const {data: rows} = useCostTypes()
 
 	return (
-		<>
-			<MainNav/>
-			<SettingsSecondaryNav/>
+		<MainLayout>
 			<Container maxWidth="lg">
 				<TableContainer component={Paper} sx={{maxWidth: '400px', margin: '24px 0'}}>
 					<Table>
@@ -98,6 +95,6 @@ export default function CostTypesPage() {
 					</Table>
 				</TableContainer>
 			</Container>
-		</>
+		</MainLayout>
 	)
 }

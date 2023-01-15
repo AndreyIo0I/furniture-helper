@@ -3,8 +3,7 @@ import React from 'react'
 import useCostTypes, {CostType} from '../../../../../api/costTypes/useCostTypes'
 import saveProjectBudget from '../../../../../api/saveProjectBudget'
 import useProjectBudget, {ProjectBudget} from '../../../../../api/useProjectBudget'
-import MainNav from '../../../../components/MainNav'
-import ProjectSecondaryNav from '../../../../components/ProjectSecondaryNav'
+import MainLayout from '../../../../components/MainLayout'
 import ClientPaymentsTable from './clientPayments'
 import {formStyle, toApiModelDate, toApiModelNumber, toViewModelNumber, toViewNumber} from './common'
 import CostPaymentsTable from './costPayments'
@@ -90,9 +89,9 @@ function Content(props: ContentProps) {
 	}
 
 	return (
-		<>
-			<MainNav/>
-			<ProjectSecondaryNav projectId={props.projectId}/>
+		<MainLayout
+			projectId={props.projectId}
+		>
 			{budget && <Container maxWidth="lg">
 				<Paper sx={formStyle}>
 					<TextField
@@ -125,7 +124,7 @@ function Content(props: ContentProps) {
                     Сохранить
 				</Button>
 			</Container>}
-		</>
+		</MainLayout>
 	)
 }
 

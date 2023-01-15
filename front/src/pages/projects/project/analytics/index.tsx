@@ -5,8 +5,7 @@ import {
 	getProjectProfitNormById,
 	getProjectRateOfSurplusValueById,
 } from '../../../../../api/useAnalytics'
-import MainNav from '../../../../components/MainNav'
-import ProjectSecondaryNav from '../../../../components/ProjectSecondaryNav'
+import MainLayout from '../../../../components/MainLayout'
 
 interface ProjectAnalyticsPageProps {
 	projectId: number
@@ -25,9 +24,9 @@ interface ContentProps {
 
 function Content(props: ContentProps) {
 	return (
-		<>
-			<MainNav/>
-			<ProjectSecondaryNav projectId={props.projectId}/>
+		<MainLayout
+			projectId={props.projectId}
+		>
 			{props && props.analytics && (
 				<Container maxWidth="lg">
 					<div>{`Маржа по проекту: ${props.analytics.projectMargin}`}</div>
@@ -35,7 +34,7 @@ function Content(props: ContentProps) {
 					<div>{`Норма прибавочной стоимости по проекту: ${props.analytics.rateOfSurplusValue}`}</div>
 				</Container>
 			)}
-		</>
+		</MainLayout>
 	)
 }
 

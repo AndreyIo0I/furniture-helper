@@ -1,20 +1,12 @@
-import {Container} from '@mui/material'
-import Button from '@mui/material/Button'
-import Paper from '@mui/material/Paper'
+import {Button, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
 import styled from '@mui/material/styles/styled'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell, {tableCellClasses} from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
+import {tableCellClasses} from '@mui/material/TableCell'
 import {useRouter} from 'next/router'
 import React from 'react'
 import useClients from '../../../../api/clients/useClients'
 import {UserRole} from '../../../../api/users/createUser'
 import useCurrentUser from '../../../../api/users/useCurrentUser'
-import MainNav from '../../../components/MainNav'
-import SettingsSecondaryNav from '../../../components/SettingsSecondaryNav'
+import MainLayout from '../../../components/MainLayout'
 import styles from './styles.module.css'
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
@@ -50,9 +42,7 @@ export default function ClientsPage() {
 	const isEditable = currentUser && currentUser.role !== UserRole.Manager
 
 	return (
-		<>
-			<MainNav/>
-			<SettingsSecondaryNav/>
+		<MainLayout>
 			<Container maxWidth="lg">
 				<div className={styles.top}>
 					{/* TODO добавить поиск */}
@@ -110,6 +100,6 @@ export default function ClientsPage() {
 					</Table>
 				</TableContainer>
 			</Container>
-		</>
+		</MainLayout>
 	)
 }

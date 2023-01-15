@@ -1,13 +1,11 @@
-import {useRouter} from 'next/router'
-import * as Yup from 'yup'
-import createClient from '../../../../../api/clients/createClient'
-import MainNav from '../../../../components/MainNav'
+import {yupResolver} from '@hookform/resolvers/yup'
 import {Box, Button, Container, TextField} from '@mui/material'
-import SettingsSecondaryNav from '../../../../components/SettingsSecondaryNav'
-import styles from './styles.module.css'
+import {useRouter} from 'next/router'
 import React, {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
-import {yupResolver} from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
+import createClient from '../../../../../api/clients/createClient'
+import styles from './styles.module.css'
 
 type Form = {
 	fullName: string;
@@ -52,8 +50,6 @@ export default function NewClientPage() {
 
 	return (
 		<>
-			<MainNav/>
-			<SettingsSecondaryNav/>
 			<Container maxWidth="lg">
 				<Box
 					component="form"

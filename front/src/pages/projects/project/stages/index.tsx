@@ -20,8 +20,7 @@ import dayjs from 'dayjs'
 import React, {useEffect, useRef, useState} from 'react'
 import saveStage from '../../../../../api/saveStage'
 import useStages, {Stage} from '../../../../../api/useStages'
-import MainNav from '../../../../components/MainNav'
-import ProjectSecondaryNav from '../../../../components/ProjectSecondaryNav'
+import MainLayout from '../../../../components/MainLayout'
 import {isDeepEqual} from '../../../../helpers'
 import styles from './styles.module.css'
 
@@ -143,9 +142,7 @@ function Content({projectId, stages: _stages}: ContentProps) {
 	}
 
 	return (
-		<>
-			<MainNav/>
-			<ProjectSecondaryNav projectId={projectId}/>
+		<MainLayout projectId={projectId}>
 			<Container maxWidth="lg">
 				<div
 					style={{
@@ -189,7 +186,7 @@ function Content({projectId, stages: _stages}: ContentProps) {
 					</Table>
 				</TableContainer>
 			</Container>
-		</>
+		</MainLayout>
 	)
 }
 

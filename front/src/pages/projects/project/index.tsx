@@ -2,12 +2,11 @@ import {Autocomplete, Box, Button, Container, TextField} from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
 import * as React from 'react'
 import {useRef, useState} from 'react'
-import saveProject from '../../../../api/saveProject'
 import useClients, {Client} from '../../../../api/clients/useClients'
+import saveProject from '../../../../api/saveProject'
 import useProject from '../../../../api/useProject'
 import {Project} from '../../../../api/useProjects'
-import MainNav from '../../../components/MainNav'
-import ProjectSecondaryNav from '../../../components/ProjectSecondaryNav'
+import MainLayout from '../../../components/MainLayout'
 
 interface ContentProps {
 	project: Project
@@ -169,12 +168,10 @@ export default function ProjectPage(props: ProjectPageProps) {
 	const {data: clients} = useClients()
 
 	return (
-		<>
-			<MainNav/>
-			<ProjectSecondaryNav projectId={props.projectId}/>
+		<MainLayout projectId={props.projectId}>
 			<Container maxWidth="lg">
 				{project && clients && <Content project={project} clients={clients}/>}
 			</Container>
-		</>
+		</MainLayout>
 	)
 }

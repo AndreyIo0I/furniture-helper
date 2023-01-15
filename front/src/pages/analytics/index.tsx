@@ -8,6 +8,10 @@ import {DatePicker} from '@mui/x-date-pickers'
 import dayjs, {Dayjs} from 'dayjs'
 import {useEffect, useRef, useState} from 'react'
 import {
+	getOutdatedProjects,
+	getProjectMargin,
+	getProjectsPrices,
+	getSpendingOnCosts,
 	mapOutdatedProjectsDto,
 	mapProjectsMarginDto,
 	mapProjectsPricesDto,
@@ -18,18 +22,13 @@ import {
 	ProjectsPrices,
 	SearchAnalyticParams,
 	SpendingOnCosts,
-	getOutdatedProjects,
-	getProjectMargin,
-	getProjectsPrices,
-	getSpendingOnCosts,
 } from '../../../api/useAnalytics'
 import MarginComponent from '../../components/Analytics/Margin'
 import {OutDatedProjectsComponent} from '../../components/Analytics/OutDatedProjects'
 import {ProjectsPricesComponent} from '../../components/Analytics/ProjectsPrices'
 import SpendingOnCostsComponent from '../../components/Analytics/SpendingOnCosts'
-import MainNav from '../../components/MainNav'
+import MainLayout from '../../components/MainLayout'
 import styles from './styles.module.css'
-
 
 enum AnalyticsKind {
 	Margin = 'margin',
@@ -102,8 +101,7 @@ export default function AnalyticsPage() {
 	}, [analyticsState])
 
 	return (
-		<>
-			<MainNav/>
+		<MainLayout>
 			<div className={styles.form}>
 				<div className={styles.panelWrapper}>
 					<div>
@@ -196,6 +194,6 @@ export default function AnalyticsPage() {
 				&& <SpendingOnCostsComponent
 					spendingOnCosts={(analyticsState as SpendingOnCosts).spendingOnCosts!}
 				/>}
-		</>
+		</MainLayout>
 	)
 }

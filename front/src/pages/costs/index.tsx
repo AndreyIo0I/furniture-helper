@@ -19,7 +19,7 @@ import React, {useRef, useState} from 'react'
 import createBusinessCost from '../../../api/createBusinessCost'
 import deleteBusinessCost from '../../../api/deleteBusinessCost'
 import useBusinessCosts, {BusinessCostEntity} from '../../../api/useBusinessCosts'
-import MainNav from '../../components/MainNav'
+import MainLayout from '../../components/MainLayout'
 
 interface RowProps {
 	cost: BusinessCostEntity;
@@ -115,8 +115,7 @@ function Content({businessCosts}: ContentProps) {
 	}
 
 	return (
-		<>
-			<MainNav/>
+		<MainLayout>
 			<Container maxWidth="lg">
 				<TableContainer component={Paper} sx={{maxWidth: '800px', margin: '24px 0'}}>
 					<Table>
@@ -182,7 +181,7 @@ function Content({businessCosts}: ContentProps) {
 					</Table>
 				</TableContainer>
 			</Container>
-		</>
+		</MainLayout>
 	)
 }
 

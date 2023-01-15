@@ -1,8 +1,6 @@
 import {Box, Button, Container, MenuItem, Select, TextField} from '@mui/material'
 import React, {useRef, useState} from 'react'
 import createUser, {UserRole} from '../../../../../api/users/createUser'
-import MainNav from '../../../../components/MainNav'
-import SettingsSecondaryNav from '../../../../components/SettingsSecondaryNav'
 import styles from './styles.module.css'
 
 export default function NewUserPage() {
@@ -23,8 +21,6 @@ export default function NewUserPage() {
 
 	return (
 		<>
-			<MainNav/>
-			<SettingsSecondaryNav/>
 			<Container maxWidth="lg">
 				<Box
 					component="form"

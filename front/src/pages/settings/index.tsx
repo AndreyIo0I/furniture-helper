@@ -5,8 +5,7 @@ import {useForm} from 'react-hook-form'
 import * as Yup from 'yup'
 import saveAccountSettings from '../../../api/saveAccountSettings'
 import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
-import MainNav from '../../components/MainNav'
-import SettingsSecondaryNav from '../../components/SettingsSecondaryNav'
+import MainLayout from '../../components/MainLayout'
 import styles from './styles.module.css'
 
 type Form = {
@@ -139,10 +138,8 @@ export default function MainSettingsPage() {
 	const {data: accountSettings} = useAccountSettings()
 
 	return (
-		<>
-			<MainNav/>
-			<SettingsSecondaryNav/>
+		<MainLayout>
 			{accountSettings && <Content accountSettings={accountSettings}/>}
-		</>
+		</MainLayout>
 	)
 }

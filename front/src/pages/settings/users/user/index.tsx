@@ -5,7 +5,7 @@ import deleteUser from '../../../../../api/users/deleteUser'
 import updateUser from '../../../../../api/users/updateUser'
 import useCurrentUser from '../../../../../api/users/useCurrentUser'
 import useUser from '../../../../../api/users/useUser'
-import MainNav from '../../../../components/MainNav'
+import MainLayout from '../../../../components/MainLayout'
 import styles from './styles.module.css'
 
 interface UserPageContentProps {
@@ -122,11 +122,10 @@ export default function UserPage({userId}: UserPageProps) {
 	const {data: user} = useUser(userId)
 
 	return (
-		<>
-			<MainNav/>
+		<MainLayout>
 			<Container maxWidth="lg">
 				{user && <Content user={user}/>}
 			</Container>
-		</>
+		</MainLayout>
 	)
 }
