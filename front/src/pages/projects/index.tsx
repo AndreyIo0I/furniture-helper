@@ -1,5 +1,5 @@
-import {Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
-import {Button} from 'antd'
+import {Button, Table} from 'antd'
+import {ColumnsType} from 'antd/es/table'
 import dayjs, {Dayjs} from 'dayjs'
 import {useRouter} from 'next/router'
 import React from 'react'
@@ -28,6 +28,28 @@ function getColor(diff: number, accountSettings: AccountSettings): 'red' | 'yell
 	return
 }
 
+interface Columns {
+	name: string
+	client?: Client
+	dateOfFinish: Dayjs
+}
+
+const columns: ColumnsType<Columns> = [{
+	title: 'Название',
+	dataIndex: 'name',
+	key: 'name',
+}, {
+	title: 'Клиент',
+	dataIndex: 'client',
+	key: 'client',
+	render: client => client?.fullName,
+}, {
+	title: 'Дедлайн',
+	dataIndex: 'dateOfFinish',
+	key: 'dateOfFinish',
+	render: dateOfFinish => dateOfFinish.format('DD/MM/YYYY'),
+}]
+
 export default function ProjectsPage() {
 	const router = useRouter()
 
@@ -49,56 +71,32 @@ export default function ProjectsPage() {
 
 	return (
 		<MainLayout>
-			<Container maxWidth="lg">
-				<div className={styles.top}>
-					<div></div>
-					<Button
-						onClick={() => router.push('/projects/new')}
-						type="primary"
-					>
-						Добавить новый проект
-					</Button>
-				</div>
-				<TableContainer
-					component={Paper}
-					sx={{
-						maxWidth: '1440px',
-						margin: 'auto',
-					}}
+			<div className={styles.top}>
+				<div></div>
+				<Button
+					onClick={() => router.push('/projects/new')}
+					type="primary"
 				>
-					<Table>
-						<TableHead>
-							<TableRow>
-								<TableCell>Название</TableCell>
-								<TableCell align="right">Клиент</TableCell>
-								<TableCell align="right">Дедлайн</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{projects && projects.map(row => (
-								<TableRow
-									key={row.id}
-									className={[
-										styles.row,
-										row.deadlineState === 'red' && styles.row_red,
-										row.deadlineState === 'yellow' && styles.row_yellow,
-									].filter(x => !!x).join(' ')}
-									onClick={() => router.push(`/projects/${row.id}`)}
-									style={{
-										background: row.isCompleted ? 'lightgreen' : undefined,
-									}}
-								>
-									<TableCell component="th" scope="row">
-										{row.name}
-									</TableCell>
-									<TableCell align="right">{row.client?.fullName}</TableCell>
-									<TableCell align="right">{row.dateOfFinish.format('DD/MM/YYYY')}</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</TableContainer>
-			</Container>
+					Добавить новый проект
+				</Button>
+			</div>
+			<Table
+				rowKey="id"
+				rowClassName={(_, index) => [
+					styles.row,
+					projects[index].deadlineState === 'red' && styles.row_red,
+					projects[index].deadlineState === 'yellow' && styles.row_yellow,
+					projects[index].isCompleted && styles.row_completed,
+				].filter(x => !!x).join(' ')}
+				columns={columns}
+				dataSource={projects}
+				pagination={false}
+				onRow={(_, index) => {
+					return {
+						onDoubleClick: () => router.push(`/projects/${projects[index!].id}`),
+					}
+				}}
+			/>
 		</MainLayout>
 	)
 }

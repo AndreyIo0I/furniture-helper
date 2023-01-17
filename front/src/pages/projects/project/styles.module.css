@@ -8,15 +8,14 @@
     cursor: pointer;
 }
 
-.row_red {
-    background: red;
+.row_red * {
+    background: lightcoral;
 }
 
-.row_yellow {
-    background: yellow;
+.row_yellow * {
+    background: lightyellow;
 }
 
-.row:last-child td,
-.row:last-child th {
-    border: 0;
+.row_completed * {
+    background: lightgreen;
 }
