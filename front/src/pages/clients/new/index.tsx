@@ -40,7 +40,7 @@ export default function NewClientPage() {
 			mail: data.email,
 			description: data.description,
 		})
-		await router.push(`/settings/clients/${encodeURIComponent(newClientId)}`)
+		await router.push('/clients')
 	}
 
 	useEffect(() => {

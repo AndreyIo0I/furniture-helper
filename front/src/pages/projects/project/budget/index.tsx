@@ -59,6 +59,7 @@ function Content(props: ContentProps) {
 		try {
 			apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
 		} catch (err) {
+			console.log(err)
 			return
 		}
 		await saveProjectBudget(apiProjectBudget)

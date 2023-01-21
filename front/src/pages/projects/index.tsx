@@ -93,7 +93,7 @@ export default function ProjectsPage() {
 				pagination={false}
 				onRow={(_, index) => {
 					return {
-						onDoubleClick: () => router.push(`/projects/${projects[index!].id}`),
+						onClick: () => router.push(`/projects/${projects[index!].id}`),
 					}
 				}}
 			/>

@@ -6,7 +6,7 @@ export const formStyle: SxProps = {
 }
 
 export function isValidDate(date: Date | null): boolean {
-	return date !== null && !isNaN(Number(date))
+	return date !== null
 }
 
 export function toApiModelDate(date: Date | null): Date {

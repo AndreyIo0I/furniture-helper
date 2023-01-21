@@ -175,13 +175,13 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 			return
 		}
 		props.setCostPayments([
-			...props.costPayments,
 			{
 				paymentId: newPayment.paymentId,
 				costId: newPayment.costId,
 				amount: newPayment.amount,
 				paymentDate: newPayment.paymentDate,
 			},
+			...props.costPayments,
 		])
 		setNewPayment(makeNewPayment(newPayment.paymentId + 1))
 	}

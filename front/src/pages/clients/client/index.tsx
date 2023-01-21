@@ -79,8 +79,8 @@ function Content({client}: { client: Client }) {
 				/>
 				<TextField
 					margin="normal"
-					label={client.source}
-					defaultValue="Реклама в вк"
+					label="Канал"
+					defaultValue={client.source}
 					{...register('source')}
 					FormHelperTextProps={{error: !!errors.source?.message}}
 					helperText={errors.source?.message}
@@ -132,7 +132,7 @@ function Content({client}: { client: Client }) {
 						<Button
 							onClick={async () => {
 								await deleteClient(client.id)
-								await router.push('/settings/clients')
+								await router.push('/clients')
 							}}
 						>
 							Удалить

@@ -120,12 +120,12 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 			return
 		}
 		props.setClientPayments([
-			...props.clientPayments,
 			{
 				paymentId: newPayment.paymentId,
 				amount: newPayment.amount,
 				paymentDate: newPayment.paymentDate,
 			},
+			...props.clientPayments,
 		])
 		setNewPayment(makeNewPayment(newPayment.paymentId + 1))
 	}
