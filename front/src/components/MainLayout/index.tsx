@@ -116,7 +116,7 @@ export default function MainLayout({
 					onClick={item => router.push(item.key)}
 				/>
 			</Layout.Header>
-			<Layout>
+			<Layout hasSider>
 				<Layout.Sider width={200} style={{background: colorBgContainer}}>
 					{!!sidebarItems && (
 						<Menu
