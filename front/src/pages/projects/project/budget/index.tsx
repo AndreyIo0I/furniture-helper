@@ -6,7 +6,14 @@ import saveProjectBudget from '../../../../../api/saveProjectBudget'
 import useProjectBudget, {ProjectBudget} from '../../../../../api/useProjectBudget'
 import MainLayout from '../../../../components/MainLayout'
 import ClientPaymentsTable from './clientPayments'
-import {formStyle, toApiModelDate, toApiModelNumber, toViewModelNumber, toViewNumber} from './common'
+import {
+	formStyle,
+	pageContainerId,
+	toApiModelDate,
+	toApiModelNumber,
+	toViewModelNumber,
+	toViewNumber,
+} from './common'
 import CostPaymentsTable from './costPayments'
 import * as model from './model'
 import styles from './styles.module.css'
@@ -91,7 +98,11 @@ function Content(props: ContentProps) {
 		<MainLayout
 			projectId={props.projectId}
 		>
-			{budget && <Container maxWidth="lg">
+			{budget && <Container
+				id={pageContainerId}
+				style={{position: 'relative'}}
+				maxWidth="lg"
+			>
 				<Paper sx={formStyle}>
 					<TextField
 						type="number"

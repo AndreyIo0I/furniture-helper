@@ -1,8 +1,14 @@
 import {SxProps} from '@mui/material'
 
+export const pageContainerId = 'projectBudgetPageContainer'
+
 export const formStyle: SxProps = {
 	mt: 3,
 	maxWidth: 'fit-content',
+}
+
+export function getPopupContainer() {
+	return document.getElementById(pageContainerId)!
 }
 
 export function isValidDate(date: Date | null): boolean {

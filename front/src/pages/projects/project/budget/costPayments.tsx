@@ -1,10 +1,7 @@
 import {AddCircleOutline, Delete} from '@mui/icons-material'
 import {
-	FormControl,
 	IconButton,
-	MenuItem,
 	Paper,
-	Select,
 	Table,
 	TableBody,
 	TableCell,
@@ -14,9 +11,16 @@ import {
 	TextField,
 } from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
+import {Select} from 'antd'
 import React from 'react'
 import {CostType} from '../../../../../api/costTypes/useCostTypes'
-import {formStyle, isValidDate, toViewModelNumber, toViewNumber} from './common'
+import {
+	formStyle,
+	getPopupContainer,
+	isValidDate,
+	toViewModelNumber,
+	toViewNumber,
+} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
 
@@ -27,6 +31,7 @@ interface CostPaymentsTableProps {
 }
 
 interface CostSelectProps {
+	error?: boolean
 	costId?: number
 	setCostId: (costId: number) => void
 	costs: CostType[]
@@ -40,23 +45,22 @@ interface CostPaymentProps {
 }
 
 function CostSelect(props: CostSelectProps) {
+	const toViewCostType = (value: CostType) => ({
+		label: value.name,
+		value: value.id,
+	})
+
 	return (
 		<Select
-			value={props.costId !== undefined ? props.costId : ''}
-			onChange={event =>
-				props.setCostId(Number(event.target.value))
-			}
+			value={props.costId}
+			onChange={props.setCostId}
 			className={styles.form_control}
-		>
-			{props.costs.map(cost => (
-				<MenuItem
-					key={cost.id}
-					value={cost.id}
-				>
-					{cost.name}
-				</MenuItem>
-			))}
-		</Select>
+			getPopupContainer={getPopupContainer}
+			options={props.costs.map(toViewCostType)}
+			optionFilterProp="label"
+			showSearch
+			status={props.error ? 'error' : undefined}
+		/>
 	)
 }
 
@@ -218,18 +222,12 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 				<TableBody>
 					<TableRow>
 						<TableCell>
-							<FormControl
-								error={
-									newPayment.needsValidation
-									&& newPayment.costId === undefined
-								}
-							>
-								<CostSelect
-									costId={newPayment.costId}
-									setCostId={setNewPaymentCostId}
-									costs={props.costs}
-								/>
-							</FormControl>
+							<CostSelect
+								error={newPayment.needsValidation && newPayment.costId === undefined}
+								costId={newPayment.costId}
+								setCostId={setNewPaymentCostId}
+								costs={props.costs}
+							/>
 						</TableCell>
 						<TableCell>
 							<TextField
