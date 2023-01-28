@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using Application.Services;
 
 namespace ExtranetAPI.Controllers
 {
@@ -14,13 +15,14 @@ namespace ExtranetAPI.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IClientRepository _clientRepository;
+        private readonly IClientConsistencyDeterminant _clientConsistencyDeterminant;
         private readonly IUnitOfWork _unitOfWork;
 
-
-        public ClientController( IClientRepository clientRepository, IUnitOfWork unitOfWork )
+        public ClientController( IClientRepository clientRepository, IUnitOfWork unitOfWork, IClientConsistencyDeterminant clientConsistencyDeterminant )
         {
             _clientRepository = clientRepository;
             _unitOfWork = unitOfWork;
+            _clientConsistencyDeterminant = clientConsistencyDeterminant;
         }
 
         /// <summary>
@@ -84,7 +86,11 @@ namespace ExtranetAPI.Controllers
             {
                 return BadRequest( $"Property with id {clientId} is not exist" );
             }
-
+            bool isClientExistInSomeProjects = await _clientConsistencyDeterminant.IsClientExistInSomeProjects( clientId );
+            if ( isClientExistInSomeProjects )
+            {
+                return BadRequest( $"Client with id {clientId} used in some oroject" );
+            }
             _clientRepository.Remove( client );
             await _unitOfWork.Commit();
 

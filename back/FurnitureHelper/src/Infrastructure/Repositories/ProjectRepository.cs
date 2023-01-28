@@ -20,9 +20,14 @@ namespace Infrastructure.Repositories
             return await Entities.ToListAsync();
         }
 
-        public async Task<IReadOnlyList<Project>> GetAll(DateTime startDate, DateTime endDate)
+        public async Task<IReadOnlyList<Project>> GetAll( DateTime startDate, DateTime endDate )
         {
-            return await Entities.Where(x => x.DateOfStart >= startDate && x.DateOfStart <= endDate).ToListAsync();
+            return await Entities.Where( x => x.DateOfStart >= startDate && x.DateOfStart <= endDate ).ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<Project>> GetByClientId( int clientId )
+        {
+            return await Entities.Where( item => item.ClientId == clientId ).ToListAsync();
         }
     }
 }

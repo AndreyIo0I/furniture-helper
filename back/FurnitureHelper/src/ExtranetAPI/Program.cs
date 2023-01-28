@@ -61,6 +61,7 @@ builder.Services
     } );
 
 builder.Services.AddScoped<IProjectStageInitializer, ProjectStageInitializer>();
+builder.Services.AddScoped<IClientConsistencyDeterminant, ClientConsistencyDeterminant>();
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
