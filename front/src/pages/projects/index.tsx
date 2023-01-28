@@ -5,7 +5,7 @@ import {useRouter} from 'next/router'
 import React from 'react'
 import useClients, {Client} from '../../../api/clients/useClients'
 import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
-import useProjects from '../../../api/useProjects'
+import useProjects from '../../../api/projects/useProjects'
 import MainLayout from '../../components/MainLayout'
 import styles from './project/styles.module.css'
 

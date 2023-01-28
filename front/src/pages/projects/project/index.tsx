@@ -4,9 +4,10 @@ import {Button} from 'antd'
 import * as React from 'react'
 import {useRef, useState} from 'react'
 import useClients, {Client} from '../../../../api/clients/useClients'
-import saveProject from '../../../../api/saveProject'
-import useProject from '../../../../api/useProject'
-import {Project} from '../../../../api/useProjects'
+import completeProject from '../../../../api/projects/completeProject'
+import saveProject from '../../../../api/projects/saveProject'
+import useProject from '../../../../api/projects/useProject'
+import {Project} from '../../../../api/projects/useProjects'
 import MainLayout from '../../../components/MainLayout'
 
 interface ContentProps {
@@ -33,8 +34,14 @@ function Content({
 	const descriptionRef = useRef<HTMLInputElement>(null)
 	const [isCompleted, setIsCompleted] = useState(project.isCompleted)
 
-	const onSaveProject = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault()
+	const onCompleteProject = async () => {
+		// что с не сохраненными изменениями?
+		setIsCompleted(true)
+		await completeProject(project.id) // TODO: добавить "вы уверены?"
+	}
+
+	const onSaveProject = async (event?: React.FormEvent<HTMLFormElement>) => {
+		event?.preventDefault()
 		await saveProject({
 			id: project.id,
 			name: nameRef.current!.value,
@@ -43,7 +50,6 @@ function Content({
 			dateOfFinish: finishDate,
 			clientId: clientIdRef.current!,
 			description: descriptionRef.current!.value,
-			isCompleted,
 		})
 	}
 
@@ -85,7 +91,7 @@ function Content({
 						disabled={isCompleted}
 					/>
 					<Button
-						onClick={() => setIsCompleted(!isCompleted)}
+						onClick={() => onCompleteProject()}
 						type="primary"
 						disabled={project.isCompleted}
 					>

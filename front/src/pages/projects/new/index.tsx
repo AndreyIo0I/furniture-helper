@@ -6,7 +6,7 @@ import {useRouter} from 'next/router'
 import * as React from 'react'
 import {useEffect, useRef, useState} from 'react'
 import useClients from '../../../../api/clients/useClients'
-import createProject from '../../../../api/createProject'
+import createProject from '../../../../api/projects/createProject'
 import useAccountSettings from '../../../../api/useAccountSettings'
 import MainLayout from '../../../components/MainLayout'
 

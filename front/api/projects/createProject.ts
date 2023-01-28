@@ -1,5 +1,5 @@
-import {projectApi} from './api'
-import {makeAuthenticatedReq} from './useAuthenticatedSWR'
+import {projectApi} from '../api'
+import {makeAuthenticatedReq} from '../useAuthenticatedSWR'
 
 interface CreateProjectParams {
 	name: string;

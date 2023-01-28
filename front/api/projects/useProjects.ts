@@ -1,8 +1,8 @@
 import dayjs, {Dayjs} from 'dayjs'
 import useSWR, {SWRResponse} from 'swr'
-import {projectApi} from './api'
-import {ProjectDto} from './typescript-fetch-client-generated'
-import useAuthenticatedSWR from './useAuthenticatedSWR'
+import {projectApi} from '../api'
+import {ProjectDto} from '../typescript-fetch-client-generated'
+import useAuthenticatedSWR from '../useAuthenticatedSWR'
 
 export interface Project {
 	id: number

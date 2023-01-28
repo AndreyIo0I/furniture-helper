@@ -1,7 +1,7 @@
 import useSWR, {SWRResponse} from 'swr'
-import {projectBudgetApi} from './api'
-import {ProjectBudgetDto} from './typescript-fetch-client-generated'
-import useAuthenticatedSWR from './useAuthenticatedSWR'
+import {projectBudgetApi} from '../api'
+import {ProjectBudgetDto} from '../typescript-fetch-client-generated'
+import useAuthenticatedSWR from '../useAuthenticatedSWR'
 
 interface ClientPayment {
 	paymentDate: Date,
