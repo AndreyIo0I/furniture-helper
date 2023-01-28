@@ -1,5 +1,6 @@
 import {Container, Paper, SxProps, TextField} from '@mui/material'
 import {Button} from 'antd'
+import dayjs from 'dayjs'
 import React from 'react'
 import useCostTypes, {CostType} from '../../../../../api/costTypes/useCostTypes'
 import saveProjectBudget from '../../../../../api/saveProjectBudget'
@@ -25,12 +26,15 @@ const projectCostStyle: SxProps = {
 const mapToProjectBudgetViewModel = (projectBudget: ProjectBudget): model.ProjectBudget => ({
 	projectCost: projectBudget.projectCost,
 	clientPayments: projectBudget.clientPayments.map((payment, index) => ({
-		...payment,
 		paymentId: index,
+		amount: payment.amount,
+		paymentDate: dayjs(payment.paymentDate),
 	})),
 	costPayments: projectBudget.costPayments.map((payment, index) => ({
-		...payment,
 		paymentId: index,
+		costId: payment.costId,
+		amount: payment.amount,
+		paymentDate: dayjs(payment.paymentDate),
 	})),
 })
 
