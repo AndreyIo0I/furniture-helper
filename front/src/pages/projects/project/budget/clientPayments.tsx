@@ -10,9 +10,16 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
-import {DatePicker} from '@mui/x-date-pickers'
+import {DatePicker} from 'antd'
+import {Dayjs} from 'dayjs'
 import React from 'react'
-import {formStyle, isValidDate, toViewModelNumber, toViewNumber} from './common'
+import {
+	formStyle,
+	getPopupContainer,
+	toViewModelNumber,
+	toViewNumber,
+	toViewStatus,
+} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
 
@@ -35,7 +42,7 @@ function ClientPayment(props: ClientPaymentProps) {
 		})
 	}
 
-	function setPaymentDate(paymentDate: Date | null) {
+	function setPaymentDate(paymentDate: Dayjs | null) {
 		props.setPayment({
 			...props.payment,
 			paymentDate,
@@ -58,10 +65,11 @@ function ClientPayment(props: ClientPaymentProps) {
 			</TableCell>
 			<TableCell>
 				<DatePicker
-					renderInput={props => <TextField {...props}/>}
 					value={props.payment.paymentDate}
 					onChange={setPaymentDate}
 					className={styles.form_control}
+					getPopupContainer={getPopupContainer}
+					status={toViewStatus(props.payment.paymentDate === null)}
 				/>
 			</TableCell>
 			<TableCell>
@@ -78,14 +86,14 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 		needsValidation: boolean,
 		paymentId: number,
 		amount?: number,
-		paymentDate: Date | null,
+		paymentDate: Dayjs | null,
 	}
 
 	function makeNewPayment(paymentId: number): NewPaymentState {
 		return {
 			needsValidation: false,
 			paymentId,
-			paymentDate: new Date(),
+			paymentDate: null,
 		}
 	}
 
@@ -107,7 +115,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 		})
 	}
 
-	function setNewPaymentDate(paymentDate: Date | null) {
+	function setNewPaymentDate(paymentDate: Dayjs | null) {
 		setNewPayment({
 			...newPayment,
 			paymentDate,
@@ -115,7 +123,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 	}
 
 	function addPayment() {
-		if (newPayment.amount === undefined || !isValidDate(newPayment.paymentDate)) {
+		if (newPayment.amount === undefined || newPayment.paymentDate === null) {
 			setNewPaymentNeedsValidation()
 			return
 		}
@@ -177,10 +185,11 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 						</TableCell>
 						<TableCell>
 							<DatePicker
-								renderInput={props => <TextField {...props}/>}
 								value={newPayment.paymentDate}
 								onChange={setNewPaymentDate}
 								className={styles.form_control}
+								getPopupContainer={getPopupContainer}
+								status={toViewStatus(newPayment.needsValidation && newPayment.paymentDate === null)}
 							/>
 						</TableCell>
 						<TableCell>

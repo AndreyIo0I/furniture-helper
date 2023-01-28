@@ -1,12 +1,20 @@
 import {Container, Paper, SxProps, TextField} from '@mui/material'
 import {Button} from 'antd'
+import dayjs from 'dayjs'
 import React from 'react'
 import useCostTypes, {CostType} from '../../../../../api/costTypes/useCostTypes'
 import saveProjectBudget from '../../../../../api/saveProjectBudget'
 import useProjectBudget, {ProjectBudget} from '../../../../../api/useProjectBudget'
 import MainLayout from '../../../../components/MainLayout'
 import ClientPaymentsTable from './clientPayments'
-import {formStyle, toApiModelDate, toApiModelNumber, toViewModelNumber, toViewNumber} from './common'
+import {
+	formStyle,
+	pageContainerId,
+	toApiModelDate,
+	toApiModelNumber,
+	toViewModelNumber,
+	toViewNumber,
+} from './common'
 import CostPaymentsTable from './costPayments'
 import * as model from './model'
 import styles from './styles.module.css'
@@ -18,12 +26,15 @@ const projectCostStyle: SxProps = {
 const mapToProjectBudgetViewModel = (projectBudget: ProjectBudget): model.ProjectBudget => ({
 	projectCost: projectBudget.projectCost,
 	clientPayments: projectBudget.clientPayments.map((payment, index) => ({
-		...payment,
 		paymentId: index,
+		amount: payment.amount,
+		paymentDate: dayjs(payment.paymentDate),
 	})),
 	costPayments: projectBudget.costPayments.map((payment, index) => ({
-		...payment,
 		paymentId: index,
+		costId: payment.costId,
+		amount: payment.amount,
+		paymentDate: dayjs(payment.paymentDate),
 	})),
 })
 
@@ -91,7 +102,11 @@ function Content(props: ContentProps) {
 		<MainLayout
 			projectId={props.projectId}
 		>
-			{budget && <Container maxWidth="lg">
+			{budget && <Container
+				id={pageContainerId}
+				style={{position: 'relative'}}
+				maxWidth="lg"
+			>
 				<Paper sx={formStyle}>
 					<TextField
 						type="number"

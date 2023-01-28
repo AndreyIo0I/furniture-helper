@@ -8,6 +8,8 @@ import theme from '../src/theme'
 import createEmotionCache from '../src/createEmotionCache'
 import {LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
+import {ConfigProvider} from 'antd'
+import ruRU from 'antd/locale/ru_RU'
 import 'dayjs/locale/ru'
 import {SWRConfig} from 'swr'
 
@@ -35,7 +37,9 @@ export default function MyApp(props: MyAppProps) {
 					{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
 					<CssBaseline/>
 					<LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'ru'}>
-						<Component {...pageProps} />
+						<ConfigProvider locale={ruRU}>
+							<Component {...pageProps} />
+						</ConfigProvider>
 					</LocalizationProvider>
 				</ThemeProvider>
 			</CacheProvider>

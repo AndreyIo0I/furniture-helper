@@ -1,10 +1,7 @@
 import {AddCircleOutline, Delete} from '@mui/icons-material'
 import {
-	FormControl,
 	IconButton,
-	MenuItem,
 	Paper,
-	Select,
 	Table,
 	TableBody,
 	TableCell,
@@ -13,10 +10,17 @@ import {
 	TableRow,
 	TextField,
 } from '@mui/material'
-import {DatePicker} from '@mui/x-date-pickers'
+import {DatePicker, Select} from 'antd'
+import {Dayjs} from 'dayjs'
 import React from 'react'
 import {CostType} from '../../../../../api/costTypes/useCostTypes'
-import {formStyle, isValidDate, toViewModelNumber, toViewNumber} from './common'
+import {
+	formStyle,
+	getPopupContainer,
+	toViewModelNumber,
+	toViewNumber,
+	toViewStatus,
+} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
 
@@ -27,6 +31,7 @@ interface CostPaymentsTableProps {
 }
 
 interface CostSelectProps {
+	error?: boolean
 	costId?: number
 	setCostId: (costId: number) => void
 	costs: CostType[]
@@ -40,23 +45,22 @@ interface CostPaymentProps {
 }
 
 function CostSelect(props: CostSelectProps) {
+	const toViewCostType = (value: CostType) => ({
+		label: value.name,
+		value: value.id,
+	})
+
 	return (
 		<Select
-			value={props.costId !== undefined ? props.costId : ''}
-			onChange={event =>
-				props.setCostId(Number(event.target.value))
-			}
+			value={props.costId}
+			onChange={props.setCostId}
 			className={styles.form_control}
-		>
-			{props.costs.map(cost => (
-				<MenuItem
-					key={cost.id}
-					value={cost.id}
-				>
-					{cost.name}
-				</MenuItem>
-			))}
-		</Select>
+			getPopupContainer={getPopupContainer}
+			options={props.costs.map(toViewCostType)}
+			optionFilterProp="label"
+			showSearch
+			status={toViewStatus(props.error)}
+		/>
 	)
 }
 
@@ -75,7 +79,7 @@ function CostPayment(props: CostPaymentProps) {
 		})
 	}
 
-	function setPaymentDate(paymentDate: Date | null) {
+	function setPaymentDate(paymentDate: Dayjs | null) {
 		props.setPayment({
 			...props.payment,
 			paymentDate,
@@ -105,10 +109,11 @@ function CostPayment(props: CostPaymentProps) {
 			</TableCell>
 			<TableCell>
 				<DatePicker
-					renderInput={props => <TextField {...props}/>}
 					value={props.payment.paymentDate}
 					onChange={setPaymentDate}
 					className={styles.form_control}
+					getPopupContainer={getPopupContainer}
+					status={toViewStatus(props.payment.paymentDate === null)}
 				/>
 			</TableCell>
 			<TableCell>
@@ -126,14 +131,14 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		paymentId: number,
 		costId?: number,
 		amount?: number,
-		paymentDate: Date | null,
+		paymentDate: Dayjs | null,
 	}
 
 	function makeNewPayment(paymentId: number): NewPaymentState {
 		return {
 			needsValidation: false,
 			paymentId,
-			paymentDate: new Date(),
+			paymentDate: null,
 		}
 	}
 
@@ -162,7 +167,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		})
 	}
 
-	function setNewPaymentDate(paymentDate: Date | null) {
+	function setNewPaymentDate(paymentDate: Dayjs | null) {
 		setNewPayment({
 			...newPayment,
 			paymentDate,
@@ -170,7 +175,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 	}
 
 	function addPayment() {
-		if (newPayment.costId === undefined || newPayment.amount === undefined || !isValidDate(newPayment.paymentDate)) {
+		if (newPayment.costId === undefined || newPayment.amount === undefined || newPayment.paymentDate === null) {
 			setNewPaymentNeedsValidation()
 			return
 		}
@@ -218,18 +223,12 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 				<TableBody>
 					<TableRow>
 						<TableCell>
-							<FormControl
-								error={
-									newPayment.needsValidation
-									&& newPayment.costId === undefined
-								}
-							>
-								<CostSelect
-									costId={newPayment.costId}
-									setCostId={setNewPaymentCostId}
-									costs={props.costs}
-								/>
-							</FormControl>
+							<CostSelect
+								error={newPayment.needsValidation && newPayment.costId === undefined}
+								costId={newPayment.costId}
+								setCostId={setNewPaymentCostId}
+								costs={props.costs}
+							/>
 						</TableCell>
 						<TableCell>
 							<TextField
@@ -248,10 +247,11 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 						</TableCell>
 						<TableCell>
 							<DatePicker
-								renderInput={props => <TextField {...props}/>}
 								value={newPayment.paymentDate}
 								onChange={setNewPaymentDate}
 								className={styles.form_control}
+								getPopupContainer={getPopupContainer}
+								status={toViewStatus(newPayment.needsValidation && newPayment.paymentDate === null)}
 							/>
 						</TableCell>
 						<TableCell>
