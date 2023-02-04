@@ -407,7 +407,7 @@ export interface ProjectDto {
 	 * @type {string}
 	 * @memberof ProjectDto
 	 */
-	name?: string;
+	projectType?: string;
 	/**
 	 *
 	 * @type {string}
@@ -425,13 +425,31 @@ export interface ProjectDto {
 	 * @type {Date}
 	 * @memberof ProjectDto
 	 */
+	dateOfApplication?: string;
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof ProjectDto
+	 */
 	deadLine?: string;
+	/**
+	 *
+	 * @type {Date}
+	 * @memberof ProjectDto
+	 */
+	endDate?: string;
 	/**
 	 *
 	 * @type {number}
 	 * @memberof ProjectDto
 	 */
 	clientId?: number;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof ProjectDto
+	 */
+	address?: string;
 	/**
 	 *
 	 * @type {string}
@@ -516,6 +534,12 @@ export interface ProjectStage {
 	 * @memberof ProjectStage
 	 */
 	projectId?: number;
+	/**
+	 *
+	 * @type {string}
+	 * @memberof ProjectStage
+	 */
+	projectStageCode?: string;
 	/**
 	 *
 	 * @type {string}
@@ -972,7 +996,7 @@ export const AnalyticsApiFp = function (configuration?: Configuration) {
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
-						return response.json()
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
 					} else {
 						throw response
 					}
@@ -2420,6 +2444,82 @@ export const ProjectApiFetchParamCreator = function (configuration?: Configurati
 		},
 		/**
 		 *
+		 * @summary Установить номер договора
+		 * @param {number} projectId
+		 * @param {string} contractNumber
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdContractNumberPost(projectId: number, contractNumber: string, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling projectsProjectIdContractNumberPost.')
+			}
+			// verify required parameter 'contractNumber' is not null or undefined
+			if (contractNumber === null || contractNumber === undefined) {
+				throw new RequiredError('contractNumber', 'Required parameter contractNumber was null or undefined when calling projectsProjectIdContractNumberPost.')
+			}
+			const localVarPath = `/projects/{projectId}/contract-number`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			if (contractNumber !== undefined) {
+				localVarQueryParameter['contractNumber'] = contractNumber
+			}
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Установить ожидаемую дату завершения выполнения
+		 * @param {number} projectId
+		 * @param {Date} deadLine
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdDeadlinePost(projectId: number, deadLine: Date, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling projectsProjectIdDeadlinePost.')
+			}
+			// verify required parameter 'deadLine' is not null or undefined
+			if (deadLine === null || deadLine === undefined) {
+				throw new RequiredError('deadLine', 'Required parameter deadLine was null or undefined when calling projectsProjectIdDeadlinePost.')
+			}
+			const localVarPath = `/projects/{projectId}/deadline`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			if (deadLine !== undefined) {
+				localVarQueryParameter['deadLine'] = (deadLine as any).toISOString()
+			}
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
 		 * @summary Удалить проект
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -2436,6 +2536,44 @@ export const ProjectApiFetchParamCreator = function (configuration?: Configurati
 			const localVarRequestOptions = Object.assign({method: 'DELETE'}, options)
 			const localVarHeaderParameter = {} as any
 			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
+		 * @summary Установить актуальную дату завершения выполнения
+		 * @param {number} projectId
+		 * @param {Date} endDate
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdEndDatePost(projectId: number, endDate: Date, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling projectsProjectIdEndDatePost.')
+			}
+			// verify required parameter 'endDate' is not null or undefined
+			if (endDate === null || endDate === undefined) {
+				throw new RequiredError('endDate', 'Required parameter endDate was null or undefined when calling projectsProjectIdEndDatePost.')
+			}
+			const localVarPath = `/projects/{projectId}/end-date`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			if (endDate !== undefined) {
+				localVarQueryParameter['endDate'] = (endDate as any).toISOString()
+			}
 
 			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
 			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
@@ -2545,6 +2683,44 @@ export const ProjectApiFetchParamCreator = function (configuration?: Configurati
 		},
 		/**
 		 *
+		 * @summary Установить актуальную дату начала выполнения
+		 * @param {number} projectId
+		 * @param {Date} startDate
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdStartDatePost(projectId: number, startDate: Date, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling projectsProjectIdStartDatePost.')
+			}
+			// verify required parameter 'startDate' is not null or undefined
+			if (startDate === null || startDate === undefined) {
+				throw new RequiredError('startDate', 'Required parameter startDate was null or undefined when calling projectsProjectIdStartDatePost.')
+			}
+			const localVarPath = `/projects/{projectId}/start-date`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			if (startDate !== undefined) {
+				localVarQueryParameter['startDate'] = (startDate as any).toISOString()
+			}
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
 		 * @summary Остановить проект
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -2639,6 +2815,46 @@ export const ProjectApiFp = function (configuration?: Configuration) {
 		},
 		/**
 		 *
+		 * @summary Установить номер договора
+		 * @param {number} projectId
+		 * @param {string} contractNumber
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdContractNumberPost(projectId: number, contractNumber: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = ProjectApiFetchParamCreator(configuration).projectsProjectIdContractNumberPost(projectId, contractNumber, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Установить ожидаемую дату завершения выполнения
+		 * @param {number} projectId
+		 * @param {Date} deadLine
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdDeadlinePost(projectId: number, deadLine: Date, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = ProjectApiFetchParamCreator(configuration).projectsProjectIdDeadlinePost(projectId, deadLine, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
 		 * @summary Удалить проект
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -2646,6 +2862,26 @@ export const ProjectApiFp = function (configuration?: Configuration) {
 		 */
 		projectsProjectIdDelete(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
 			const localVarFetchArgs = ProjectApiFetchParamCreator(configuration).projectsProjectIdDelete(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
+		 * @summary Установить актуальную дату завершения выполнения
+		 * @param {number} projectId
+		 * @param {Date} endDate
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdEndDatePost(projectId: number, endDate: Date, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = ProjectApiFetchParamCreator(configuration).projectsProjectIdEndDatePost(projectId, endDate, options)
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
@@ -2716,6 +2952,26 @@ export const ProjectApiFp = function (configuration?: Configuration) {
 		},
 		/**
 		 *
+		 * @summary Установить актуальную дату начала выполнения
+		 * @param {number} projectId
+		 * @param {Date} startDate
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdStartDatePost(projectId: number, startDate: Date, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+			const localVarFetchArgs = ProjectApiFetchParamCreator(configuration).projectsProjectIdStartDatePost(projectId, startDate, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.text().then(parseFloat) // приходит число - парсить json не надо
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
 		 * @summary Остановить проект
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -2773,6 +3029,28 @@ export const ProjectApiFactory = function (configuration?: Configuration, fetch?
 		},
 		/**
 		 *
+		 * @summary Установить номер договора
+		 * @param {number} projectId
+		 * @param {string} contractNumber
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdContractNumberPost(projectId: number, contractNumber: string, options?: any) {
+			return ProjectApiFp(configuration).projectsProjectIdContractNumberPost(projectId, contractNumber, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Установить ожидаемую дату завершения выполнения
+		 * @param {number} projectId
+		 * @param {Date} deadLine
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdDeadlinePost(projectId: number, deadLine: Date, options?: any) {
+			return ProjectApiFp(configuration).projectsProjectIdDeadlinePost(projectId, deadLine, options)(fetch, basePath)
+		},
+		/**
+		 *
 		 * @summary Удалить проект
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -2780,6 +3058,17 @@ export const ProjectApiFactory = function (configuration?: Configuration, fetch?
 		 */
 		projectsProjectIdDelete(projectId: number, options?: any) {
 			return ProjectApiFp(configuration).projectsProjectIdDelete(projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Установить актуальную дату завершения выполнения
+		 * @param {number} projectId
+		 * @param {Date} endDate
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdEndDatePost(projectId: number, endDate: Date, options?: any) {
+			return ProjectApiFp(configuration).projectsProjectIdEndDatePost(projectId, endDate, options)(fetch, basePath)
 		},
 		/**
 		 *
@@ -2811,6 +3100,17 @@ export const ProjectApiFactory = function (configuration?: Configuration, fetch?
 		 */
 		projectsProjectIdRunPost(projectId: number, options?: any) {
 			return ProjectApiFp(configuration).projectsProjectIdRunPost(projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
+		 * @summary Установить актуальную дату начала выполнения
+		 * @param {number} projectId
+		 * @param {Date} startDate
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectsProjectIdStartDatePost(projectId: number, startDate: Date, options?: any) {
+			return ProjectApiFp(configuration).projectsProjectIdStartDatePost(projectId, startDate, options)(fetch, basePath)
 		},
 		/**
 		 *
@@ -2869,6 +3169,32 @@ export class ProjectApi extends BaseAPI {
 
 	/**
 	 *
+	 * @summary Установить номер договора
+	 * @param {number} projectId
+	 * @param {string} contractNumber
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectApi
+	 */
+	public projectsProjectIdContractNumberPost(projectId: number, contractNumber: string, options?: any) {
+		return ProjectApiFp(this.configuration).projectsProjectIdContractNumberPost(projectId, contractNumber, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Установить ожидаемую дату завершения выполнения
+	 * @param {number} projectId
+	 * @param {Date} deadLine
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectApi
+	 */
+	public projectsProjectIdDeadlinePost(projectId: number, deadLine: Date, options?: any) {
+		return ProjectApiFp(this.configuration).projectsProjectIdDeadlinePost(projectId, deadLine, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
 	 * @summary Удалить проект
 	 * @param {number} projectId
 	 * @param {*} [options] Override http request option.
@@ -2877,6 +3203,19 @@ export class ProjectApi extends BaseAPI {
 	 */
 	public projectsProjectIdDelete(projectId: number, options?: any) {
 		return ProjectApiFp(this.configuration).projectsProjectIdDelete(projectId, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Установить актуальную дату завершения выполнения
+	 * @param {number} projectId
+	 * @param {Date} endDate
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectApi
+	 */
+	public projectsProjectIdEndDatePost(projectId: number, endDate: Date, options?: any) {
+		return ProjectApiFp(this.configuration).projectsProjectIdEndDatePost(projectId, endDate, options)(this.fetch, this.basePath)
 	}
 
 	/**
@@ -2914,6 +3253,19 @@ export class ProjectApi extends BaseAPI {
 	 */
 	public projectsProjectIdRunPost(projectId: number, options?: any) {
 		return ProjectApiFp(this.configuration).projectsProjectIdRunPost(projectId, options)(this.fetch, this.basePath)
+	}
+
+	/**
+	 *
+	 * @summary Установить актуальную дату начала выполнения
+	 * @param {number} projectId
+	 * @param {Date} startDate
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectApi
+	 */
+	public projectsProjectIdStartDatePost(projectId: number, startDate: Date, options?: any) {
+		return ProjectApiFp(this.configuration).projectsProjectIdStartDatePost(projectId, startDate, options)(this.fetch, this.basePath)
 	}
 
 	/**
@@ -3296,6 +3648,35 @@ export const ProjectStageApiFetchParamCreator = function (configuration?: Config
 	return {
 		/**
 		 *
+		 * @summary Получить текущий этап по проекту  Возвращаем первый следующий после последнего выполненного этапа, если выполненны все, то возваращаем последний
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectStagesProjectIdCurrentGet(projectId: number, options: any = {}): FetchArgs {
+			// verify required parameter 'projectId' is not null or undefined
+			if (projectId === null || projectId === undefined) {
+				throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling projectStagesProjectIdCurrentGet.')
+			}
+			const localVarPath = `/project-stages/{projectId}/current`
+				.replace(`{${'projectId'}}`, encodeURIComponent(String(projectId)))
+			const localVarUrlObj = url.parse(localVarPath, true)
+			const localVarRequestOptions = Object.assign({method: 'GET'}, options)
+			const localVarHeaderParameter = {} as any
+			const localVarQueryParameter = {} as any
+
+			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+			delete localVarUrlObj.search
+			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+			return {
+				url: url.format(localVarUrlObj),
+				options: localVarRequestOptions,
+			}
+		},
+		/**
+		 *
 		 * @summary Получить этапы проекта
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -3372,6 +3753,25 @@ export const ProjectStageApiFp = function (configuration?: Configuration) {
 	return {
 		/**
 		 *
+		 * @summary Получить текущий этап по проекту  Возвращаем первый следующий после последнего выполненного этапа, если выполненны все, то возваращаем последний
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectStagesProjectIdCurrentGet(projectId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ProjectStage> {
+			const localVarFetchArgs = ProjectStageApiFetchParamCreator(configuration).projectStagesProjectIdCurrentGet(projectId, options)
+			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+					if (response.status >= 200 && response.status < 300) {
+						return response.json()
+					} else {
+						throw response
+					}
+				})
+			}
+		},
+		/**
+		 *
 		 * @summary Получить этапы проекта
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -3420,6 +3820,16 @@ export const ProjectStageApiFactory = function (configuration?: Configuration, f
 	return {
 		/**
 		 *
+		 * @summary Получить текущий этап по проекту  Возвращаем первый следующий после последнего выполненного этапа, если выполненны все, то возваращаем последний
+		 * @param {number} projectId
+		 * @param {*} [options] Override http request option.
+		 * @throws {RequiredError}
+		 */
+		projectStagesProjectIdCurrentGet(projectId: number, options?: any) {
+			return ProjectStageApiFp(configuration).projectStagesProjectIdCurrentGet(projectId, options)(fetch, basePath)
+		},
+		/**
+		 *
 		 * @summary Получить этапы проекта
 		 * @param {number} projectId
 		 * @param {*} [options] Override http request option.
@@ -3449,6 +3859,18 @@ export const ProjectStageApiFactory = function (configuration?: Configuration, f
  * @extends {BaseAPI}
  */
 export class ProjectStageApi extends BaseAPI {
+	/**
+	 *
+	 * @summary Получить текущий этап по проекту  Возвращаем первый следующий после последнего выполненного этапа, если выполненны все, то возваращаем последний
+	 * @param {number} projectId
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 * @memberof ProjectStageApi
+	 */
+	public projectStagesProjectIdCurrentGet(projectId: number, options?: any) {
+		return ProjectStageApiFp(this.configuration).projectStagesProjectIdCurrentGet(projectId, options)(this.fetch, this.basePath)
+	}
+
 	/**
 	 *
 	 * @summary Получить этапы проекта

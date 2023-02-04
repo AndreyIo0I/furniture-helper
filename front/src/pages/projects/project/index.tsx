@@ -44,7 +44,7 @@ function Content({
 		event?.preventDefault()
 		await saveProject({
 			id: project.id,
-			name: nameRef.current!.value,
+			projectType: nameRef.current!.value,
 			contractNumber: contractRef.current!.value,
 			dateOfStart: startDate,
 			dateOfFinish: finishDate,
@@ -84,7 +84,7 @@ function Content({
 						required
 						label="Название проекта"
 						autoFocus
-						defaultValue={project.name}
+						defaultValue={project.projectType}
 						sx={{
 							width: '100%',
 						}}

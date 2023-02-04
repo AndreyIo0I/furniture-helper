@@ -130,6 +130,87 @@ namespace ExtranetAPI.Controllers
         }
 
         /// <summary>
+        /// Установить номер договора
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="contractNumber"></param>
+        /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
+        [HttpPost( "{projectId}/contract-number" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновить номер договора" )]
+        public async Task<IActionResult> UpdateContractNumber(
+            [FromRoute, Required] int projectId,
+            [FromQuery, Required] string contractNumber )
+        {
+            Project project = await _projectRepository.GetById( projectId );
+            project.ApplyContractNumber( contractNumber );
+            await _unitOfWork.Commit();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Установить актуальную дату начала выполнения
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="startDate"></param>
+        /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
+        [HttpPost( "{projectId}/start-date" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Установить актуальную дату начала выполнения" )]
+        public async Task<IActionResult> UpdateStartDate(
+            [FromRoute, Required] int projectId,
+            [FromQuery, Required] DateTime startDate )
+        {
+            Project project = await _projectRepository.GetById( projectId );
+            project.ApplyStartDate( startDate );
+            await _unitOfWork.Commit();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Установить актуальную дату завершения выполнения
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
+        [HttpPost( "{projectId}/end-date" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Установить актуальную дату завершения выполнения" )]
+        public async Task<IActionResult> UpdateEndDate(
+            [FromRoute, Required] int projectId,
+            [FromQuery, Required] DateTime endDate )
+        {
+            Project project = await _projectRepository.GetById( projectId );
+            project.ApplyEndDate( endDate );
+            await _unitOfWork.Commit();
+
+            return Ok();
+        }
+
+
+        /// <summary>
+        /// Установить ожидаемую дату завершения выполнения
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="deadLine"></param>
+        /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
+        [HttpPost( "{projectId}/deadline" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Установить ожидаемую дату завершения выполнения" )]
+        public async Task<IActionResult> UpdateDeadLine(
+            [FromRoute, Required] int projectId,
+            [FromQuery, Required] DateTime deadLine )
+        {
+            Project project = await _projectRepository.GetById( projectId );
+            project.ApplyDeadLine( deadLine );
+            await _unitOfWork.Commit();
+
+            return Ok();
+        }
+
+        /// <summary>
         /// Завершить проект
         /// </summary>
         /// <param name="projectId"></param>

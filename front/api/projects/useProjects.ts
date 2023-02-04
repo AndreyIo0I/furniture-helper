@@ -6,7 +6,7 @@ import useAuthenticatedSWR from '../useAuthenticatedSWR'
 
 export interface Project {
 	id: number
-	name: string
+	projectType: string
 	clientId: number
 	contractNumber: string
 	dateOfStart: Dayjs
@@ -17,7 +17,7 @@ export interface Project {
 
 export const mapProjectDto = (dto: ProjectDto): Project => ({
 	id: dto.id!,
-	name: dto.name!,
+	projectType: dto.projectType!,
 	clientId: dto.clientId!,
 	contractNumber: dto.contractNumber!,
 	dateOfStart: dayjs(dto.dateOfStart!),
@@ -28,7 +28,7 @@ export const mapProjectDto = (dto: ProjectDto): Project => ({
 
 export const mapToProjectDto = (project: Project): ProjectDto => ({
 	id: project.id,
-	name: project.name,
+	projectType: project.projectType,
 	clientId: project.clientId,
 	contractNumber: project.contractNumber,
 	dateOfStart: project.dateOfStart.toISOString(),

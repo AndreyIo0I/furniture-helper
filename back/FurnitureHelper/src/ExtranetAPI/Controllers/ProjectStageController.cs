@@ -34,7 +34,31 @@ namespace ExtranetAPI.Controllers
         {
             List<ProjectStage> stages = await _projectStageRepository.GetByProjectId( projectId );
 
-            return Ok( stages );
+            return Ok( stages.OrderBy( item => item.Id ) );
+        }
+
+        /// <summary>
+        /// Получить текущий этап по проекту
+        /// Возвращаем первый следующий после последнего выполненного этапа, если выполненны все, то возваращаем последний
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        [HttpGet( "{projectId}/current" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( ProjectStage ), description: "Получить текущий этап по проекту" )]
+        public async Task<IActionResult> GetCurrentProjectStage(
+              [FromRoute, Required] int projectId )
+        {
+            List<ProjectStage> stages = await _projectStageRepository.GetByProjectId( projectId );
+            List<ProjectStage>? orderedStages = stages.OrderBy( item => item.Id ).ToList();
+            foreach ( var stage in orderedStages )
+            {
+                if ( !stage.IsCompleted )
+                {
+                    return Ok( stage );
+                }
+            }
+
+            return Ok( orderedStages.Last() );
         }
 
         /// <summary>
@@ -50,7 +74,7 @@ namespace ExtranetAPI.Controllers
             [FromRoute, Required] int projectStageId,
             [FromBody, Required] ProjectStage stage )
         {
-            ProjectStage existing = await _projectStageRepository.Get( projectStageId );
+            ProjectStage existing = await _projectStageRepository.Get( projectStageId, stage.ProjectId );
             existing.Update( stage );
             await _unitOfWork.Commit();
 

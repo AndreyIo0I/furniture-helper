@@ -1,6 +1,6 @@
 import useSWR, {SWRResponse} from 'swr'
-import {clientApi, projectDeadlineApi} from './api'
-import {ClientDto, ProjectDeadlineSettings} from './typescript-fetch-client-generated'
+import {projectDeadlineApi} from './api'
+import {ProjectDeadlineSettings} from './typescript-fetch-client-generated'
 import useAuthenticatedSWR from './useAuthenticatedSWR'
 
 export interface AccountSettings {

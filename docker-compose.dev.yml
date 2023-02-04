@@ -12,7 +12,9 @@ services:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: '1234'
   back:
-    image: andrbeckov/furniture-helper-back:dev
+    build:
+      context: ./back/FurnitureHelper
+      dockerfile: dev.Dockerfile
     ports:
       - '5000:5000'
     environment:

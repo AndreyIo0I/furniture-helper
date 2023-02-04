@@ -3,36 +3,62 @@
     public class Project
     {
         public int Id { get; private set; }
-        public string Name { get; private set; }
+        public string ProjectType { get; private set; }
         public string ContractNumber { get; private set; }
-        public DateTime DateOfStart { get; private set; }
-        public DateTime DeadLine { get; private set; }
+        public DateTime? DateOfStart { get; private set; }
+        public DateTime DateOfApplication { get; private set; }
+        public DateTime? DeadLine { get; private set; }
+        public DateTime? EndDate { get; private set; }
         public int ClientId { get; private set; }
+        public string Address { get; private set; }
         public string Description { get; private set; }
         public bool IsCompleted { get; private set; }
         public bool IsStopped { get; private set; }
-        public DateTime? EndDate { get; private set; }
 
-        public Project( string name, string contractNumber, DateTime dateOfStart, DateTime deadLine, int clientId, string description )
+        public Project(
+            string projectType,
+            DateTime dateOfApplication,
+            int clientId,
+            string description,
+            string address )
         {
-            Name = name;
-            ContractNumber = contractNumber;
-            DateOfStart = dateOfStart;
-            DeadLine = deadLine;
+            ProjectType = projectType;
+            DateOfApplication = dateOfApplication;
             ClientId = clientId;
             Description = description;
             IsCompleted = false;
             IsStopped = false;
+            Address = address;
+            ContractNumber = string.Empty;
         }
 
         public void Update( Project newProject )
         {
-            Name = newProject.Name;
-            ContractNumber = newProject.ContractNumber;
-            DateOfStart = newProject.DateOfStart;
-            DeadLine = newProject.DeadLine;
+            ProjectType = newProject.ProjectType;
             ClientId = newProject.ClientId;
             Description = newProject.Description;
+            DateOfApplication = newProject.DateOfApplication;
+            Address = newProject.Address;
+        }
+
+        public void ApplyContractNumber( string contractNumber )
+        {
+            ContractNumber = contractNumber;
+        }
+
+        public void ApplyDeadLine( DateTime deadLine )
+        {
+            DeadLine = deadLine;
+        }
+
+        public void ApplyStartDate( DateTime deadOfStart )
+        {
+            DateOfStart = deadOfStart;
+        }
+
+        public void ApplyEndDate( DateTime endDate )
+        {
+            EndDate = endDate;
         }
 
         public void Complete()

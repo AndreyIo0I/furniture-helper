@@ -20,20 +20,19 @@ namespace Application.Services
         {
             var toAdd = new List<ProjectStage>
             {
-                ProjectStage.Default( projectId, "Замер" ),
-                ProjectStage.Default( projectId, "Дизайн" ),
-                ProjectStage.Default( projectId, "Договор" ),
-                ProjectStage.Default( projectId, "Контрольный замер" ),
-                ProjectStage.Default( projectId, "Деталировка" ),
-                ProjectStage.Default( projectId, "Схемы" ),
-                ProjectStage.Default( projectId, "Распил" ),
-                ProjectStage.Default( projectId, "Фасады" ),
-                ProjectStage.Default( projectId, "Фурнитура" ),
-                ProjectStage.Default( projectId, "Мягкие детали" ),
-                ProjectStage.Default( projectId, "Стекло. Зеркало" ),
-                ProjectStage.Default( projectId, "Багет" ),
-                ProjectStage.Default( projectId, "Сборка" ),
-                ProjectStage.Default( projectId, "Установка" ),
+                ProjectStage.Default( 1, projectId, "Замер", "Measuring" ),
+                ProjectStage.Default( 2, projectId, "Расчет", "Calculation" ),
+                ProjectStage.Default( 3, projectId, "Договор", "Contract" ),
+                ProjectStage.Default( 4, projectId, "Конструкторская документация", "DesignDocumentation" ),
+                ProjectStage.Default( 5, projectId, "Распил", "Production" ),
+                ProjectStage.Default( 6, projectId, "Фасады", "Production" ),
+                ProjectStage.Default( 7, projectId, "Фурнитура", "Production" ),
+                ProjectStage.Default( 8, projectId, "Мягкие детали", "Production" ),
+                ProjectStage.Default( 9, projectId, "Стекло. Зеркало", "Production" ),
+                ProjectStage.Default( 10, projectId, "Багет", "Production" ),
+                ProjectStage.Default( 11, projectId, "Сборка", "Assembling" ),
+                ProjectStage.Default( 12, projectId, "Установка", "Installation" ),
+                ProjectStage.Default( 13, projectId, "Оплата", "Payment" ),
             };
 
             _repository.Add( toAdd );

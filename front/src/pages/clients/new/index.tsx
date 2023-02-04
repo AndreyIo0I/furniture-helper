@@ -33,7 +33,7 @@ export default function NewClientPage() {
 
 	const router = useRouter()
 	const handleOnSubmit = async (data: Form) => {
-		const newClientId = await createClient({
+		await createClient({
 			name: data.fullName,
 			communicationChannel: data.source,
 			phoneNumber: data.phone,

@@ -58,7 +58,7 @@ public class AnalyticsController : ControllerBase
         
         if ( !String.IsNullOrEmpty( searchAnalytic.Name ) )
         {
-            projects = projects.Where( x => x.Name == searchAnalytic.Name ).ToList();
+            projects = projects.Where( x => x.ProjectType == searchAnalytic.Name ).ToList();
         }
         
         IReadOnlyList<ProjectBudget> projectBudgets = await _projectBudgetRepository.GetByProjectIds( projects.Select( x => x.Id ).ToList() );
@@ -71,9 +71,9 @@ public class AnalyticsController : ControllerBase
             
             ProjectMarginDto projectMarginDto = new ProjectMarginDto
             {
-                ProjectStartdate = project.DateOfStart,
-                ProjectName = project.Name,
-                ProjectDeadLine = project.DeadLine,
+                ProjectStartdate = project.DateOfStart.Value,
+                ProjectName = project.ProjectType,
+                ProjectDeadLine = project.DeadLine.Value,
                 ProjectMargin = _analyticsService
                     .CalculateProjectMargin(
                     projectBudget.CostPayments
@@ -144,13 +144,13 @@ public class AnalyticsController : ControllerBase
 
         IReadOnlyList<Project> projects = await _projectRepository.GetAll( searchAnalytic.Period.StartDate, searchAnalytic.Period.EndDate );
         projects = projects
-            .Where(x => ( x.EndDate.HasValue && x.EndDate.Value.Date > x.DeadLine.Date ) 
-                || ( !x.EndDate.HasValue && x.DeadLine.Date < currentDate.Date ) )
+            .Where(x => ( x.EndDate.HasValue && x.EndDate.Value.Date > x.DeadLine.Value.Date) 
+                || ( !x.EndDate.HasValue && x.DeadLine.Value.Date < currentDate.Date ) )
             .ToList();
         
         if ( !String.IsNullOrEmpty( searchAnalytic.Name ) )
         {
-            projects = projects.Where( x => x.Name == searchAnalytic.Name ).ToList();
+            projects = projects.Where( x => x.ProjectType == searchAnalytic.Name ).ToList();
         }
 
         List<OutdatedProjectDto> outdatedProjects = new();
@@ -159,10 +159,10 @@ public class AnalyticsController : ControllerBase
         {
             OutdatedProjectDto projectDto = new OutdatedProjectDto
             {
-                StartDate = project.DateOfStart,
-                DeadLine = project.DeadLine,
-                ProjectName = project.Name,
-                WastedDays = ( int ) ( currentDate - project.DateOfStart ).TotalDays
+                StartDate = project.DateOfStart.Value,
+                DeadLine = project.DeadLine.Value,
+                ProjectName = project.ProjectType,
+                WastedDays = ( int ) ( currentDate - project.DateOfStart ).Value.TotalDays
             };
             
             outdatedProjects.Add( projectDto );
@@ -210,7 +210,7 @@ public class AnalyticsController : ControllerBase
             new SpendingOnProjectCostsDto
             {
                 SpendingOnCosts = spendingOnCosts,
-                ProjectName = project.Name
+                ProjectName = project.ProjectType
             } );
     }
     
@@ -275,7 +275,7 @@ public class AnalyticsController : ControllerBase
 
         List<ProjectPriceDto> projectPrices = projectBudgets.Select( x => new ProjectPriceDto
         {
-            ProjectName = projects.Single( p => p.Id == x.ProjectId ).Name,
+            ProjectName = projects.Single( p => p.Id == x.ProjectId ).ProjectType,
             ProjectPrice = x.ProjectCost
         } ).OrderBy( x => x.ProjectPrice ).ToList();
 

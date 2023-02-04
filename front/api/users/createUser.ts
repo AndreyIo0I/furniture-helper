@@ -1,4 +1,4 @@
-import {clientApi, userApi} from '../api'
+import {userApi} from '../api'
 import {UserDto} from '../typescript-fetch-client-generated'
 import {makeAuthenticatedReq} from '../useAuthenticatedSWR'
 

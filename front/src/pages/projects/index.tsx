@@ -61,7 +61,7 @@ export default function ProjectsPage() {
 	const projects: Project[] = data
 		? data.map(project => ({
 			id: project.id!,
-			name: project.name!,
+			name: project.projectType!,
 			client: clients?.find(client => client.id === project.clientId),
 			dateOfFinish: project.dateOfFinish,
 			deadlineState: accountSettings && getColor(project.dateOfFinish.diff(dayjs(), 'days'), accountSettings),

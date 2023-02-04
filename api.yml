@@ -3,6 +3,239 @@ info:
   title: ExtranetAPI
   version: '1.0'
 paths:
+  /analytics/margin/{projectId}:
+    get:
+      tags:
+        - Analytics
+      summary: Маржа по проекту
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Маржа по проекту
+          content:
+            text/plain:
+              schema:
+                type: number
+                format: double
+            application/json:
+              schema:
+                type: number
+                format: double
+            text/json:
+              schema:
+                type: number
+                format: double
+  /analytics/margin:
+    post:
+      tags:
+        - Analytics
+      summary: Маржа по проектам за период
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchAnalyticDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SearchAnalyticDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SearchAnalyticDto'
+      responses:
+        '200':
+          description: Маржа по проектам за период
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProjectsMagrinDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectsMagrinDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProjectsMagrinDto'
+  /analytics/profitNorm/{projectId}:
+    get:
+      tags:
+        - Analytics
+      summary: Норма прибыли
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Норма прибыли
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+  /analytics/rateOfSurplusValue/{projectId}:
+    get:
+      tags:
+        - Analytics
+      summary: Норма прибавочной стоимости
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Норма прибавочной стоимости
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+  /analytics/outDatedProjects:
+    post:
+      tags:
+        - Analytics
+      summary: Просроченные проекты
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchAnalyticDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SearchAnalyticDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SearchAnalyticDto'
+      responses:
+        '200':
+          description: Просроченные проекты
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OutdatedProjectsDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutdatedProjectsDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/OutdatedProjectsDto'
+  /analytics/spendingOnCosts/{projectId}:
+    get:
+      tags:
+        - Analytics
+      summary: Траты на издержки по проекту
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Траты на издержки по проекту
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/SpendingOnProjectCostsDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpendingOnProjectCostsDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/SpendingOnProjectCostsDto'
+  /analytics/spendingOnCosts:
+    post:
+      tags:
+        - Analytics
+      summary: Траты на издержки
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchAnalyticDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SearchAnalyticDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SearchAnalyticDto'
+      responses:
+        '200':
+          description: Траты на издержки
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpendingOnCostDto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpendingOnCostDto'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpendingOnCostDto'
+  /analytics/projectsPrices:
+    post:
+      tags:
+        - Analytics
+      summary: Цены проектов
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Period'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Period'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Period'
+      responses:
+        '200':
+          description: Цены проектов
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProjectsPricesDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectsPricesDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProjectsPricesDto'
   /authentification:
     post:
       tags:
@@ -547,6 +780,149 @@ paths:
               schema:
                 type: integer
                 format: int32
+  /projects/{projectId}/contract-number:
+    post:
+      tags:
+        - Project
+      summary: Установить номер договора
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: contractNumber
+          in: query
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Обновить номер договора
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /projects/{projectId}/start-date:
+    post:
+      tags:
+        - Project
+      summary: Установить актуальную дату начала выполнения
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: startDate
+          in: query
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Установить актуальную дату начала выполнения
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /projects/{projectId}/end-date:
+    post:
+      tags:
+        - Project
+      summary: Установить актуальную дату завершения выполнения
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: endDate
+          in: query
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Установить актуальную дату завершения выполнения
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /projects/{projectId}/deadline:
+    post:
+      tags:
+        - Project
+      summary: Установить ожидаемую дату завершения выполнения
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: deadLine
+          in: query
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Установить ожидаемую дату завершения выполнения
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
   /projects/{projectId}/complete:
     post:
       tags:
@@ -744,6 +1120,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectStage'
+  /project-stages/{projectId}/current:
+    get:
+      tags:
+        - ProjectStage
+      summary: "Получить текущий этап по проекту\r\nВозвращаем первый следующий после последнего выполненного этапа, если выполненны все, то возваращаем последний"
+      parameters:
+        - name: projectId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Получить текущий этап по проекту
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProjectStage'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectStage'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProjectStage'
   /project-stages/{projectStageId}/project-stage-updating:
     post:
       tags:
@@ -1018,6 +1420,46 @@ components:
           type: number
           format: double
       additionalProperties: false
+    OutdatedProjectDto:
+      type: object
+      properties:
+        startDate:
+          type: string
+          format: date-time
+        deadLine:
+          type: string
+          format: date-time
+        projectName:
+          type: string
+          nullable: true
+        wastedDays:
+          type: integer
+          format: int32
+      additionalProperties: false
+    OutdatedProjectsDto:
+      type: object
+      properties:
+        outdatedProjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutdatedProjectDto'
+          nullable: true
+        period:
+          $ref: '#/components/schemas/Period'
+        averageAmount:
+          type: number
+          format: double
+      additionalProperties: false
+    Period:
+      type: object
+      properties:
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+      additionalProperties: false
     ProjectBudgetDto:
       type: object
       properties:
@@ -1063,7 +1505,7 @@ components:
         id:
           type: integer
           format: int32
-        name:
+        projectType:
           type: string
           nullable: true
         contractNumber:
@@ -1072,15 +1514,85 @@ components:
         dateOfStart:
           type: string
           format: date-time
+          nullable: true
+        dateOfApplication:
+          type: string
+          format: date-time
         deadLine:
           type: string
           format: date-time
+          nullable: true
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
         clientId:
           type: integer
           format: int32
+        address:
+          type: string
+          nullable: true
         description:
           type: string
           nullable: true
+        isCompleted:
+          type: boolean
+      additionalProperties: false
+    ProjectMarginDto:
+      type: object
+      properties:
+        projectStartdate:
+          type: string
+          format: date-time
+        projectDeadLine:
+          type: string
+          format: date-time
+        projectName:
+          type: string
+          nullable: true
+        projectMargin:
+          type: number
+          format: double
+      additionalProperties: false
+    ProjectPriceDto:
+      type: object
+      properties:
+        projectName:
+          type: string
+          nullable: true
+        projectPrice:
+          type: number
+          format: double
+      additionalProperties: false
+    ProjectsMagrinDto:
+      type: object
+      properties:
+        projectMargins:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectMarginDto'
+          nullable: true
+        period:
+          $ref: '#/components/schemas/Period'
+        totalMargin:
+          type: number
+          format: double
+      additionalProperties: false
+    ProjectsPricesDto:
+      type: object
+      properties:
+        averagePrice:
+          type: number
+          format: double
+        projectPrices:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectPriceDto'
+          nullable: true
+        maxProjectPrice:
+          $ref: '#/components/schemas/ProjectPriceDto'
+        minProjectPrice:
+          $ref: '#/components/schemas/ProjectPriceDto'
       additionalProperties: false
     ProjectStage:
       type: object
@@ -1091,6 +1603,9 @@ components:
         projectId:
           type: integer
           format: int32
+        projectStageCode:
+          type: string
+          nullable: true
         name:
           type: string
           nullable: true
@@ -1103,6 +1618,37 @@ components:
           nullable: true
         isCompleted:
           type: boolean
+      additionalProperties: false
+    SearchAnalyticDto:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        period:
+          $ref: '#/components/schemas/Period'
+      additionalProperties: false
+    SpendingOnCostDto:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        amount:
+          type: number
+          format: double
+      additionalProperties: false
+    SpendingOnProjectCostsDto:
+      type: object
+      properties:
+        spendingOnCosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpendingOnCostDto'
+          nullable: true
+        projectName:
+          type: string
+          nullable: true
       additionalProperties: false
     UserDto:
       type: object
