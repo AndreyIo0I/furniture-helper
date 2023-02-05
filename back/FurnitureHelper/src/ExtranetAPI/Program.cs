@@ -3,6 +3,8 @@ using Infrastructure;
 using Infrastructure.Foundation.EntityFramwork;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using ExtranetAPI.Analytics.Services;
+using ExtranetAPI.Analytics.Services.Builders;
 using ExtranetAPI.Services;
 using ExtranetAPI.Services.Builders;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -32,6 +34,7 @@ builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<IUserBuilder, UserBuilder>();
 builder.Services.AddScoped<IPasswordCryptionService, PasswordCryptionService>(
     sp => new PasswordCryptionService( builder.Configuration["SecurityKey"] ) );
+builder.Services.AddScoped<IProjectSummaryBuilder, ProjectSummaryBuilder>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

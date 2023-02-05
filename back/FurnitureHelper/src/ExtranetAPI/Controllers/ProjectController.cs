@@ -6,6 +6,8 @@ using ExtranetAPI.Models.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using ExtranetAPI.Analytics.Models.ProjectSummary;
+using ExtranetAPI.Analytics.Services.Builders;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ExtranetAPI.Controllers
@@ -18,17 +20,20 @@ namespace ExtranetAPI.Controllers
         private readonly IProjectBudgetRepository _projectBudgetRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProjectStageInitializer _projectStageInitializer;
+        private readonly IProjectSummaryBuilder _projectSummaryBuilder;
 
         public ProjectController(
             IProjectRepository projectRepository,
             IUnitOfWork unitOfWork,
             IProjectBudgetRepository projectBudgetRepository,
-            IProjectStageInitializer projectStageInitializer )
+            IProjectStageInitializer projectStageInitializer,
+            IProjectSummaryBuilder projectSummaryBuilder )
         {
             _projectRepository = projectRepository;
             _unitOfWork = unitOfWork;
             _projectBudgetRepository = projectBudgetRepository;
             _projectStageInitializer = projectStageInitializer;
+            _projectSummaryBuilder = projectSummaryBuilder;
         }
 
         /// <summary>
@@ -262,6 +267,20 @@ namespace ExtranetAPI.Controllers
             await _unitOfWork.Commit();
 
             return Ok();
+        }
+        
+        /// <summary>
+        /// Получить совдую таблицу по проекту
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
+        [HttpPost( "{projectId}/summary-table" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( ProjectSummaryTableDto ), description: "Получить сводную таблицу" )]
+        public async Task<IActionResult> GetSummaryTable(
+            [FromRoute, Required] int projectId )
+        {
+            return Ok( await _projectSummaryBuilder.Build( projectId ) );
         }
     }
 }

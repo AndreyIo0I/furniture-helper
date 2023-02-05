@@ -1,8 +1,9 @@
 ﻿using Domain.CostsManagement;
 using Domain.ProjectManagement;
+using ExtranetAPI.Analytics.Models;
+using ExtranetAPI.Analytics.Services;
 using ExtranetAPI.Models;
 using ExtranetAPI.Models.Analytics;
-using ExtranetAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -29,22 +30,17 @@ public class AnalyticsController : ControllerBase
     }
     
     /// <summary>
-    /// Маржа по проекту
+    /// Числовые показатели за период
     /// </summary>
-    /// <param name="projectId"></param>
+    /// <param name="numericalIndicators"></param>
     /// <returns></returns>
-    [HttpGet( "margin/{projectId}" )]
-    [SwaggerResponse( statusCode: 200, type: typeof( decimal ), description: "Маржа по проекту" )]
-    public async Task<IActionResult> GetProjectMargin( [FromRoute] int projectId )
+    [HttpPost( "margin" )]
+    [SwaggerResponse( statusCode: 200, type: typeof( NumericalIndicatorsDto ), description: "Числовые показатели за период" )]
+    public async Task<IActionResult> GetNumericalIndicators( [FromBody] Period period )
     {
-        ProjectBudget projectBudget = await _projectBudgetRepository.GetByProjectId( projectId );
-
-        return Ok( 
-            _analyticsService.CalculateProjectMargin(
-                projectBudget.CostPayments.Select( x => x.Amount ).Sum(),
-                projectBudget.ProjectCost ) );
+        return Ok();
     }
-    
+
     /// <summary>
     /// Маржа по проектам за период
     /// </summary>
@@ -98,40 +94,6 @@ public class AnalyticsController : ControllerBase
     }
 
     /// <summary>
-    /// Норма прибыли
-    /// </summary>
-    /// <param name="projectId"></param>
-    /// <returns></returns>
-    [HttpGet("profitNorm/{projectId}")]
-    [SwaggerResponse(statusCode: 200, type: typeof(string), description: "Норма прибыли")]
-    public async Task<IActionResult> GetProfitNorm([FromRoute] int projectId)
-    {
-        ProjectBudget projectBudget = await _projectBudgetRepository.GetByProjectId(projectId);
-
-        return Ok(
-            _analyticsService.CalculateProjectProfitNorm(
-                projectBudget.CostPayments.Select( x => x.Amount ).Sum(),
-                projectBudget.ProjectCost ) );
-    }
-
-    /// <summary>
-    /// Норма прибавочной стоимости
-    /// </summary>
-    /// <param name="projectId"></param>
-    /// <returns></returns>
-    [HttpGet( "rateOfSurplusValue/{projectId}" )]
-    [SwaggerResponse( statusCode: 200, type: typeof( string ), description: "Норма прибавочной стоимости" )]
-    public async Task<IActionResult> GetRateOfSurplusValue( [FromRoute] int projectId )
-    {
-        ProjectBudget projectBudget = await _projectBudgetRepository.GetByProjectId( projectId );
-
-        return Ok(
-            _analyticsService.CalculateProjectRateOfSurplusValue(
-                projectBudget.CostPayments.Select( x => x.Amount ).Sum(),
-                projectBudget.ProjectCost ) );
-    }
-
-    /// <summary>
     /// Просроченные проекты
     /// </summary>
     /// <param name="searchAnalytic"></param>
@@ -178,42 +140,7 @@ public class AnalyticsController : ControllerBase
                     outdatedProjects.Count )
             } );
     }
-    
-    /// <summary>
-    /// Траты на издержки по проекту
-    /// </summary>
-    /// <param name="projectId"></param>
-    /// <returns></returns>
-    [HttpGet( "spendingOnCosts/{projectId}" )]
-    [SwaggerResponse( statusCode: 200, type: typeof( SpendingOnProjectCostsDto ), description: "Траты на издержки по проекту" )]
-    public async Task<IActionResult> GetSpendingOnProjectCosts( [FromRoute] int projectId )
-    {
-        Project project = await _projectRepository.GetById( projectId );
-        
-        ProjectBudget projectBudget = await _projectBudgetRepository.GetByProjectId( projectId );
 
-        Dictionary<int, List<CostPayment>> costPayments =
-            projectBudget.CostPayments.GroupBy(x => x.CostId)
-                .ToDictionary(x => x.Key, x => x.ToList());
-
-        List<Cost> costs = await _costRepository.GetAll( projectBudget.CostPayments.Select( x => x.CostId ).ToList() );
-
-        Dictionary<int, Cost> costsToIds = costs.ToDictionary( x => x.Id, x => x );
-
-        List<SpendingOnCostDto> spendingOnCosts = costPayments.Select( x => new SpendingOnCostDto
-        {
-            Amount = x.Value.Select( c => c.Amount ).Sum(),
-            Name = costsToIds[ x.Key ].Name
-        } ).ToList();
-
-        return Ok(
-            new SpendingOnProjectCostsDto
-            {
-                SpendingOnCosts = spendingOnCosts,
-                ProjectName = project.ProjectType
-            } );
-    }
-    
     /// <summary>
     /// Траты на издержки
     /// </summary>
