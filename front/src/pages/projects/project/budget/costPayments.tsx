@@ -8,17 +8,14 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	TextField,
 } from '@mui/material'
-import {DatePicker, Select} from 'antd'
+import {DatePicker, InputNumber, Select} from 'antd'
 import {Dayjs} from 'dayjs'
 import React from 'react'
 import {CostType} from '../../../../../api/costTypes/useCostTypes'
 import {
 	formStyle,
 	getPopupContainer,
-	toViewModelNumber,
-	toViewNumber,
 	toViewStatus,
 } from './common'
 import * as model from './model'
@@ -72,7 +69,7 @@ function CostPayment(props: CostPaymentProps) {
 		})
 	}
 
-	function setAmount(amount?: number) {
+	function setAmount(amount: number | null) {
 		props.setPayment({
 			...props.payment,
 			amount,
@@ -96,15 +93,11 @@ function CostPayment(props: CostPaymentProps) {
 				/>
 			</TableCell>
 			<TableCell>
-				<TextField
-					type="number"
-					variant="standard"
-					value={toViewNumber(props.payment.amount)}
-					onChange={event =>
-						setAmount(toViewModelNumber(event.target.value))
-					}
+				<InputNumber
+					value={props.payment.amount}
+					onChange={setAmount}
 					className={styles.form_control}
-					error={props.payment.amount === undefined}
+					status={toViewStatus(props.payment.amount === null)}
 				/>
 			</TableCell>
 			<TableCell>
@@ -130,7 +123,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		needsValidation: boolean,
 		paymentId: number,
 		costId?: number,
-		amount?: number,
+		amount: number | null,
 		paymentDate: Dayjs | null,
 	}
 
@@ -138,6 +131,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		return {
 			needsValidation: false,
 			paymentId,
+			amount: null,
 			paymentDate: null,
 		}
 	}
@@ -160,7 +154,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		})
 	}
 
-	function setNewPaymentAmount(amount?: number) {
+	function setNewPaymentAmount(amount: number | null) {
 		setNewPayment({
 			...newPayment,
 			amount,
@@ -231,18 +225,11 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 							/>
 						</TableCell>
 						<TableCell>
-							<TextField
-								type="number"
-								variant="standard"
-								value={toViewNumber(newPayment.amount)}
-								onChange={event =>
-									setNewPaymentAmount(toViewModelNumber(event.target.value))
-								}
+							<InputNumber
+								value={newPayment.amount}
+								onChange={setNewPaymentAmount}
 								className={styles.form_control}
-								error={
-									newPayment.needsValidation
-									&& newPayment.amount === undefined
-								}
+								status={toViewStatus(newPayment.needsValidation && newPayment.amount === null)}
 							/>
 						</TableCell>
 						<TableCell>
