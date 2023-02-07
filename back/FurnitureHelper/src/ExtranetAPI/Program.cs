@@ -35,6 +35,7 @@ builder.Services.AddScoped<IUserBuilder, UserBuilder>();
 builder.Services.AddScoped<IPasswordCryptionService, PasswordCryptionService>(
     sp => new PasswordCryptionService( builder.Configuration["SecurityKey"] ) );
 builder.Services.AddScoped<IProjectSummaryBuilder, ProjectSummaryBuilder>();
+builder.Services.AddScoped<IProjectNumericalIndicatorsBuilder, ProjectNumericalIndicatorsBuilder>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -1,4 +1,7 @@
-﻿namespace ExtranetAPI.Analytics.Services;
+﻿using Domain.ProjectManagement;
+using ExtranetAPI.Models;
+
+namespace ExtranetAPI.Analytics.Services;
 
 public class AnalyticsService : IAnalyticsService
 {
@@ -25,5 +28,16 @@ public class AnalyticsService : IAnalyticsService
         }
         
         return decimal.Divide( CalculateProjectMargin( costs, projectCost ), projectCost );
+    }
+
+    public decimal CalculateAverageCheck( List<decimal> projectsCosts )
+    {
+        return decimal.Divide( projectsCosts.Sum(), projectsCosts.Count );
+    }
+
+    public int CalculateAverageProductionDays( List<Period> projectsPeriods )
+    {
+        return ( int )( projectsPeriods.Select(x => ( x.EndDate.Date - x.StartDate.Date ).TotalDays ).Sum() /
+                     projectsPeriods.Count );
     }
 }

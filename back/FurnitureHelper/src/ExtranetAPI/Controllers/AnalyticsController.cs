@@ -2,6 +2,7 @@
 using Domain.ProjectManagement;
 using ExtranetAPI.Analytics.Models;
 using ExtranetAPI.Analytics.Services;
+using ExtranetAPI.Analytics.Services.Builders;
 using ExtranetAPI.Models;
 using ExtranetAPI.Models.Analytics;
 using Microsoft.AspNetCore.Mvc;
@@ -16,17 +17,20 @@ public class AnalyticsController : ControllerBase
     private readonly IProjectBudgetRepository _projectBudgetRepository;
     private readonly IAnalyticsService _analyticsService;
     private readonly ICostRepository _costRepository;
+    private readonly IProjectNumericalIndicatorsBuilder _projectNumericalIndicatorsBuilder;
 
     public AnalyticsController(
         IProjectRepository projectRepository,
         IProjectBudgetRepository projectBudgetRepository,
         IAnalyticsService analyticsService,
-        ICostRepository costRepository )
+        ICostRepository costRepository,
+        IProjectNumericalIndicatorsBuilder projectNumericalIndicatorsBuilder )
     {
         _projectRepository = projectRepository;
         _projectBudgetRepository = projectBudgetRepository;
         _analyticsService = analyticsService;
         _costRepository = costRepository;
+        _projectNumericalIndicatorsBuilder = projectNumericalIndicatorsBuilder;
     }
     
     /// <summary>
@@ -38,7 +42,12 @@ public class AnalyticsController : ControllerBase
     [SwaggerResponse( statusCode: 200, type: typeof( NumericalIndicatorsDto ), description: "Числовые показатели за период" )]
     public async Task<IActionResult> GetNumericalIndicators( [FromBody] Period period )
     {
-        return Ok();
+        if ( period.StartDate > period.EndDate )
+        {
+            return BadRequest();
+        }
+
+        return Ok( _projectNumericalIndicatorsBuilder.Build( period ) );
     }
 
     /// <summary>

@@ -51,13 +51,23 @@
             DeadLine = deadLine;
         }
 
-        public void ApplyStartDate( DateTime deadOfStart )
+        public void ApplyStartDate( DateTime dateOfStart )
         {
-            DateOfStart = deadOfStart;
+            DateOfStart = dateOfStart;
         }
 
         public void ApplyEndDate( DateTime endDate )
         {
+            if ( !DateOfStart.HasValue )
+            {
+                throw new ArgumentOutOfRangeException( "Can't set end date while start date is null" );
+            }
+            
+            if ( DateOfStart > endDate )
+            {
+                throw new ArgumentOutOfRangeException($"EndDate: {endDate} must be more then start date: {DateOfStart}");
+            }
+            
             EndDate = endDate;
         }
 
