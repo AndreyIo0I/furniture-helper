@@ -1,5 +1,5 @@
 import {Container, Paper, SxProps} from '@mui/material'
-import {Button, Form, InputNumber} from 'antd'
+import {Button, Form, InputNumber, message} from 'antd'
 import dayjs from 'dayjs'
 import React from 'react'
 import useCostTypes, {CostType} from '../../../../../api/costTypes/useCostTypes'
@@ -66,15 +66,15 @@ function Content(props: ContentProps) {
 	}
 
 	async function updateProjectBudget() {
-		let apiProjectBudget
 		try {
-			apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
+			let apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
+			await saveProjectBudget(apiProjectBudget)
+			mutate(apiProjectBudget)
+			message.success('Изменения успешно сохранены')
 		} catch (err) {
-			console.log(err)
-			return
+			console.error(err)
+			message.error('Не удалось сохранить изменения')
 		}
-		await saveProjectBudget(apiProjectBudget)
-		await mutate(apiProjectBudget)
 	}
 
 	function setProjectCost(projectCost: number | null) {
