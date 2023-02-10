@@ -28,8 +28,8 @@ function Content({
 }: ContentProps) {
 	const nameRef = useRef<HTMLInputElement>(null)
 	const clientIdRef = useRef<number>(project.clientId)
-	const [startDate, setStartDate] = useState(project.dateOfStart)
-	const [finishDate, setFinishDate] = useState(project.dateOfFinish)
+	const [startDate, setStartDate] = useState(project.dateOfStart || null)
+	const [finishDate, setFinishDate] = useState(project.dateOfFinish || null)
 	const contractRef = useRef<HTMLInputElement>(null)
 	const descriptionRef = useRef<HTMLInputElement>(null)
 	const [isCompleted, setIsCompleted] = useState(project.isCompleted)
@@ -82,7 +82,7 @@ function Content({
 						inputRef={nameRef}
 						margin="none"
 						required
-						label="Название проекта"
+						label="Тип проекта"
 						autoFocus
 						defaultValue={project.projectType}
 						sx={{

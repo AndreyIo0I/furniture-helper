@@ -36,7 +36,7 @@ export function OutDatedProjectsComponent(props: OutdatedProjects) {
 							<TableRow>
 								<TableCell>Дата начала проекта</TableCell>
 								<TableCell align="right">Дедлайн</TableCell>
-								<TableCell align="right">Название проекта</TableCell>
+								<TableCell align="right">Тип проекта</TableCell>
 								<TableCell align="right">Кол-во просроченных дней</TableCell>
 							</TableRow>
 						</TableHead>

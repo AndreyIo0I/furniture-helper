@@ -22,6 +22,7 @@ export default function NewProjectPage() {
 	const clientIdRef = useRef<number | null>(null)
 	const [startDate, setStartDate] = useState(dayjs())
 	const [finishDate, setFinishDate] = useState(dayjs().add(DEFAULT_PROJECT_DURATION_IN_DAYS, 'day'))
+	const addressRef = useRef<HTMLInputElement>(null)
 	const contractRef = useRef<HTMLInputElement>(null)
 	const descriptionRef = useRef<HTMLInputElement>(null)
 
@@ -38,7 +39,8 @@ export default function NewProjectPage() {
 	const createNewProject = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const newProjectId = await createProject({
-			name: nameRef.current!.value,
+			projectType: nameRef.current!.value,
+			address: addressRef.current!.value,
 			contractNumber: contractRef.current!.value,
 			dateOfStart: startDate.toISOString(),
 			deadLine: finishDate.toISOString(),
@@ -66,7 +68,7 @@ export default function NewProjectPage() {
 						inputRef={nameRef}
 						margin="none"
 						required
-						label="Название проекта"
+						label="Тип проекта"
 						autoFocus
 					/>
 					<div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
@@ -115,9 +117,13 @@ export default function NewProjectPage() {
 						renderInput={params => <TextField {...params} />}
 					/>
 					<TextField
+						inputRef={addressRef}
+						margin="none"
+						label="Адрес"
+					/>
+					<TextField
 						inputRef={contractRef}
 						margin="none"
-						required
 						label="Номер контракта"
 					/>
 					<TextField

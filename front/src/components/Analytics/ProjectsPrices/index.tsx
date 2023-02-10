@@ -17,7 +17,7 @@ export function ProjectsPricesComponent(props: ProjectsPrices) {
 				&& <div>
 					<h4>Проект с минимальной ценой</h4>
 					<ProjectPriceComponent
-						projectName={props?.minProjectPrice.projectName}
+						projectType={props?.minProjectPrice.projectType}
 						projectPrice={props?.minProjectPrice.projectPrice}
 					/>
 				</div>
@@ -26,7 +26,7 @@ export function ProjectsPricesComponent(props: ProjectsPrices) {
 				&& <div>
 					<h4>Проект с максимальной ценой</h4>
 					<ProjectPriceComponent
-						projectName={props?.maxProjectPrice.projectName}
+						projectType={props?.maxProjectPrice.projectType}
 						projectPrice={props?.maxProjectPrice.projectPrice}
 					/>
 				</div>
@@ -54,7 +54,7 @@ export function ProjectsPricesComponent(props: ProjectsPrices) {
 									className={styles.row}
 								>
 									<TableCell component="th" scope="row">
-										{row.projectName}
+										{row.projectType}
 									</TableCell>
 									<TableCell align="right">{row.projectPrice}</TableCell>
 								</TableRow>
@@ -70,7 +70,7 @@ export function ProjectsPricesComponent(props: ProjectsPrices) {
 function ProjectPriceComponent(props: ProjectPrice) {
 	return (
 		<>
-			<div>{`Название проекта: ${props.projectName}`}</div>
+			<div>{`Тип проекта: ${props.projectType}`}</div>
 			<div>{`Стоимость проекта: ${props.projectPrice}`}</div>
 		</>
 	)

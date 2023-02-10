@@ -13,8 +13,8 @@ interface Project {
 	id: number
 	name: string
 	client?: Client
-	dateOfFinish: Dayjs
-	deadlineState?: 'red' | 'yellow'
+	dateOfFinish: Dayjs | null
+	deadlineState: 'red' | 'yellow' | null
 	isCompleted: boolean
 }
 
@@ -31,7 +31,7 @@ function getColor(diff: number, accountSettings: AccountSettings): 'red' | 'yell
 interface Columns {
 	name: string
 	client?: Client
-	dateOfFinish: Dayjs
+	dateOfFinish: Dayjs | null
 }
 
 const columns: ColumnsType<Columns> = [{
@@ -47,7 +47,7 @@ const columns: ColumnsType<Columns> = [{
 	title: 'Дедлайн',
 	dataIndex: 'dateOfFinish',
 	key: 'dateOfFinish',
-	render: dateOfFinish => dateOfFinish.format('DD/MM/YYYY'),
+	render: dateOfFinish => dateOfFinish?.format('DD/MM/YYYY'),
 }]
 
 export default function ProjectsPage() {
@@ -64,7 +64,7 @@ export default function ProjectsPage() {
 			name: project.projectType!,
 			client: clients?.find(client => client.id === project.clientId),
 			dateOfFinish: project.dateOfFinish,
-			deadlineState: accountSettings && getColor(project.dateOfFinish.diff(dayjs(), 'days'), accountSettings),
+			deadlineState: accountSettings && project.dateOfFinish && getColor(project.dateOfFinish.diff(dayjs(), 'days'), accountSettings) || null,
 			isCompleted: !!project.isCompleted,
 		}))
 		: []

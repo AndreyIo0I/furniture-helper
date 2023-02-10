@@ -34,7 +34,7 @@ export interface ProjectsPrices {
 }
 
 export interface ProjectPrice {
-	projectName: string
+	projectType: string
 	projectPrice: string
 }
 
@@ -46,7 +46,7 @@ export const mapProjectsPricesDto = (projectsPrices: ProjectsPricesDto): Project
 })
 
 export const mapProjectPriceDto = (projectPrice: ProjectPriceDto): ProjectPrice => ({
-	projectName: projectPrice?.projectName!,
+	projectType: projectPrice?.projectName!,
 	projectPrice: projectPrice?.projectPrice!.toString(),
 })
 

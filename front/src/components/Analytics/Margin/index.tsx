@@ -32,7 +32,7 @@ export default function MarginComponent(props: ProjectsMargin) {
 							<TableRow>
 								<TableCell>Дата начала проекта</TableCell>
 								<TableCell align="right">Дедлайн</TableCell>
-								<TableCell align="right">Название проекта</TableCell>
+								<TableCell align="right">Тип проекта</TableCell>
 								<TableCell align="right">Маржа</TableCell>
 							</TableRow>
 						</TableHead>
