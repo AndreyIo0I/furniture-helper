@@ -9,11 +9,14 @@ import useClients from '../../../../api/clients/useClients'
 import createProject from '../../../../api/projects/createProject'
 import useAccountSettings from '../../../../api/useAccountSettings'
 import MainLayout from '../../../components/MainLayout'
+import NewClientPopup from '../../../components/NewClientPopup'
 
 const DEFAULT_PROJECT_DURATION_IN_DAYS = 42
 
 export default function NewProjectPage() {
 	const router = useRouter()
+
+	const [isNewClientPopupOpen, setIsNewClientPopupOpen] = useState(false)
 
 	const nameRef = useRef<HTMLInputElement>(null)
 	const clientIdRef = useRef<number | null>(null)
@@ -30,7 +33,7 @@ export default function NewProjectPage() {
 		}
 	}, [accountSettings])
 
-	const {data: clients} = useClients()
+	const {data: clients, mutate: updateClients} = useClients()
 
 	const createNewProject = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -66,23 +69,31 @@ export default function NewProjectPage() {
 						label="Название проекта"
 						autoFocus
 					/>
-					<Autocomplete
-						disablePortal
-						onChange={(event, newValue) => {
-							if (newValue) {
-								clientIdRef.current = newValue.id
+					<div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+						<Autocomplete
+							disablePortal
+							onChange={(event, newValue) => {
+								if (newValue) {
+									clientIdRef.current = newValue.id
+								}
+							}}
+							options={clients
+								? clients.map(client => ({
+									label: client.fullName,
+									id: client.id,
+								}))
+								: []
 							}
-						}}
-						options={clients
-							? clients.map(client => ({
-								label: client.fullName,
-								id: client.id,
-							}))
-							: []
-						}
-						sx={{width: 300}}
-						renderInput={params => <TextField {...params} label="Клиент"/>}
-					/>
+							sx={{width: 300}}
+							renderInput={params => <TextField {...params} label="Клиент"/>}
+						/>
+						<Button
+							onClick={() => setIsNewClientPopupOpen(true)}
+							type="primary"
+						>
+							Добавить клиента
+						</Button>
+					</div>
 					<DatePicker
 						label="Дата начала"
 						value={startDate}
@@ -127,6 +138,13 @@ export default function NewProjectPage() {
 					</div>
 				</Box>
 			</Container>
+			<NewClientPopup
+				open={isNewClientPopupOpen}
+				onCancel={() => {
+					updateClients()
+					setIsNewClientPopupOpen(false)
+				}}
+			/>
 		</MainLayout>
 	)
 }

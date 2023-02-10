@@ -21,10 +21,10 @@ namespace ExtranetAPI.Models.Extensions
         {
             return new Client(
                 client.Name,
-                client.CommunicationChannel,
-                client.PhoneNumber,
-                client.Mail,
-                client.Description );
+                client.CommunicationChannel ?? "",
+                client.PhoneNumber ?? "",
+                client.Mail ?? "",
+                client.Description ?? "" );
         }
     }
 }
