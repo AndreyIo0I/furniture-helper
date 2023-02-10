@@ -3,11 +3,12 @@ import styled from '@mui/material/styles/styled'
 import {tableCellClasses} from '@mui/material/TableCell'
 import {Button} from 'antd'
 import {useRouter} from 'next/router'
-import React from 'react'
+import React, {useState} from 'react'
 import useClients from '../../../api/clients/useClients'
 import {UserRole} from '../../../api/users/createUser'
 import useCurrentUser from '../../../api/users/useCurrentUser'
 import MainLayout from '../../components/MainLayout'
+import NewClientPopup from '../../components/NewClientPopup'
 import styles from './styles.module.css'
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
@@ -36,6 +37,8 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
 export default function ClientsPage() {
 	const router = useRouter()
 
+	const [isNewClientPopupOpen, setIsNewClientPopupOpen] = useState(false)
+
 	const {data: clients} = useClients()
 
 	const {data: currentUser} = useCurrentUser()
@@ -49,7 +52,7 @@ export default function ClientsPage() {
 					<div></div>
 					{isEditable && (
 						<Button
-							onClick={() => router.push(`${location.pathname}/new`)}
+							onClick={() => setIsNewClientPopupOpen(true)}
 							type="primary"
 						>
 							Добавить клиента
@@ -88,6 +91,10 @@ export default function ClientsPage() {
 					</Table>
 				</TableContainer>
 			</Container>
+			<NewClientPopup
+				open={isNewClientPopupOpen}
+				onCancel={() => setIsNewClientPopupOpen(false)}
+			/>
 		</MainLayout>
 	)
 }
