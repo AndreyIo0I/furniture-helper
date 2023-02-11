@@ -1,6 +1,5 @@
-import {AddCircleOutline, Delete} from '@mui/icons-material'
+import {PlusCircleOutlined, DeleteFilled} from '@ant-design/icons'
 import {
-	IconButton,
 	Paper,
 	Table,
 	TableBody,
@@ -9,10 +8,11 @@ import {
 	TableHead,
 	TableRow,
 } from '@mui/material'
-import {DatePicker, InputNumber} from 'antd'
+import {Button, DatePicker, InputNumber} from 'antd'
 import {Dayjs} from 'dayjs'
 import React from 'react'
 import {
+	addRowStyle,
 	formStyle,
 	getPopupContainer,
 	toViewStatus,
@@ -66,9 +66,11 @@ function ClientPayment(props: ClientPaymentProps) {
 				/>
 			</TableCell>
 			<TableCell>
-				<IconButton onClick={props.removePayment}>
-					<Delete/>
-				</IconButton>
+				<Button
+					type="link"
+					icon={<DeleteFilled/>}
+					onClick={props.removePayment}
+				/>
 			</TableCell>
 		</TableRow>
 	)
@@ -161,7 +163,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					<TableRow>
+					<TableRow style={addRowStyle}>
 						<TableCell>
 							<InputNumber
 								value={newPayment.amount}
@@ -180,9 +182,11 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 							/>
 						</TableCell>
 						<TableCell>
-							<IconButton onClick={addPayment}>
-								<AddCircleOutline/>
-							</IconButton>
+							<Button
+								type="link"
+								icon={<PlusCircleOutlined/>}
+								onClick={addPayment}
+							/>
 						</TableCell>
 					</TableRow>
 					{props.clientPayments.map(payment => (

@@ -1,3 +1,4 @@
+import {blue} from '@ant-design/colors'
 import {SxProps} from '@mui/material'
 import {Dayjs} from 'dayjs'
 
@@ -6,6 +7,10 @@ export const pageContainerId = 'projectBudgetPageContainer'
 export const formStyle: SxProps = {
 	mt: 3,
 	maxWidth: 'fit-content',
+}
+
+export const addRowStyle = {
+	background: blue[0],
 }
 
 export function getPopupContainer() {

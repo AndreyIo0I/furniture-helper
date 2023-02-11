@@ -1,6 +1,5 @@
-import {AddCircleOutline, Delete} from '@mui/icons-material'
+import {PlusCircleOutlined, DeleteFilled} from '@ant-design/icons'
 import {
-	IconButton,
 	Paper,
 	Table,
 	TableBody,
@@ -9,11 +8,12 @@ import {
 	TableHead,
 	TableRow,
 } from '@mui/material'
-import {DatePicker, InputNumber, Select} from 'antd'
+import {Button, DatePicker, InputNumber, Select} from 'antd'
 import {Dayjs} from 'dayjs'
 import React from 'react'
 import {CostType} from '../../../../../api/costTypes/useCostTypes'
 import {
+	addRowStyle,
 	formStyle,
 	getPopupContainer,
 	toViewStatus,
@@ -110,9 +110,11 @@ function CostPayment(props: CostPaymentProps) {
 				/>
 			</TableCell>
 			<TableCell>
-				<IconButton onClick={props.removePayment}>
-					<Delete/>
-				</IconButton>
+				<Button
+					type="link"
+					icon={<DeleteFilled/>}
+					onClick={props.removePayment}
+				/>
 			</TableCell>
 		</TableRow>
 	)
@@ -215,7 +217,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					<TableRow>
+					<TableRow style={addRowStyle}>
 						<TableCell>
 							<CostSelect
 								error={newPayment.needsValidation && newPayment.costId === undefined}
@@ -242,9 +244,11 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 							/>
 						</TableCell>
 						<TableCell>
-							<IconButton onClick={addPayment}>
-								<AddCircleOutline/>
-							</IconButton>
+							<Button
+								type="link"
+								icon={<PlusCircleOutlined/>}
+								onClick={addPayment}
+							/>
 						</TableCell>
 					</TableRow>
 					{props.costPayments.map(payment => (
