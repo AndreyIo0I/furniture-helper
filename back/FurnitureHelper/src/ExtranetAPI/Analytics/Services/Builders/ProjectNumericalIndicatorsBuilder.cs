@@ -22,16 +22,22 @@ public class ProjectNumericalIndicatorsBuilder : IProjectNumericalIndicatorsBuil
 
     public async Task<NumericalIndicatorsDto> Build( Period period )
     {
+        NumericalIndicatorsDto numericalIndicatorsDto = new();
+
         IReadOnlyList<Project> projects = await _projectRepository.GetActiveByPeriod(period.StartDate, period.EndDate);
+        if ( projects.Count == 0 )
+        {
+            return numericalIndicatorsDto;
+        }
+
         IReadOnlyList<ProjectBudget> projectBudgets = await _projectBudgetRepository.GetByProjectIds( projects.Select( x => x.Id ).ToList() );
 
-        return new NumericalIndicatorsDto
-        {
-            AverageCheck = _analyticsService.CalculateAverageCheck( projectBudgets.Select( x => x.ProjectCost ).ToList() ),
-            AverageProductionDays = _analyticsService.CalculateAverageProductionDays(
+        numericalIndicatorsDto.AverageCheck = _analyticsService.CalculateAverageCheck( projectBudgets.Select( x => x.ProjectCost ).ToList() );
+        numericalIndicatorsDto.AverageProductionDays = _analyticsService.CalculateAverageProductionDays(
                 projects.Select( x => new Period( x.DateOfStart.Value, x.EndDate.Value ) )
-                    .ToList() ),
-            NumberOfProducts = projects.Count
-        };
+                    .ToList() );
+        numericalIndicatorsDto.NumberOfProducts = projects.Count;
+
+        return numericalIndicatorsDto;
     }
 }

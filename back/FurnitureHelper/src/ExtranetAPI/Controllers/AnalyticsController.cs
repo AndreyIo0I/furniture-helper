@@ -38,7 +38,7 @@ public class AnalyticsController : ControllerBase
     /// </summary>
     /// <param name="numericalIndicators"></param>
     /// <returns></returns>
-    [HttpPost( "margin" )]
+    [HttpPost( "numerical-indicators" )]
     [SwaggerResponse( statusCode: 200, type: typeof( NumericalIndicatorsDto ), description: "Числовые показатели за период" )]
     public async Task<IActionResult> GetNumericalIndicators( [FromBody] Period period )
     {
@@ -47,7 +47,7 @@ public class AnalyticsController : ControllerBase
             return BadRequest();
         }
 
-        return Ok( _projectNumericalIndicatorsBuilder.Build( period ) );
+        return Ok( await _projectNumericalIndicatorsBuilder.Build( period ) );
     }
 
     /// <summary>
