@@ -17,4 +17,5 @@ export interface ProjectBudget {
 	projectCost: number | null
 	clientPayments: ClientPayment[]
 	costPayments: CostPayment[]
+	hasChangesInModel: boolean
 }

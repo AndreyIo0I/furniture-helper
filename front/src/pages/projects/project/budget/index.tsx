@@ -23,6 +23,22 @@ const projectCostStyle: SxProps = {
 	p: 2,
 }
 
+function isValidProjectBudget(projectBudget: model.ProjectBudget) {
+	function isValidClientPayment(payment: model.ClientPayment) {
+		return payment.amount !== null && payment.paymentDate !== null
+	}
+
+	function isValidCostPayment(payment: model.CostPayment) {
+		return payment.amount !== null && payment.paymentDate !== null
+	}
+
+	return (
+		projectBudget.projectCost !== null
+		&& projectBudget.clientPayments.every(isValidClientPayment)
+		&& projectBudget.costPayments.every(isValidCostPayment)
+	)
+}
+
 const mapToProjectBudgetViewModel = (projectBudget: ProjectBudget): model.ProjectBudget => ({
 	projectCost: projectBudget.projectCost,
 	clientPayments: projectBudget.clientPayments.map((payment, index) => ({
@@ -36,6 +52,7 @@ const mapToProjectBudgetViewModel = (projectBudget: ProjectBudget): model.Projec
 		amount: payment.amount,
 		paymentDate: dayjs(payment.paymentDate),
 	})),
+	hasChangesInModel: false,
 })
 
 const mapToApiProjectBudget = (projectBudget: model.ProjectBudget, projectId: number): ProjectBudget => ({
@@ -70,6 +87,10 @@ function Content(props: ContentProps) {
 			let apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
 			await saveProjectBudget(apiProjectBudget)
 			mutate(apiProjectBudget)
+			setBudget({
+				...budget!,
+				hasChangesInModel: false,
+			})
 			message.success('Изменения успешно сохранены')
 		} catch (err) {
 			console.error(err)
@@ -81,6 +102,7 @@ function Content(props: ContentProps) {
 		setBudget({
 			...budget!,
 			projectCost,
+			hasChangesInModel: true,
 		})
 	}
 
@@ -88,6 +110,7 @@ function Content(props: ContentProps) {
 		setBudget({
 			...budget!,
 			clientPayments,
+			hasChangesInModel: true,
 		})
 	}
 
@@ -95,6 +118,7 @@ function Content(props: ContentProps) {
 		setBudget({
 			...budget!,
 			costPayments,
+			hasChangesInModel: true,
 		})
 	}
 
@@ -135,6 +159,7 @@ function Content(props: ContentProps) {
 					type="primary"
 					onClick={updateProjectBudget}
 					style={{margin: '16px 0'}}
+					disabled={!budget.hasChangesInModel || !isValidProjectBudget(budget)}
 				>
                     Сохранить
 				</Button>

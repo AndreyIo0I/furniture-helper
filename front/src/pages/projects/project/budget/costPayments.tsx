@@ -171,7 +171,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 	}
 
 	function addPayment() {
-		if (newPayment.costId === undefined || newPayment.amount === undefined || newPayment.paymentDate === null) {
+		if (newPayment.costId === undefined || newPayment.amount === null || newPayment.paymentDate === null) {
 			setNewPaymentNeedsValidation()
 			return
 		}
