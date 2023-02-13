@@ -25,6 +25,11 @@ namespace Infrastructure.Repositories
             return await Entities.Where( x => x.DateOfStart >= startDate && x.DateOfStart <= endDate ).ToListAsync();
         }
         
+        public async Task<IReadOnlyList<Project>> GetByPeriod( DateTime startDate, DateTime endDate )
+        {
+            return await Entities.Where( x =>x.EndDate.HasValue && x.EndDate >= startDate && x.EndDate <= endDate ).ToListAsync();
+        }
+        
         public async Task<IReadOnlyList<Project>> GetActiveByPeriod( DateTime startDate, DateTime endDate )
         {
             return await Entities.Where(

@@ -36,7 +36,7 @@ public class AnalyticsController : ControllerBase
     /// <summary>
     /// Числовые показатели за период
     /// </summary>
-    /// <param name="numericalIndicators"></param>
+    /// <param name="period"></param>
     /// <returns></returns>
     [HttpPost( "numerical-indicators" )]
     [SwaggerResponse( statusCode: 200, type: typeof( NumericalIndicatorsDto ), description: "Числовые показатели за период" )]
