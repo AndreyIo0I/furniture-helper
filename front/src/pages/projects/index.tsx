@@ -14,6 +14,7 @@ interface ProjectRow {
 	projectType: string
 	clientName?: string
 	dateOfFinish: Dayjs | null
+	endDate: Dayjs | null
 	isCompleted: boolean
 }
 
@@ -37,6 +38,31 @@ const columns: ColumnsType<ProjectRow> = [{
 	render: dateOfFinish => dateOfFinish?.format('DD/MM/YYYY'),
 }]
 
+function compareDates(lhs: Dayjs | null, rhs: Dayjs | null, options = {nullIsLess: false}): number {
+	if (lhs === null && rhs === null) {
+		return 0
+	}
+	if (lhs === null) {
+		return options.nullIsLess ? -1 : 1
+	}
+	if (rhs === null) {
+		return options.nullIsLess ? 1 : -1
+	}
+	return lhs.diff(rhs)
+}
+
+function compareProjects(lhs: ProjectRow, rhs: ProjectRow): number {
+	const dIsCompleted = Number(lhs.isCompleted) - Number(rhs.isCompleted)
+	if (dIsCompleted) {
+		return dIsCompleted
+	}
+	if (lhs.isCompleted) {
+		return compareDates(rhs.endDate, lhs.endDate, {nullIsLess: true})
+	} else {
+		return compareDates(lhs.dateOfFinish, rhs.dateOfFinish)
+	}
+}
+
 export default function ProjectsPage() {
 	const router = useRouter()
 
@@ -50,10 +76,11 @@ export default function ProjectsPage() {
 		projectType: project.projectType,
 		clientName: clients?.find(client => client.id === project.clientId)?.fullName,
 		dateOfFinish: project.dateOfFinish,
+		endDate: project.endDate!,
 		isCompleted: !!project.isCompleted,
 	})
 
-	const projects = apiProjects ? apiProjects.map(mapToProjectRow) : []
+	const projects = apiProjects ? apiProjects.map(mapToProjectRow).sort(compareProjects) : []
 
 	function toRowStyle(project: ProjectRow): string {
 		if (project.isCompleted) {
