@@ -1,0 +1,32 @@
+.new_project_button {
+    float: right;
+    margin: 40px 0;
+}
+
+.row {
+    cursor: pointer;
+}
+
+.row_red * {
+    background: lightcoral;
+}
+
+.row_red:hover * {
+    background: #eb7b7b !important;
+}
+
+.row_yellow * {
+    background: lightyellow;
+}
+
+.row_yellow:hover * {
+    background: #fafadb !important;
+}
+
+.row_completed * {
+    background: lightgreen;
+}
+
+.row_completed:hover * {
+    background: #8be98b !important;
+}

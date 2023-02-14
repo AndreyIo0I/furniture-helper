@@ -2,47 +2,34 @@ import {Button, Table} from 'antd'
 import {ColumnsType} from 'antd/es/table'
 import dayjs, {Dayjs} from 'dayjs'
 import {useRouter} from 'next/router'
-import React from 'react'
-import useClients, {Client} from '../../../api/clients/useClients'
-import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
-import useProjects from '../../../api/projects/useProjects'
+import useClients from '../../../api/clients/useClients'
+import useAccountSettings from '../../../api/useAccountSettings'
+import useProjects, {Project} from '../../../api/projects/useProjects'
 import MainLayout from '../../components/MainLayout'
-import styles from './project/styles.module.css'
+import styles from './styles.module.css'
 
-interface Project {
+interface ProjectRow {
 	id: number
-	name: string
-	client?: Client
+	contractNumber: string
+	projectType: string
+	clientName?: string
 	dateOfFinish: Dayjs | null
-	deadlineState: 'red' | 'yellow' | null
 	isCompleted: boolean
 }
 
-function getColor(diff: number, accountSettings: AccountSettings): 'red' | 'yellow' | undefined {
-	if (diff < accountSettings.daysForDeadlineRed) {
-		return 'red'
-	}
-	if (diff < accountSettings.daysForDeadlineYellow) {
-		return 'yellow'
-	}
-	return
-}
-
-interface Columns {
-	name: string
-	client?: Client
-	dateOfFinish: Dayjs | null
-}
-
-const columns: ColumnsType<Columns> = [{
-	title: 'Название',
-	dataIndex: 'name',
-	key: 'name',
+const columns: ColumnsType<ProjectRow> = [{
+	title: 'Номер договора',
+	dataIndex: 'contractNumber',
+	key: 'contractNumber',
+	render: contractNumber => contractNumber ? contractNumber : '–',
+}, {
+	title: 'Тип проекта',
+	dataIndex: 'projectType',
+	key: 'projectType',
 }, {
 	title: 'Клиент',
-	dataIndex: 'client',
-	key: 'client',
-	render: client => client?.fullName,
+	dataIndex: 'clientName',
+	key: 'clientName',
 }, {
 	title: 'Дедлайн',
 	dataIndex: 'dateOfFinish',
@@ -54,48 +41,54 @@ export default function ProjectsPage() {
 	const router = useRouter()
 
 	const {data: accountSettings} = useAccountSettings()
-
 	const {data: clients} = useClients()
+	const {data: apiProjects} = useProjects()
 
-	const {data} = useProjects()
-	const projects: Project[] = data
-		? data.map(project => ({
-			id: project.id!,
-			name: project.projectType!,
-			client: clients?.find(client => client.id === project.clientId),
-			dateOfFinish: project.dateOfFinish,
-			deadlineState: accountSettings && project.dateOfFinish && getColor(project.dateOfFinish.diff(dayjs(), 'days'), accountSettings) || null,
-			isCompleted: !!project.isCompleted,
-		}))
-		: []
+	const mapToProjectRow = (project: Project): ProjectRow => ({
+		id: project.id,
+		contractNumber: project.contractNumber,
+		projectType: project.projectType,
+		clientName: clients?.find(client => client.id === project.clientId)?.fullName,
+		dateOfFinish: project.dateOfFinish,
+		isCompleted: !!project.isCompleted,
+	})
+
+	const projects = apiProjects ? apiProjects.map(mapToProjectRow) : []
+
+	function toRowStyle(project: ProjectRow): string {
+		if (project.isCompleted) {
+			return `${styles.row} ${styles.row_completed}`
+		}
+		if (project.dateOfFinish !== null && accountSettings !== undefined) {
+			const daysLeft = project.dateOfFinish.diff(dayjs(), 'days')
+			if (daysLeft < accountSettings.daysForDeadlineRed) {
+				return `${styles.row} ${styles.row_red}`
+			}
+			if (daysLeft < accountSettings.daysForDeadlineYellow) {
+				return `${styles.row} ${styles.row_yellow}`
+			}
+		}
+		return styles.row
+	}
 
 	return (
 		<MainLayout>
-			<div className={styles.top}>
-				<div></div>
-				<Button
-					onClick={() => router.push('/projects/new')}
-					type="primary"
-				>
-					Добавить новый проект
-				</Button>
-			</div>
+			<Button
+				type="primary"
+				className={styles.new_project_button}
+				onClick={() => router.push('/projects/new')}
+			>
+				Добавить новый проект
+			</Button>
 			<Table
 				rowKey="id"
-				rowClassName={(_, index) => [
-					styles.row,
-					projects[index].deadlineState === 'red' && styles.row_red,
-					projects[index].deadlineState === 'yellow' && styles.row_yellow,
-					projects[index].isCompleted && styles.row_completed,
-				].filter(x => !!x).join(' ')}
+				rowClassName={toRowStyle}
 				columns={columns}
 				dataSource={projects}
 				pagination={false}
-				onRow={(_, index) => {
-					return {
-						onClick: () => router.push(`/projects/${projects[index!].id}`),
-					}
-				}}
+				onRow={record => ({
+					onClick: () => router.push(`/projects/${record.id}`),
+				})}
 			/>
 		</MainLayout>
 	)
