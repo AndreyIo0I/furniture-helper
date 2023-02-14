@@ -3,6 +3,7 @@ using Infrastructure;
 using Infrastructure.Foundation.EntityFramwork;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using ExtranetAPI;
 using ExtranetAPI.Analytics.Services;
 using ExtranetAPI.Analytics.Services.Builders;
 using ExtranetAPI.Analytics.Services.ChartAnalytics;
@@ -30,17 +31,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
     } );
 builder.Services.AddAuthorization();
-builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
-builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
-builder.Services.AddScoped<IUserBuilder, UserBuilder>();
-builder.Services.AddScoped<IPasswordCryptionService, PasswordCryptionService>(
-    sp => new PasswordCryptionService( builder.Configuration["SecurityKey"] ) );
-builder.Services.AddScoped<IProjectSummaryBuilder, ProjectSummaryBuilder>();
-builder.Services.AddScoped<IProjectNumericalIndicatorsBuilder, ProjectNumericalIndicatorsBuilder>();
-builder.Services.AddScoped<IChartAnyticsService, ChartAnyticsService>();
-builder.Services.AddScoped<ProjectsRevenueCollector>();
-builder.Services.AddScoped<IProjectsDataCollector, ProjectsRevenueCollector>(s =>
-    s.GetService<ProjectsRevenueCollector>());
+builder.Services.AddExtranetApi(builder.Configuration["SecurityKey"]);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

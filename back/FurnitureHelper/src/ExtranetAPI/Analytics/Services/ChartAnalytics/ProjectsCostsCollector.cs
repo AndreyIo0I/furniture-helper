@@ -2,11 +2,11 @@
 
 namespace ExtranetAPI.Analytics.Services.ChartAnalytics;
 
-public class ProjectsRevenueCollector: IProjectsDataCollector
+public class ProjectsCostsCollector: IProjectsDataCollector
 {
     private readonly IProjectBudgetRepository _projectBudgetRepository;
 
-    public ProjectsRevenueCollector(IProjectBudgetRepository projectBudgetRepository)
+    public ProjectsCostsCollector(IProjectBudgetRepository projectBudgetRepository)
     {
         _projectBudgetRepository = projectBudgetRepository;
     }
@@ -14,7 +14,9 @@ public class ProjectsRevenueCollector: IProjectsDataCollector
     public async Task<decimal> GetValueForProjects(List<int> projectsIds)
     {
         IReadOnlyList<ProjectBudget> projectBudgets = await _projectBudgetRepository.GetByProjectIds(projectsIds);
+        List<CostPayment> costPayments = projectBudgets.SelectMany(x => x.CostPayments).ToList();
 
-        return projectBudgets.Select(x => x.ProjectCost).Sum();
+        return costPayments.Select(x => x.Amount).Sum();
+
     }
 }
