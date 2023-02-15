@@ -3,7 +3,6 @@ using ExtranetAPI.Analytics.Extensions;
 using ExtranetAPI.Analytics.Models.Chart;
 using ExtranetAPI.Analytics.Services.ChartAnalytics;
 using ExtranetAPI.Models;
-using Infrastructure.Repositories;
 
 namespace ExtranetAPI.Analytics.Services;
 
@@ -12,9 +11,9 @@ public class ChartAnyticsService: IChartAnyticsService
     private IReadOnlyList<Project> _projects;
     private IProjectsDataCollector _projectsDataCollector;
 
-    private readonly ProjectRepository _projectRepository;
+    private readonly IProjectRepository _projectRepository;
 
-    public ChartAnyticsService( ProjectRepository projectRepository )
+    public ChartAnyticsService( IProjectRepository projectRepository )
     {
         _projectRepository = projectRepository;
     }
@@ -46,6 +45,7 @@ public class ChartAnyticsService: IChartAnyticsService
         Period period)
     {
         _projects = await _projectRepository.GetByPeriod(period.StartDate, period.EndDate);
+        _projectsDataCollector = projectsDataCollector;
 
         if (chartPeriodType != ChartPeriodType.ByWeeks)
         {

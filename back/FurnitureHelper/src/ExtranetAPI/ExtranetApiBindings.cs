@@ -19,6 +19,8 @@ public static class ExtranetApiBindings
             .AddScoped<IProjectSummaryBuilder, ProjectSummaryBuilder>()
             .AddScoped<IProjectNumericalIndicatorsBuilder, ProjectNumericalIndicatorsBuilder>()
             .AddScoped<IChartAnyticsService, ChartAnyticsService>()
+            .AddScoped<IChartAnalyticsBuilder, ChartAnalyticsBuilder>()
+            .AddScoped<IProjectDataCollectorFactory, ProjectDataCollectorFactory>()
             .AddScoped<ProjectsRevenueCollector>()
             .AddScoped<IProjectsDataCollector, ProjectsRevenueCollector>(s =>
                 s.GetService<ProjectsRevenueCollector>())
@@ -27,6 +29,12 @@ public static class ExtranetApiBindings
                 s.GetService<ProjectsCostsCollector>())
             .AddScoped<ProjectMarginCollector>()
             .AddScoped<IProjectsDataCollector, ProjectMarginCollector>(s =>
-                s.GetService<ProjectMarginCollector>());
+                s.GetService<ProjectMarginCollector>())
+            .AddScoped<ProjectsKOneCollector>()
+            .AddScoped<IProjectsDataCollector, ProjectsKOneCollector>(s =>
+                s.GetService<ProjectsKOneCollector>())
+            .AddScoped<ProjectsKTwoCollector>()
+            .AddScoped<IProjectsDataCollector, ProjectsKTwoCollector>(s =>
+                s.GetService<ProjectsKTwoCollector>());
     }
 }
