@@ -3,8 +3,9 @@ import {ColumnsType} from 'antd/es/table'
 import dayjs, {Dayjs} from 'dayjs'
 import {useRouter} from 'next/router'
 import useClients from '../../../api/clients/useClients'
-import useAccountSettings from '../../../api/useAccountSettings'
 import useProjects, {Project} from '../../../api/projects/useProjects'
+import useAccountSettings from '../../../api/useAccountSettings'
+import useCurrentStage from '../../../api/useCurrentStage'
 import MainLayout from '../../components/MainLayout'
 import styles from './styles.module.css'
 
@@ -16,6 +17,10 @@ interface ProjectRow {
 	dateOfFinish: Dayjs | null
 	endDate: Dayjs | null
 	isCompleted: boolean
+}
+
+interface CurrentStageCellProps {
+	projectId: number
 }
 
 const columns: ColumnsType<ProjectRow> = [{
@@ -31,6 +36,11 @@ const columns: ColumnsType<ProjectRow> = [{
 	title: 'Клиент',
 	dataIndex: 'clientName',
 	key: 'clientName',
+}, {
+	title: 'Текущий этап',
+	dataIndex: 'id',
+	key: 'currentStage',
+	render: projectId => <CurrentStageCell projectId={projectId} />,
 }, {
 	title: 'Дедлайн',
 	dataIndex: 'dateOfFinish',
@@ -61,6 +71,11 @@ function compareProjects(lhs: ProjectRow, rhs: ProjectRow): number {
 	} else {
 		return compareDates(lhs.dateOfFinish, rhs.dateOfFinish)
 	}
+}
+
+function CurrentStageCell(props: CurrentStageCellProps) {
+	const {data: currentStage} = useCurrentStage(props.projectId)
+	return <>{currentStage?.name}</>
 }
 
 export default function ProjectsPage() {
