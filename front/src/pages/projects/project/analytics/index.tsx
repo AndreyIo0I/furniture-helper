@@ -131,7 +131,7 @@ function buildDateValue(date: Dayjs): string {
 }
 
 function buildNumberValue(numberValue: number): string {
-    return `${!numberValue ? 0 : numberValue}`
+    return `${!numberValue ? 0 : numberValue.toFixed(3)}`
 }
 
 function buildPriceValue(price: number): string {
@@ -139,16 +139,23 @@ function buildPriceValue(price: number): string {
     return `${resolvedPrice} ₽`
 }
 
-function buildCostPrice(costPrice: TableCostPrice): string {
+function buildPercentValue(percent: number): string {
+    return `${!percent ? '0%' : (percent * 100).toFixed(3)}%`
+}
+
+function buildCostPrice(costPrice: TableCostPrice) {
     const resolvedCostPrice = !costPrice.costPrice ? 0 : costPrice.costPrice
 
-    let resultString = `${buildPriceValue(resolvedCostPrice)}\n\n`
-
-    for (const tableCost of costPrice.costs! ) {
-        resultString += `${tableCost.name}=${buildPriceValue(tableCost.amount!)} ${buildNumberValue(tableCost.persent!)}%\n\n`
-    }
-
-    return resultString
+    return (
+        <div>
+            <span>{`Общая сумма: ${buildPriceValue(resolvedCostPrice)}`}</span>
+            <br />
+            <br />
+            {costPrice.costs && costPrice.costs.map((tableCost, index) => (
+                <div key={index}>{`${tableCost.name}:${buildPriceValue(tableCost.amount!)} (${buildPercentValue(tableCost.persent!)})`}</div>
+            ))}
+        </div>
+    )
 }
 
 function buildStages(stages: TableStage[]) {

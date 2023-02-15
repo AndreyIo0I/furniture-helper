@@ -1,4 +1,4 @@
-import { NumericalIndicatorsDto } from './typescript-fetch-client-generated/api';
+import { NumericalIndicatorsDto, ChartDto, ChartItemDto, ChartItemWeeksDto } from './typescript-fetch-client-generated/api';
 import dayjs, {Dayjs} from 'dayjs'
 import {analyticsApi, projectApi} from './api'
 import {
@@ -91,6 +91,16 @@ const mapStageDto = (stageDto: StageDto): TableStage => ({
 
 /* ###################### */
 
+export interface PeriodItem {
+	startDate?: Dayjs,
+	endDate?: Dayjs 
+}
+
+export const mapPeriodDto = (periodDto: Period): PeriodItem => ({
+	startDate: dayjs(periodDto.startDate),
+	endDate: dayjs(periodDto.endDate),
+})
+
 /* Числовые показатели*/
 export function getNumericalIndicators(period: Period) {
 	return makeAuthenticatedReq(() => analyticsApi.analyticsNumericalIndicatorsPost(period))
@@ -108,4 +118,32 @@ export const mapNumericalIndicatorsDto = (numericalIndicatorsDto: NumericalIndic
 	numberOfProducts: numericalIndicatorsDto.numberOfProducts
 })
 
+/* Аналитика с выводом по датам */
+export function getChartAnalyticsPerDates(chartDto: ChartDto) {
+	return makeAuthenticatedReq(() => analyticsApi.analyticsDataByDatePost(chartDto))
+}
 
+export interface ChartItem {
+	date: Dayjs,
+	value: number
+}
+
+export const mapChartItemDto = (chartItemDto: ChartItemDto): ChartItem => ({
+	date: dayjs(chartItemDto.date!),
+	value: chartItemDto.value!
+})
+
+/* Аналитика с выводом по периодам */
+export function getChartAnalyticsPerPeriods(chartDto: ChartDto) {
+	return makeAuthenticatedReq(() => analyticsApi.analyticsDataByPeriodPost(chartDto))
+}
+
+export interface ChartItemWeeks {
+	period: PeriodItem,
+	value: number
+}
+
+export const mapChartItemWeeksDto = (chartItemWeeksDto: ChartItemWeeksDto): ChartItemWeeks => ({
+	period: mapPeriodDto(chartItemWeeksDto.period!),
+	value: chartItemWeeksDto.value!
+})

@@ -133,6 +133,93 @@ export interface BuisnessCost {
 }
 
 /**
+ * 
+ * @export
+ * @interface ChartDto
+ */
+export interface ChartDto {
+	/**
+	 * 
+	 * @type {Period}
+	 * @memberof ChartDto
+	 */
+	period?: Period;
+	/**
+	 * 
+	 * @type {ChartPeriodType}
+	 * @memberof ChartDto
+	 */
+	chartPeriodType?: ChartPeriodType;
+	/**
+	 * 
+	 * @type {ChartType}
+	 * @memberof ChartDto
+	 */
+	chartType?: ChartType;
+}
+/**
+* 
+* @export
+* @interface ChartItemDto
+*/
+export interface ChartItemDto {
+	/**
+	 * 
+	 * @type {Date}
+	 * @memberof ChartItemDto
+	 */
+	date?: Date;
+	/**
+	 * 
+	 * @type {number}
+	 * @memberof ChartItemDto
+	 */
+	value?: number;
+}
+/**
+* 
+* @export
+* @interface ChartItemWeeksDto
+*/
+export interface ChartItemWeeksDto {
+	/**
+	 * 
+	 * @type {Period}
+	 * @memberof ChartItemWeeksDto
+	 */
+	period?: Period;
+	/**
+	 * 
+	 * @type {number}
+	 * @memberof ChartItemWeeksDto
+	 */
+	value?: number;
+}
+/**
+* 
+* @export
+* @enum {string}
+*/
+export enum ChartPeriodType {
+	NUMBER_0 = <any> 0,
+	NUMBER_1 = <any> 1,
+	NUMBER_2 = <any> 2,
+	NUMBER_3 = <any> 3
+}
+/**
+* 
+* @export
+* @enum {string}
+*/
+export enum ChartType {
+	NUMBER_0 = <any> 0,
+	NUMBER_1 = <any> 1,
+	NUMBER_2 = <any> 2,
+	NUMBER_3 = <any> 3,
+	NUMBER_4 = <any> 4
+}
+
+/**
  *
  * @export
  * @interface ClientDto
@@ -876,34 +963,6 @@ export const AnalyticsApiFetchParamCreator = function (configuration?: Configura
 	return {
 		/**
 		 *
-		 * @summary Маржа по проектам за период
-		 * @param {SearchAnalyticDto} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsMarginPost(body?: SearchAnalyticDto, options: any = {}): FetchArgs {
-			const localVarPath = `/analytics/margin`
-			const localVarUrlObj = url.parse(localVarPath, true)
-			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
-			const localVarHeaderParameter = {} as any
-			const localVarQueryParameter = {} as any
-
-			localVarHeaderParameter['Content-Type'] = 'application/json'
-
-			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-			delete localVarUrlObj.search
-			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-			const needsSerialization = (<any>'SearchAnalyticDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
-			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
-
-			return {
-				url: url.format(localVarUrlObj),
-				options: localVarRequestOptions,
-			}
-		},
-		/**
-		 *
 		 * @summary Числовые показатели за период
 		 * @param {Period} [body]
 		 * @param {*} [options] Override http request option.
@@ -930,90 +989,62 @@ export const AnalyticsApiFetchParamCreator = function (configuration?: Configura
 				options: localVarRequestOptions,
 			}
 		},
-		/**
-		 *
-		 * @summary Просроченные проекты
-		 * @param {SearchAnalyticDto} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsOutDatedProjectsPost(body?: SearchAnalyticDto, options: any = {}): FetchArgs {
-			const localVarPath = `/analytics/outDatedProjects`
-			const localVarUrlObj = url.parse(localVarPath, true)
-			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
-			const localVarHeaderParameter = {} as any
-			const localVarQueryParameter = {} as any
+     /**
+   * 
+   * @summary Получить данные для аналитики по дате
+   * @param {ChartDto} [body] 
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   */
+		 analyticsDataByDatePost(body?: ChartDto, options: any = {}): FetchArgs {
+      const localVarPath = `/analytics/data-by-date`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-			localVarHeaderParameter['Content-Type'] = 'application/json'
+      localVarHeaderParameter['Content-Type'] = 'application/json';
 
-			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-			delete localVarUrlObj.search
-			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-			const needsSerialization = (<any>'SearchAnalyticDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
-			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+      localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      delete localVarUrlObj.search;
+      localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      const needsSerialization = (<any>"ChartDto" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+      localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
-			return {
-				url: url.format(localVarUrlObj),
-				options: localVarRequestOptions,
-			}
-		},
-		/**
-		 *
-		 * @summary Цены проектов
-		 * @param {Period} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsProjectsPricesPost(body?: Period, options: any = {}): FetchArgs {
-			const localVarPath = `/analytics/projectsPrices`
-			const localVarUrlObj = url.parse(localVarPath, true)
-			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
-			const localVarHeaderParameter = {} as any
-			const localVarQueryParameter = {} as any
+      return {
+          url: url.format(localVarUrlObj),
+          options: localVarRequestOptions,
+      };
+    },
+    /**
+     * 
+     * @summary Получить данные для аналитики по периоду
+     * @param {ChartDto} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    analyticsDataByPeriodPost(body?: ChartDto, options: any = {}): FetchArgs {
+        const localVarPath = `/analytics/data-by-period`;
+        const localVarUrlObj = url.parse(localVarPath, true);
+        const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-			localVarHeaderParameter['Content-Type'] = 'application/json'
+        localVarHeaderParameter['Content-Type'] = 'application/json';
 
-			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-			delete localVarUrlObj.search
-			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-			const needsSerialization = (<any>'Period' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
-			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
+        localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+        // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+        delete localVarUrlObj.search;
+        localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+        const needsSerialization = (<any>"ChartDto" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+        localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
-			return {
-				url: url.format(localVarUrlObj),
-				options: localVarRequestOptions,
-			}
-		},
-		/**
-		 *
-		 * @summary Траты на издержки
-		 * @param {SearchAnalyticDto} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsSpendingOnCostsPost(body?: SearchAnalyticDto, options: any = {}): FetchArgs {
-			const localVarPath = `/analytics/spendingOnCosts`
-			const localVarUrlObj = url.parse(localVarPath, true)
-			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
-			const localVarHeaderParameter = {} as any
-			const localVarQueryParameter = {} as any
-
-			localVarHeaderParameter['Content-Type'] = 'application/json'
-
-			localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-			delete localVarUrlObj.search
-			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-			const needsSerialization = (<any>'SearchAnalyticDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
-			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
-
-			return {
-				url: url.format(localVarUrlObj),
-				options: localVarRequestOptions,
-			}
-		},
+        return {
+            url: url.format(localVarUrlObj),
+            options: localVarRequestOptions,
+        };
+    },
 	}
 }
 
@@ -1023,24 +1054,43 @@ export const AnalyticsApiFetchParamCreator = function (configuration?: Configura
  */
 export const AnalyticsApiFp = function (configuration?: Configuration) {
 	return {
+   /**
+   * 
+   * @summary Получить данные для аналитики по дате
+   * @param {ChartDto} [body] 
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   */
+			analyticsDataByDatePost(body?: ChartDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ChartItemDto>> {
+				const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsDataByDatePost(body, options);
+				return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+						return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+								if (response.status >= 200 && response.status < 300) {
+										return response.json();
+								} else {
+										throw response;
+								}
+						});
+				};
+		},
 		/**
-		 *
-		 * @summary Маржа по проектам за период
-		 * @param {SearchAnalyticDto} [body]
+		 * 
+		 * @summary Получить данные для аналитики по периоду
+		 * @param {ChartDto} [body] 
 		 * @param {*} [options] Override http request option.
 		 * @throws {RequiredError}
 		 */
-		analyticsMarginPost(body?: SearchAnalyticDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ProjectsMagrinDto> {
-			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsMarginPost(body, options)
-			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-					if (response.status >= 200 && response.status < 300) {
-						return response.json()
-					} else {
-						throw response
-					}
-				})
-			}
+		analyticsDataByPeriodPost(body?: ChartDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ChartItemWeeksDto>> {
+				const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsDataByPeriodPost(body, options);
+				return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+						return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+								if (response.status >= 200 && response.status < 300) {
+										return response.json();
+								} else {
+										throw response;
+								}
+						});
+				};
 		},
 		/**
 		 *
@@ -1051,63 +1101,6 @@ export const AnalyticsApiFp = function (configuration?: Configuration) {
 		 */
 		analyticsNumericalIndicatorsPost(body?: Period, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<NumericalIndicatorsDto> {
 			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsNumericalIndicatorsPost(body, options)
-			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-					if (response.status >= 200 && response.status < 300) {
-						return response.json()
-					} else {
-						throw response
-					}
-				})
-			}
-		},
-		/**
-		 *
-		 * @summary Просроченные проекты
-		 * @param {SearchAnalyticDto} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsOutDatedProjectsPost(body?: SearchAnalyticDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<OutdatedProjectsDto> {
-			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsOutDatedProjectsPost(body, options)
-			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-					if (response.status >= 200 && response.status < 300) {
-						return response.json()
-					} else {
-						throw response
-					}
-				})
-			}
-		},
-		/**
-		 *
-		 * @summary Цены проектов
-		 * @param {Period} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsProjectsPricesPost(body?: Period, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ProjectsPricesDto> {
-			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsProjectsPricesPost(body, options)
-			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-					if (response.status >= 200 && response.status < 300) {
-						return response.json()
-					} else {
-						throw response
-					}
-				})
-			}
-		},
-		/**
-		 *
-		 * @summary Траты на издержки
-		 * @param {SearchAnalyticDto} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsSpendingOnCostsPost(body?: SearchAnalyticDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<SpendingOnCostDto>> {
-			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsSpendingOnCostsPost(body, options)
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
 					if (response.status >= 200 && response.status < 300) {
@@ -1129,16 +1122,6 @@ export const AnalyticsApiFactory = function (configuration?: Configuration, fetc
 	return {
 		/**
 		 *
-		 * @summary Маржа по проектам за период
-		 * @param {SearchAnalyticDto} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsMarginPost(body?: SearchAnalyticDto, options?: any) {
-			return AnalyticsApiFp(configuration).analyticsMarginPost(body, options)(fetch, basePath)
-		},
-		/**
-		 *
 		 * @summary Числовые показатели за период
 		 * @param {Period} [body]
 		 * @param {*} [options] Override http request option.
@@ -1147,35 +1130,25 @@ export const AnalyticsApiFactory = function (configuration?: Configuration, fetc
 		analyticsNumericalIndicatorsPost(body?: Period, options?: any) {
 			return AnalyticsApiFp(configuration).analyticsNumericalIndicatorsPost(body, options)(fetch, basePath)
 		},
-		/**
-		 *
-		 * @summary Просроченные проекты
-		 * @param {SearchAnalyticDto} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsOutDatedProjectsPost(body?: SearchAnalyticDto, options?: any) {
-			return AnalyticsApiFp(configuration).analyticsOutDatedProjectsPost(body, options)(fetch, basePath)
+    /**
+	 * 
+	 * @summary Получить данные для аналитики по дате
+	 * @param {ChartDto} [body] 
+	 * @param {*} [options] Override http request option.
+	 * @throws {RequiredError}
+	 */
+			analyticsDataByDatePost(body?: ChartDto, options?: any) {
+				return AnalyticsApiFp(configuration).analyticsDataByDatePost(body, options)(fetch, basePath);
 		},
 		/**
-		 *
-		 * @summary Цены проектов
-		 * @param {Period} [body]
+		 * 
+		 * @summary Получить данные для аналитики по периоду
+		 * @param {ChartDto} [body] 
 		 * @param {*} [options] Override http request option.
 		 * @throws {RequiredError}
 		 */
-		analyticsProjectsPricesPost(body?: Period, options?: any) {
-			return AnalyticsApiFp(configuration).analyticsProjectsPricesPost(body, options)(fetch, basePath)
-		},
-		/**
-		 *
-		 * @summary Траты на издержки
-		 * @param {SearchAnalyticDto} [body]
-		 * @param {*} [options] Override http request option.
-		 * @throws {RequiredError}
-		 */
-		analyticsSpendingOnCostsPost(body?: SearchAnalyticDto, options?: any) {
-			return AnalyticsApiFp(configuration).analyticsSpendingOnCostsPost(body, options)(fetch, basePath)
+		analyticsDataByPeriodPost(body?: ChartDto, options?: any) {
+				return AnalyticsApiFp(configuration).analyticsDataByPeriodPost(body, options)(fetch, basePath);
 		},
 	}
 }
@@ -1187,18 +1160,29 @@ export const AnalyticsApiFactory = function (configuration?: Configuration, fetc
  * @extends {BaseAPI}
  */
 export class AnalyticsApi extends BaseAPI {
-	/**
-	 *
-	 * @summary Маржа по проектам за период
-	 * @param {SearchAnalyticDto} [body]
-	 * @param {*} [options] Override http request option.
-	 * @throws {RequiredError}
-	 * @memberof AnalyticsApi
-	 */
-	public analyticsMarginPost(body?: SearchAnalyticDto, options?: any) {
-		return AnalyticsApiFp(this.configuration).analyticsMarginPost(body, options)(this.fetch, this.basePath)
-	}
+    /**
+   * 
+   * @summary Получить данные для аналитики по дате
+   * @param {ChartDto} [body] 
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AnalyticsApi
+   */
+		public analyticsDataByDatePost(body?: ChartDto, options?: any) {
+      return AnalyticsApiFp(this.configuration).analyticsDataByDatePost(body, options)(this.fetch, this.basePath);
+  }
 
+  /**
+   * 
+   * @summary Получить данные для аналитики по периоду
+   * @param {ChartDto} [body] 
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AnalyticsApi
+   */
+  public analyticsDataByPeriodPost(body?: ChartDto, options?: any) {
+      return AnalyticsApiFp(this.configuration).analyticsDataByPeriodPost(body, options)(this.fetch, this.basePath);
+  }
 	/**
 	 *
 	 * @summary Числовые показатели за период
@@ -1210,43 +1194,6 @@ export class AnalyticsApi extends BaseAPI {
 	public analyticsNumericalIndicatorsPost(body?: Period, options?: any) {
 		return AnalyticsApiFp(this.configuration).analyticsNumericalIndicatorsPost(body, options)(this.fetch, this.basePath)
 	}
-
-	/**
-	 *
-	 * @summary Просроченные проекты
-	 * @param {SearchAnalyticDto} [body]
-	 * @param {*} [options] Override http request option.
-	 * @throws {RequiredError}
-	 * @memberof AnalyticsApi
-	 */
-	public analyticsOutDatedProjectsPost(body?: SearchAnalyticDto, options?: any) {
-		return AnalyticsApiFp(this.configuration).analyticsOutDatedProjectsPost(body, options)(this.fetch, this.basePath)
-	}
-
-	/**
-	 *
-	 * @summary Цены проектов
-	 * @param {Period} [body]
-	 * @param {*} [options] Override http request option.
-	 * @throws {RequiredError}
-	 * @memberof AnalyticsApi
-	 */
-	public analyticsProjectsPricesPost(body?: Period, options?: any) {
-		return AnalyticsApiFp(this.configuration).analyticsProjectsPricesPost(body, options)(this.fetch, this.basePath)
-	}
-
-	/**
-	 *
-	 * @summary Траты на издержки
-	 * @param {SearchAnalyticDto} [body]
-	 * @param {*} [options] Override http request option.
-	 * @throws {RequiredError}
-	 * @memberof AnalyticsApi
-	 */
-	public analyticsSpendingOnCostsPost(body?: SearchAnalyticDto, options?: any) {
-		return AnalyticsApiFp(this.configuration).analyticsSpendingOnCostsPost(body, options)(this.fetch, this.basePath)
-	}
-
 }
 
 /**
