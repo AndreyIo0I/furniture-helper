@@ -151,7 +151,7 @@ export default function AnalyticsPage() {
 			return `${date.format('MMM')} ${date.get('year')}`
 		}
 		else if (discretenessKind == Discreteness.Year) {
-			return `${date.get('year')}}`
+			return `${date.get('year')}`
 		}
 		else {
 			return date.format('DD/MM/YYYY')

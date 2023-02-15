@@ -19,7 +19,7 @@ export interface ChartDataItem {
 function CustomizedAxisTick(props: any) {
   return (
     <g transform={`translate(${props.x},${props.y})`}>
-      <text x={0} y={0} dy={0} textAnchor="start" fill="#666" transform="rotate(90)">
+      <text x={0} y={0} dy={0} textAnchor="start" fill="#666" transform="rotate(90)" fontSize={12} fontWeight={600}>
         {props.payload.value}
       </text>
     </g>
