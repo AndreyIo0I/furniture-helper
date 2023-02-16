@@ -181,13 +181,11 @@ function buildStages(stages: TableStage[]) {
 
 function Content(props: ContentProps) {
 	return (
-		<MainLayout
-			projectId={props.projectId}
-		>
+		<>
 			{props && props.analytics && (
-				<Table dataSource={buildDataSource(props.analytics)} columns={columns}/>
+				<Table rowKey="contractNumber" pagination={false} dataSource={buildDataSource(props.analytics)} columns={columns}/>
 			)}
-		</MainLayout>
+		</>
 	)
 }
 
@@ -202,6 +200,10 @@ export default function ProjectAnalyticsPage(props: ProjectAnalyticsPageProps) {
 	}, [props.projectId])
 
 	return (
-		<Content projectId={props.projectId} analytics={projectAnalytics!}/>
+		<MainLayout
+			projectId={props.projectId}
+		>
+			<Content projectId={props.projectId} analytics={projectAnalytics!}/>
+		</MainLayout>
 	)
 }
