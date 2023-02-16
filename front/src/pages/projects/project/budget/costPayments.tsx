@@ -1,23 +1,10 @@
-import {PlusCircleOutlined, DeleteFilled} from '@ant-design/icons'
-import {
-	Paper,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-} from '@mui/material'
+import {DeleteFilled, PlusCircleOutlined} from '@ant-design/icons'
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
 import {Button, DatePicker, InputNumber, Select} from 'antd'
 import {Dayjs} from 'dayjs'
 import React from 'react'
 import {CostType} from '../../../../../api/costTypes/useCostTypes'
-import {
-	addRowStyle,
-	formStyle,
-	getPopupContainer,
-	toViewStatus,
-} from './common'
+import {addRowStyle, formStyle, getPopupContainer, toViewStatus} from './common'
 import * as model from './model'
 import styles from './styles.module.css'
 

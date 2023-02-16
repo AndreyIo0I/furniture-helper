@@ -7,13 +7,7 @@ import saveProjectBudget from '../../../../../api/projects/saveProjectBudget'
 import useProjectBudget, {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
 import MainLayout from '../../../../components/MainLayout'
 import ClientPaymentsTable from './clientPayments'
-import {
-	formStyle,
-	pageContainerId,
-	toApiModelDate,
-	toApiModelNumber,
-	toViewStatus,
-} from './common'
+import {formStyle, pageContainerId, toApiModelDate, toApiModelNumber, toViewStatus} from './common'
 import CostPaymentsTable from './costPayments'
 import * as model from './model'
 import styles from './styles.module.css'
