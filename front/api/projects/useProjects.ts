@@ -33,6 +33,7 @@ export const mapProjectDto = (dto: ProjectDto): Project => ({
 export const mapToProjectDto = (project: Project): ProjectDto => ({
 	id: project.id,
 	projectType: project.projectType,
+	address: project.address,
 	contractNumber: project.contractNumber,
 	dateOfStart: project.dateOfStart?.toISOString(),
 	deadLine: project.dateOfFinish?.toISOString(),
