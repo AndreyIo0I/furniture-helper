@@ -20,7 +20,7 @@ export default function LoginPage() {
 		} else if (res.status === 200) {
 			res.json().then(async user => {
 				window.localStorage.setItem('currentUserId', (user as User).id.toString())
-				await router.push('/')
+				await router.push('/projects')
 			})
 		}
 	}
