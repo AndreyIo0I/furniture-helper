@@ -1,14 +1,12 @@
+import { NumericalIndicatorsDto, ChartDto, ChartItemDto, ChartItemWeeksDto } from './typescript-fetch-client-generated/api';
 import dayjs, {Dayjs} from 'dayjs'
-import {analyticsApi} from './api'
+import {analyticsApi, projectApi} from './api'
 import {
-	OutdatedProjectDto,
-	OutdatedProjectsDto,
+	CostDto,
+	CostPriceDto,
 	Period,
-	ProjectMarginDto,
-	ProjectPriceDto,
-	ProjectsMagrinDto,
-	ProjectsPricesDto,
-	SpendingOnCostDto,
+	ProjectSummaryTableDto,
+	StageDto,
 } from './typescript-fetch-client-generated'
 import {makeAuthenticatedReq} from './useAuthenticatedSWR'
 
@@ -25,154 +23,127 @@ export interface PeriodParams {
 
 /* ###################### */
 
-/* Цены по проектам */
-export interface ProjectsPrices {
-	averagePrice: string,
-	projectPrices: Array<ProjectPrice> | undefined
-	maxProjectPrice: ProjectPrice | undefined
-	minProjectPrice: ProjectPrice | undefined
+/* Сводная таблица по проекту по ID*/
+export interface ProjectSummaryTable {
+	contractNumber?: string;
+	projectType?: string;
+	startDate?: Dayjs;
+	endDate?: Dayjs;
+	numberOfDays?: number;
+	projectCost?: number;
+	costPrice?: TableCostPrice;
+	margin?: number;
+	profitNorm?: number;
+	rateOfSurplusValue?: number;
+	stages?: Array<TableStage>;
 }
 
-export interface ProjectPrice {
-	projectType: string
-	projectPrice: string
+export interface TableCostPrice {
+	costPrice?: number;
+	costs?: Array<TableCost>;
+} 
+
+export interface TableCost {
+	name?: string;
+	amount?: number;
+	persent?: number;
 }
 
-export const mapProjectsPricesDto = (projectsPrices: ProjectsPricesDto): ProjectsPrices => ({
-	averagePrice: projectsPrices.averagePrice!.toString(),
-	projectPrices: projectsPrices.projectPrices?.map(mapProjectPriceDto),
-	minProjectPrice: mapProjectPriceDto(projectsPrices.minProjectPrice!),
-	maxProjectPrice: mapProjectPriceDto(projectsPrices.maxProjectPrice!),
+export interface TableStage {
+	name?: string;
+	isCompleted?: boolean;
+}
+
+export function getProjectSummaryTableById(projectId: number) {
+	return makeAuthenticatedReq(() => projectApi.projectsProjectIdSummaryTablePost(projectId))
+}
+
+export const mapProjectSummaryTableDto = (projectSummaryTableDto: ProjectSummaryTableDto): ProjectSummaryTable => ({
+	contractNumber: projectSummaryTableDto.contractNumber,
+	projectType: projectSummaryTableDto.projectType,
+	startDate: !projectSummaryTableDto?.startDate ? undefined : dayjs(projectSummaryTableDto?.startDate!),
+	endDate: !projectSummaryTableDto?.endDate ? undefined : dayjs(projectSummaryTableDto?.endDate!),
+	numberOfDays: projectSummaryTableDto.numberOfDays,
+	projectCost: projectSummaryTableDto.projectCost,
+	costPrice: mapCostPriceDto( projectSummaryTableDto.costPrice! ),
+	margin: projectSummaryTableDto.margin,
+	profitNorm: projectSummaryTableDto.profitNorm,
+	rateOfSurplusValue: projectSummaryTableDto.rateOfSurplusValue,
+	stages: projectSummaryTableDto.stages?.map( mapStageDto )
 })
 
-export const mapProjectPriceDto = (projectPrice: ProjectPriceDto): ProjectPrice => ({
-	projectType: projectPrice?.projectName!,
-	projectPrice: projectPrice?.projectPrice!.toString(),
+const mapCostPriceDto = (costPriceDto: CostPriceDto): TableCostPrice => ({
+	costPrice: costPriceDto.costPrice,
+	costs: costPriceDto.costs?.map(mapCostDto)
 })
 
-export function getProjectsPrices(params: PeriodParams) {
-	return makeAuthenticatedReq(() => analyticsApi.analyticsProjectsPricesPost(params))
-}
-
-/* ##################### */
-
-/* Траты на издержки */
-export interface SpendingOnCosts {
-	spendingOnCosts: Array<SpendingOnCost> | undefined
-}
-
-export interface SpendingOnCost {
-	name: string | undefined
-	amount: string | undefined
-}
-
-export const mapSpendingOnCostsDto = (spendingOnCosts: SpendingOnCostDto[]): SpendingOnCosts => ({
-	spendingOnCosts: spendingOnCosts.map(mapSpendingOnCostDto),
+const mapCostDto = (costDto: CostDto): TableCost => ({
+	amount: costDto.amount,
+	name: costDto.name,
+	persent: costDto.persent
 })
 
-export const mapSpendingOnCostDto = (spendingOnCost: SpendingOnCostDto): SpendingOnCost => ({
-	name: spendingOnCost?.name!,
-	amount: spendingOnCost?.amount?.toString(),
-})
-
-export function getSpendingOnCosts(params: SearchAnalyticParams) {
-	return makeAuthenticatedReq(() => analyticsApi.analyticsSpendingOnCostsPost(params))
-}
-
-/* ##################### */
-
-/* Просроченные проекты */
-export interface OutdatedProjects {
-	outdatedProjects: Array<OutdatedProject> | undefined
-	period: ProjectPeriod | undefined
-	averageAmount: string | undefined
-}
-
-export interface OutdatedProject {
-	startDate: Dayjs
-	deadLine: Dayjs
-	name: string
-	wastedDays: number
-}
-
-export interface ProjectPeriod {
-	startDate: Dayjs
-	endDate: Dayjs
-}
-
-export const mapOutdatedProjectsDto = (outdatedProjects: OutdatedProjectsDto): OutdatedProjects => ({
-	outdatedProjects: outdatedProjects.outdatedProjects?.map(mapOutdatedProjectDto),
-	period: mapProjectPeriodDto(outdatedProjects.period!),
-	averageAmount: outdatedProjects?.averageAmount?.toString(),
-})
-
-export const mapOutdatedProjectDto = (outdatedProject: OutdatedProjectDto): OutdatedProject => ({
-	startDate: dayjs(outdatedProject?.startDate!),
-	deadLine: dayjs(outdatedProject?.deadLine!),
-	name: outdatedProject?.projectName!,
-	wastedDays: outdatedProject?.wastedDays!,
-})
-
-export const mapProjectPeriodDto = (period: Period): ProjectPeriod => ({
-	startDate: dayjs(period?.startDate!),
-	endDate: dayjs(period?.endDate!),
-})
-
-export function getOutdatedProjects(params: SearchAnalyticParams) {
-	return makeAuthenticatedReq(() => analyticsApi.analyticsOutDatedProjectsPost(params))
-}
-
-/* ##################### */
-
-/* Маржа по проектам за период */
-export interface ProjectsMargin {
-	projectMargins: Array<ProjectMargin> | undefined
-	period: ProjectPeriod | undefined
-	totalMargin: string | undefined
-}
-
-export interface ProjectMargin {
-	startDate: Dayjs
-	deadline: Dayjs
-	name: string | undefined
-	margin: string | undefined
-}
-
-export const mapProjectsMarginDto = (projectsMargin: ProjectsMagrinDto): ProjectsMargin => ({
-	projectMargins: projectsMargin.projectMargins?.map(mapProjectMarginDto),
-	period: mapProjectPeriodDto(projectsMargin.period!),
-	totalMargin: projectsMargin.totalMargin?.toString(),
-})
-
-export const mapProjectMarginDto = (projectMargin: ProjectMarginDto): ProjectMargin => ({
-	startDate: dayjs(projectMargin?.projectStartdate!),
-	deadline: dayjs(projectMargin?.projectDeadLine!),
-	name: projectMargin?.projectName!,
-	margin: projectMargin?.projectMargin!.toString(),
+const mapStageDto = (stageDto: StageDto): TableStage => ({
+	name: stageDto.name,
+	isCompleted: stageDto.isCompleted
 })
 
 
-export function getProjectMargin(params: SearchAnalyticParams) {
-	return makeAuthenticatedReq(() => analyticsApi.analyticsMarginPost(params))
+/* ###################### */
+
+export interface PeriodItem {
+	startDate?: Dayjs,
+	endDate?: Dayjs 
 }
 
-/* ##################### */
+export const mapPeriodDto = (periodDto: Period): PeriodItem => ({
+	startDate: dayjs(periodDto.startDate),
+	endDate: dayjs(periodDto.endDate),
+})
 
-/* Маржа по проекту по ID*/
-export function getProjectMarginById(projectId: number) {
-	return makeAuthenticatedReq(() => analyticsApi.analyticsMarginProjectIdGet(projectId))
+/* Числовые показатели*/
+export function getNumericalIndicators(period: Period) {
+	return makeAuthenticatedReq(() => analyticsApi.analyticsNumericalIndicatorsPost(period))
 }
 
-/* Норма прибыли по проекту по ID*/
-export function getProjectProfitNormById(projectId: number) {
-	return makeAuthenticatedReq(() => analyticsApi.analyticsProfitNormProjectIdGet(projectId))
+export interface NumericalIndicators {
+		averageCheck?: number;
+		averageProductionDays?: number;
+		numberOfProducts?: number;
 }
 
-/* Норма прибавочной стоимости по проекту по ID*/
-export function getProjectRateOfSurplusValueById(projectId: number) {
-	return makeAuthenticatedReq(() => analyticsApi.analyticsRateOfSurplusValueProjectIdGet(projectId))
+export const mapNumericalIndicatorsDto = (numericalIndicatorsDto: NumericalIndicatorsDto): NumericalIndicators => ({
+	averageCheck: numericalIndicatorsDto.averageCheck,
+	averageProductionDays: numericalIndicatorsDto.averageProductionDays,
+	numberOfProducts: numericalIndicatorsDto.numberOfProducts
+})
+
+/* Аналитика с выводом по датам */
+export function getChartAnalyticsPerDates(chartDto: ChartDto) {
+	return makeAuthenticatedReq(() => analyticsApi.analyticsDataByDatePost(chartDto))
 }
 
+export interface ChartItem {
+	date: Dayjs,
+	value: number
+}
 
+export const mapChartItemDto = (chartItemDto: ChartItemDto): ChartItem => ({
+	date: dayjs(chartItemDto.date!),
+	value: chartItemDto.value!
+})
 
+/* Аналитика с выводом по периодам */
+export function getChartAnalyticsPerPeriods(chartDto: ChartDto) {
+	return makeAuthenticatedReq(() => analyticsApi.analyticsDataByPeriodPost(chartDto))
+}
 
+export interface ChartItemWeeks {
+	period: PeriodItem,
+	value: number
+}
+
+export const mapChartItemWeeksDto = (chartItemWeeksDto: ChartItemWeeksDto): ChartItemWeeks => ({
+	period: mapPeriodDto(chartItemWeeksDto.period!),
+	value: chartItemWeeksDto.value!
+})

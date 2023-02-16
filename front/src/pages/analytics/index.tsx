@@ -1,165 +1,208 @@
-import {Search} from '@mui/icons-material'
-import {InputAdornment, MenuItem, Stack, TextField} from '@mui/material'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import Select from '@mui/material/Select'
-import {styled} from '@mui/material/styles'
-import {DatePicker} from '@mui/x-date-pickers'
-import {Button} from 'antd'
-import dayjs, {Dayjs} from 'dayjs'
+import {Button, DatePicker, Radio, RadioChangeEvent, Select} from 'antd'
+import dayjs, { Dayjs } from 'dayjs'
 import {useEffect, useRef, useState} from 'react'
+import { ChartDto, ChartPeriodType, ChartType } from '../../../api/typescript-fetch-client-generated'
 import {
-	getOutdatedProjects,
-	getProjectMargin,
-	getProjectsPrices,
-	getSpendingOnCosts,
-	mapOutdatedProjectsDto,
-	mapProjectsMarginDto,
-	mapProjectsPricesDto,
-	mapSpendingOnCostsDto,
-	OutdatedProjects,
+	ChartItem,
+	ChartItemWeeks,
+	getChartAnalyticsPerDates,
+	getChartAnalyticsPerPeriods,
+	getNumericalIndicators,
+	mapChartItemDto,
+	mapChartItemWeeksDto,
+	mapNumericalIndicatorsDto,
+	NumericalIndicators,
+	PeriodItem,
 	PeriodParams,
-	ProjectsMargin,
-	ProjectsPrices,
-	SearchAnalyticParams,
-	SpendingOnCosts,
 } from '../../../api/useAnalytics'
-import MarginComponent from '../../components/Analytics/Margin'
-import {OutDatedProjectsComponent} from '../../components/Analytics/OutDatedProjects'
-import {ProjectsPricesComponent} from '../../components/Analytics/ProjectsPrices'
-import SpendingOnCostsComponent from '../../components/Analytics/SpendingOnCosts'
+import ChartComponent, { ChartDataItem } from '../../components/Analytics/Chart'
+import NumericalIndicatorsComponent from '../../components/Analytics/NumericalIndicators'
 import MainLayout from '../../components/MainLayout'
 import styles from './styles.module.css'
 
-enum AnalyticsKind {
-	Margin = 'margin',
-	ProjectsPrices = 'projectsPrices',
-	SpendingOnCosts = 'spendingOnCosts',
-	OutDatedProjects = 'outDatedProjects',
+const {RangePicker} = DatePicker
+
+export enum Discreteness {
+	Day,
+	Week,
+	Month,
+	Year
 }
 
-const DatePickerContainer = styled('div')(() => ({
-	flex: '160px 0 0',
-}))
+export enum ChartKind {
+  Revenue = 0,
+  Cost = 1,
+  Margin = 2,
+  K1 = 3,
+  K2 = 4
+}
 
+const renderDatePicker = (discretenessKind: Discreteness, onRangeChange: (dates: null | (Dayjs | null)[], dateStrings: string[]) => void) => {
+	return (
+		<>
+			{ discretenessKind === Discreteness.Day && <RangePicker onChange={onRangeChange} /> }
+			{ discretenessKind === Discreteness.Week && <RangePicker onChange={onRangeChange} picker="week" /> }
+			{ discretenessKind === Discreteness.Month && <RangePicker onChange={onRangeChange} picker="month" /> }
+			{ discretenessKind === Discreteness.Year && <RangePicker onChange={onRangeChange} picker="year" /> }
+		</>
+	)
+}
+
+const convertToMonthChartTypeName = (date: Dayjs): string => {
+	return `${date.format('MMM')} ${date.get('year')}`
+}
 
 export default function AnalyticsPage() {
-	const dateOfStart = useRef<HTMLInputElement>(null)
-	const endDate = useRef<HTMLInputElement>(null)
-	const searchText = useRef<HTMLInputElement>(null)
-	const analyticsKind = useRef<HTMLInputElement>(null)
+	const dateOfStart = useRef<Dayjs>(dayjs())
+	const endDate = useRef<Dayjs>(dayjs())
+	const [discretenessKind, setDiscretenessKind] = useState<Discreteness>(Discreteness.Day)
+	const [chartKind, setChartKind] = useState<ChartKind>(ChartKind.Revenue)
 
-	const [analyticsKindState, setAnalyticsKindState] = useState<AnalyticsKind | null>(AnalyticsKind.ProjectsPrices)
-	const [dateOfStartState, setDateOfStartState] = useState<Dayjs | null>(dayjs())
-	const [endDateState, setEndDateState] = useState<Dayjs | null>(dayjs())
-
-	const [analyticsState, setAnalyticsState] = useState<ProjectsPrices | OutdatedProjects | SpendingOnCosts | ProjectsMargin | undefined>(undefined)
+	const [numericalIndicatorsState, setNumericalIndicatorsState] = useState<NumericalIndicators | undefined>(undefined)
+	const [chartDataItemsState, setChartDataItemsState] = useState<ChartDataItem[]>([]);
 
 	const analyzeOnClickHandler = async () => {
-		switch (analyticsKindState) {
-			case AnalyticsKind.ProjectsPrices: {
-				const periodParams: PeriodParams = createPeriodParams()
-				const projectPrices: ProjectsPrices = mapProjectsPricesDto((await getProjectsPrices(periodParams)))
-				setAnalyticsState(projectPrices)
-				break
-			}
-			case AnalyticsKind.SpendingOnCosts: {
-				const searchAnalyticParams: SearchAnalyticParams = createSearchAnalyticParams()
-				const spendingOnCosts: SpendingOnCosts = mapSpendingOnCostsDto((await getSpendingOnCosts(searchAnalyticParams)))
-				setAnalyticsState(spendingOnCosts)
-				break
-			}
-			case AnalyticsKind.OutDatedProjects: {
-				const searchAnalyticParams: SearchAnalyticParams = createSearchAnalyticParams()
-				const outDatedProjects: OutdatedProjects = mapOutdatedProjectsDto((await getOutdatedProjects(searchAnalyticParams)))
-				setAnalyticsState(outDatedProjects)
-				break
-			}
-			case AnalyticsKind.Margin: {
-				const searchAnalyticParams: SearchAnalyticParams = createSearchAnalyticParams()
-				const projectsMargin: ProjectsMargin = mapProjectsMarginDto((await getProjectMargin(searchAnalyticParams)))
-				setAnalyticsState(projectsMargin)
-				break
-			}
+		const periodParams: PeriodParams = createPeriodParams()
+		const numericalIndicators: NumericalIndicators = mapNumericalIndicatorsDto( await getNumericalIndicators(periodParams) )
+
+		const chartDto: ChartDto = createChartDto()
+		if (discretenessKind == Discreteness.Week) {
+			const data: ChartItemWeeks[] = (await getChartAnalyticsPerPeriods(chartDto)).map( mapChartItemWeeksDto )
+			setChartDataItemsState( data.map(mapChartItemWeeksToChartDataItem))
+		} else {
+			const data: ChartItem[] = (await getChartAnalyticsPerDates(chartDto)).map( mapChartItemDto )
+			setChartDataItemsState( data.map(mapChartItemToChartDataItem))
 		}
+
+		setNumericalIndicatorsState(numericalIndicators);
 	}
+
+	const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
+		if (dates) {
+			dateOfStart.current = dayjs(dates[0])
+			endDate.current = dayjs(dates[1])
+		} else {
+			dateOfStart.current = dayjs()
+			endDate.current = dayjs()
+		}
+	};
+
+	const onChangeRadio = (e: RadioChangeEvent) => {
+    setDiscretenessKind(e.target.value)
+  };
+
+	const onChartKindChange = (value: ChartKind) => {
+		setChartKind(value)
+	}
+
+	useEffect(() => {}, [discretenessKind])
 
 	const createPeriodParams = (): PeriodParams => {
 		return {
-			startDate: dateOfStartState?.toISOString()!,
-			endDate: endDateState?.toISOString()!,
+			startDate: dateOfStart.current.toISOString()!,
+			endDate: endDate.current.toISOString()!,
 		}
 	}
 
-	const createSearchAnalyticParams = (): SearchAnalyticParams => {
-		return {
-			name: searchText.current?.value!,
-			period: createPeriodParams(),
+	const createChartDto = (): ChartDto => ({
+		period: createPeriodParams(),
+		chartPeriodType: mapToChartPeriodType(discretenessKind),
+		chartType: mapToChartType(chartKind)
+	})
+
+	const mapToChartPeriodType = (discretenessValue: Discreteness): ChartPeriodType => {
+		switch(discretenessValue) {
+			case Discreteness.Day: return ChartPeriodType.NUMBER_0;
+			case Discreteness.Week: return ChartPeriodType.NUMBER_1;
+			case Discreteness.Month: return ChartPeriodType.NUMBER_2;
+			case Discreteness.Year: return ChartPeriodType.NUMBER_3;
 		}
 	}
 
-	useEffect(() => {
-	}, [analyticsState])
+	const mapToChartType = (chartTypeValue: ChartKind): ChartType => {
+		switch(chartTypeValue) {
+			case ChartKind.Revenue: return ChartType.NUMBER_0;
+			case ChartKind.Cost: return ChartType.NUMBER_1;
+			case ChartKind.Margin: return ChartType.NUMBER_2;
+			case ChartKind.K1: return ChartType.NUMBER_3;
+			case ChartKind.K2: return ChartType.NUMBER_4;
+		}
+	}
+
+	const mapChartItemToChartDataItem = (item: ChartItem): ChartDataItem => {
+		const value = item.value
+		const name = mapChartItemDateToName(item.date)
+
+		return { name, value }
+	}
+
+	const mapChartItemWeeksToChartDataItem = (item: ChartItemWeeks): ChartDataItem => {
+		const value = item.value
+		const name = mapChartItemPeriodToName(item.period)
+
+		return { name, value }
+	}
+
+	const mapChartItemDateToName = (date: Dayjs): string => {
+		if (discretenessKind == Discreteness.Day) {
+			return date.format('DD/MM/YYYY')
+		} 
+		else if ( discretenessKind == Discreteness.Month) {
+			return `${date.format('MMM')} ${date.get('year')}`
+		}
+		else if (discretenessKind == Discreteness.Year) {
+			return `${date.get('year')}`
+		}
+		else {
+			return date.format('DD/MM/YYYY')
+		}
+	}
+
+	const mapChartItemPeriodToName = (period: PeriodItem): string => {
+		const startYear: number = dateOfStart.current.get('year')
+		const endYear: number = endDate.current.get('year')
+		const isNeedApplyYearTag: boolean = ( endYear - startYear ) > 0
+
+		let name = `${period.startDate?.format('DD')}.${period.startDate?.format('MM')}-${period.endDate?.format('DD')}.${period.endDate?.format('MM')}`
+
+		if (isNeedApplyYearTag) {
+			name += ` (${period.startDate?.get('year')})`
+		}
+
+		return name
+	}
 
 	return (
 		<MainLayout>
 			<div className={styles.form}>
 				<div className={styles.panelWrapper}>
-					<div>
-						<Stack spacing={2} sx={{width: 300}}>
-							<TextField
-								margin="none"
-								size="small"
-								autoFocus
-								inputRef={searchText}
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position="start">
-											<Search/>
-										</InputAdornment>
-									),
-								}}
-							/>
-						</Stack>
-					</div>
 					<div className={styles.panelControlsWrapper}>
-						<FormControl variant="standard" sx={{m: 1, minWidth: 120}}>
-							<InputLabel id="demo-simple-select-standard-label">Тип аналитики</InputLabel>
+						<div>
+							<div className={styles.dateWrapperDatePicker}>{renderDatePicker(discretenessKind, onRangeChange)}</div>
+							<div>
+								<Radio.Group onChange={onChangeRadio} value={discretenessKind}>
+						      <Radio value={Discreteness.Day}>Д</Radio>
+						      <Radio value={Discreteness.Week}>Н</Radio>
+						      <Radio value={Discreteness.Month}>М</Radio>
+						      <Radio value={Discreteness.Year}>Г</Radio>
+    						</Radio.Group>
+							</div>
+						</div>
+						<div className={styles.chartTypeWrapper}>
+							<span className={styles.chartTypeTitle}>Тип аналитики:</span>
 							<Select
-								labelId="demo-simple-select-standard-label"
-								id="demo-simple-select-standard"
-								label="Age"
-								onChange={(e) => {
-									setAnalyticsKindState(e.target.value as AnalyticsKind)
-								}}
-								defaultValue={AnalyticsKind.ProjectsPrices}
-							>
-								<MenuItem value={AnalyticsKind.Margin}>Маржа по проектам за период</MenuItem>
-								<MenuItem value={AnalyticsKind.ProjectsPrices}>Цены проектов</MenuItem>
-								<MenuItem value={AnalyticsKind.SpendingOnCosts}>Траты на издержки</MenuItem>
-								<MenuItem value={AnalyticsKind.OutDatedProjects}>Просроченные проекты</MenuItem>
-							</Select>
-						</FormControl>
-						<DatePickerContainer>
-							<DatePicker
-								value={dateOfStartState}
-								inputRef={dateOfStart}
-								onChange={(newValue) => {
-									setDateOfStartState(newValue)
-								}}
-								renderInput={params => <TextField {...params} />}
-							/>
-						</DatePickerContainer>
-						<DatePickerContainer>
-							<DatePicker
-								value={endDateState}
-								inputRef={endDate}
-								onChange={(newValue) => {
-									setEndDateState(newValue)
-								}}
-								renderInput={params => <TextField {...params} />}
-							/>
-						</DatePickerContainer>
+						      defaultValue={ChartKind.Revenue}
+						      style={{ width: 200 }}
+									onChange={onChartKindChange}
+						      options={[
+						        { value: ChartKind.Revenue, label: 'Выручка' },
+						        { value: ChartKind.Cost, label: 'Себестоимость' },
+						        { value: ChartKind.Margin, label: 'Маржа' },
+						        { value: ChartKind.K1, label: 'K1' },
+										{ value: ChartKind.K2, label: 'K2' },
+						      ]}
+						  />
+						</div>
 					</div>
 					<div>
 						<Button
@@ -171,30 +214,12 @@ export default function AnalyticsPage() {
 					</div>
 				</div>
 			</div>
-			{!analyticsState && <h2>Проанализируйте ваши проекты по разным критериям</h2>}
-			{analyticsState && analyticsKindState === AnalyticsKind.Margin
-				&& <MarginComponent
-					projectMargins={(analyticsState as ProjectsMargin).projectMargins!}
-					totalMargin={(analyticsState as ProjectsMargin).totalMargin!}
-					period={(analyticsState as ProjectsMargin).period!}
-				/>}
-			{analyticsState && analyticsKindState === AnalyticsKind.ProjectsPrices
-				&& <ProjectsPricesComponent
-					averagePrice={(analyticsState as ProjectsPrices).averagePrice!}
-					projectPrices={(analyticsState as ProjectsPrices).projectPrices!}
-					maxProjectPrice={(analyticsState as ProjectsPrices).maxProjectPrice!}
-					minProjectPrice={(analyticsState as ProjectsPrices).minProjectPrice!}
-				/>}
-			{analyticsState && analyticsKindState === AnalyticsKind.OutDatedProjects
-				&& <OutDatedProjectsComponent
-					outdatedProjects={(analyticsState as OutdatedProjects).outdatedProjects!}
-					averageAmount={(analyticsState as OutdatedProjects).averageAmount!}
-					period={(analyticsState as OutdatedProjects).period!}
-				/>}
-			{analyticsState && analyticsKindState === AnalyticsKind.SpendingOnCosts
-				&& <SpendingOnCostsComponent
-					spendingOnCosts={(analyticsState as SpendingOnCosts).spendingOnCosts!}
-				/>}
+			<NumericalIndicatorsComponent
+				averageCheck={numericalIndicatorsState?.averageCheck}
+				averageProductionDays={numericalIndicatorsState?.averageProductionDays}
+				numberOfProducts = {numericalIndicatorsState?.numberOfProducts}
+			/>
+			<ChartComponent data={chartDataItemsState} chartKind={chartKind} startDate={dateOfStart.current} endDate={endDate.current} />
 		</MainLayout>
 	)
 }

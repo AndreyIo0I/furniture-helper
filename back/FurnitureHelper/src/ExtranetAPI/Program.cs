@@ -3,6 +3,10 @@ using Infrastructure;
 using Infrastructure.Foundation.EntityFramwork;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using ExtranetAPI;
+using ExtranetAPI.Analytics.Services;
+using ExtranetAPI.Analytics.Services.Builders;
+using ExtranetAPI.Analytics.Services.ChartAnalytics;
 using ExtranetAPI.Services;
 using ExtranetAPI.Services.Builders;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -27,11 +31,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
     } );
 builder.Services.AddAuthorization();
-builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
-builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
-builder.Services.AddScoped<IUserBuilder, UserBuilder>();
-builder.Services.AddScoped<IPasswordCryptionService, PasswordCryptionService>(
-    sp => new PasswordCryptionService( builder.Configuration["SecurityKey"] ) );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -60,6 +59,7 @@ builder.Services
             } );
     } );
 
+builder.Services.AddExtranetApi(builder.Configuration["SecurityKey"]);
 builder.Services.AddScoped<IProjectStageInitializer, ProjectStageInitializer>();
 builder.Services.AddScoped<IClientConsistencyDeterminant, ClientConsistencyDeterminant>();
 builder.Services.AddHealthChecks();

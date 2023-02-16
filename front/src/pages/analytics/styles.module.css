@@ -16,3 +16,15 @@
     display: flex;
     justify-content: center;
 }
+
+.dateWrapperDatePicker {
+  margin-bottom: 10px;
+}
+
+.chartTypeWrapper {
+    margin-left: 10px;
+}
+
+.chartTypeTitle {
+    margin-right: 5px;
+}
