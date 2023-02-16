@@ -16,12 +16,16 @@ import React, {useState} from 'react'
 import createCostType from '../../../../api/costTypes/createCostType'
 import useCostTypes, {CostType} from '../../../../api/costTypes/useCostTypes'
 import MainLayout from '../../../components/MainLayout'
+import useCurrentUser from '../../../../api/users/useCurrentUser'
+import {UserRole} from '../../../../api/users/createUser'
 
 interface ContentProps {
 	rows: CostType[]
 }
 
 function Content({rows}: ContentProps) {
+	const {data: currentUser} = useCurrentUser()
+
 	return (
 		<>
 			{rows.map(row => (
@@ -34,7 +38,7 @@ function Content({rows}: ContentProps) {
 							variant="standard"
 							defaultValue={row.name}
 							fullWidth={true}
-							disabled
+							disabled={currentUser?.role !== UserRole.Owner}
 						/>
 						<IconButton
 							size="small"
@@ -52,13 +56,15 @@ function Content({rows}: ContentProps) {
 export default function CostTypesPage() {
 	const [newValue, setNewValue] = useState('')
 
+	const {data: rows, mutate} = useCostTypes()
+
 	const onAdd = async () => {
 		await createCostType({
 			name: newValue,
 		})
+		await mutate()
+		setNewValue('')
 	}
-
-	const {data: rows} = useCostTypes()
 
 	return (
 		<MainLayout>

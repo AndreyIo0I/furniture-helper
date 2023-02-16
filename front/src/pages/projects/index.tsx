@@ -90,7 +90,7 @@ export default function ProjectsPage() {
 		contractNumber: project.contractNumber,
 		projectType: project.projectType,
 		clientName: clients?.find(client => client.id === project.clientId)?.fullName,
-		dateOfFinish: project.dateOfFinish,
+		dateOfFinish: project.deadLine,
 		endDate: project.endDate!,
 		isCompleted: !!project.isCompleted,
 	})

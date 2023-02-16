@@ -1,4 +1,4 @@
-import {Button, DatePicker, Form, Input, Select, Space} from 'antd'
+import {Button, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Space} from 'antd'
 import dayjs, {Dayjs} from 'dayjs'
 import * as React from 'react'
 import {useState} from 'react'
@@ -13,7 +13,7 @@ import MainLayout from '../../../components/MainLayout'
 type ProjectFormData = {
 	name: string
 	address: string
-	dateOfStart: Dayjs | null
+	dateOfStart: Dayjs|null
 	clientId: number
 	description: string
 }
@@ -28,93 +28,115 @@ function Content({
 	clients,
 }: ContentProps) {
 	const [isCompleted, setIsCompleted] = useState(project.isCompleted)
-
-	const onCompleteProject = async () => {
-		// что с не сохраненными изменениями?
-		setIsCompleted(true)
-		await completeProject(project.id) // TODO: добавить "вы уверены?"
-	}
+	const [withContract, setWithContract] = useState(!!project.contractNumber)
 
 	const onSaveProject = async (data: ProjectFormData) => {
 		await saveProject({
-			id: project.id,
-			contractNumber: project.contractNumber,
-			dateOfFinish: project.dateOfFinish,
+			...project,
 			projectType: data.name,
 			address: data.address,
 			dateOfStart: data.dateOfStart,
 			clientId: data.clientId,
 			description: data.description,
 		})
+
+		if (isCompleted) {
+			await completeProject(project.id)
+		}
 	}
 
 	return (
-		<Space size={'large'}>
-			<Form
-				name="basic"
-				style={{width: '100%', minWidth: 500, maxWidth: 800}}
-				initialValues={{
-					name: project.projectType,
-					clientId: project.clientId,
-					address: project.address,
-					description: project.description,
-					dateOfApplication: dayjs(),
-				}}
-				onFinish={onSaveProject}
-				autoComplete="off"
-				layout="vertical"
-			>
-				<Space>
+		<Form
+			name="basic"
+			initialValues={{
+				contractNumber: project.contractNumber,
+				dateOfApplication: project.dateOfApplication ?? dayjs(),
+				deadLine: project.deadLine,
+				dateOfStart: project.dateOfStart,
+				endDate: project.endDate,
+				name: project.projectType,
+				clientId: project.clientId,
+				address: project.address,
+				description: project.description,
+			}}
+			onFinish={onSaveProject}
+			autoComplete="off"
+			layout="vertical"
+		>
+			<Row gutter={[48, 16]}>
+				<Col flex={4}>
+					<Space>
+						<Form.Item
+							label="Тип проекта"
+							name="name"
+							rules={[{required: true, message: 'Пожалуйста, введите тип проекта'}]}
+						>
+							<Input autoFocus/>
+						</Form.Item>
+						<Popconfirm
+							placement="right"
+							title={'Редактирование проекта будет недоступно после завершения'}
+							onConfirm={() => setIsCompleted(true)}
+							okText="Завершить"
+							cancelText="Отмена"
+						>
+							<Button
+								type="primary"
+								disabled={project.isCompleted}
+							>
+								Завершить
+							</Button>
+						</Popconfirm>
+					</Space>
 					<Form.Item
-						label="Тип проекта"
-						name="name"
-						rules={[{required: true, message: 'Пожалуйста, введите тип проекта'}]}
+						label="Клиент"
+						name="clientId"
+						style={{width: '200px'}}
 					>
-						<Input autoFocus/>
+						<Select
+							showSearch
+							filterOption={(input, option) =>
+								(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+							}
+							options={clients?.map(client => ({
+								label: client.fullName,
+								value: client.id,
+							}))}
+							disabled={project.isCompleted}
+						/>
 					</Form.Item>
-					<Button
-						onClick={() => onCompleteProject()}
-						type="primary"
-						disabled={project.isCompleted}
+					<Form.Item
+						label="Дата заявки"
+						name="dateOfApplication"
 					>
-						Завершить
-					</Button>
-				</Space>
-				<Form.Item
-					label="Клиент"
-					name="clientId"
-					style={{width: '200px'}}
-				>
-					<Select
-						showSearch
-						filterOption={(input, option) =>
-							(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-						}
-						options={clients?.map(client => ({
-							label: client.fullName,
-							value: client.id,
-						}))}
-						disabled={project.isCompleted}
-					/>
-				</Form.Item>
-				<Form.Item
-					label="Дата заявки"
-					name="dateOfApplication"
-				>
-					<DatePicker allowClear={false} disabled={project.isCompleted}/>
-				</Form.Item>
-				<Form.Item
-					label="Адрес"
-					name="address"
-				>
-					<Input disabled={project.isCompleted}/>
-				</Form.Item>
-				<Form.Item
-					label="Описание"
-					name="description"
-				>
-					<Input.TextArea autoSize={{minRows: 4, maxRows: 10}} disabled={project.isCompleted}/>
-				</Form.Item>
+						<DatePicker allowClear={false} disabled={project.isCompleted}/>
+					</Form.Item>
+					<Form.Item
+						label="Адрес"
+						name="address"
+					>
+						<Input disabled={project.isCompleted}/>
+					</Form.Item>
+					<Form.Item
+						label="Описание"
+						name="description"
+					>
+						<Input.TextArea autoSize={{minRows: 4, maxRows: 10}} disabled={project.isCompleted}/>
+					</Form.Item>
+				</Col>
+				<Col flex={2}>
+					<Form.Item>
+						{withContract
+							? (
+								<Contract/>
+							)
+							: (
+								<Button onClick={() => setWithContract(true)}/>
+							)}
+					</Form.Item>
+				</Col>
+			</Row>
+			<Row>
 				<Button
 					htmlType="submit"
 					type="primary"
@@ -122,9 +144,8 @@ function Content({
 				>
 					Сохранить
 				</Button>
-			</Form>
-			<Contract/>
-		</Space>
+			</Row>
+		</Form>
 	)
 }
 
