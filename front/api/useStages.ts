@@ -12,7 +12,7 @@ export interface Stage {
 	isCompleted: boolean;
 }
 
-const mapStageDto = (dto: ProjectStage): Stage => ({
+export const mapStageDto = (dto: ProjectStage): Stage => ({
 	id: dto.id!,
 	projectId: dto.projectId!,
 	name: dto.name!,

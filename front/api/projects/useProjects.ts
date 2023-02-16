@@ -8,10 +8,11 @@ export interface Project {
 	id: number
 	projectType: string
 	address: string
-	clientId: number
 	contractNumber: string
 	dateOfStart: Dayjs|null
 	dateOfFinish: Dayjs|null
+	endDate?: Dayjs|null
+	clientId: number
 	description: string
 	isCompleted?: boolean
 }
@@ -20,10 +21,11 @@ export const mapProjectDto = (dto: ProjectDto): Project => ({
 	id: dto.id!,
 	projectType: dto.projectType!,
 	address: dto.address!,
-	clientId: dto.clientId!,
 	contractNumber: dto.contractNumber!,
-	dateOfStart: dto.dateOfStart ? dayjs(dto.dateOfApplication) : null,
-	dateOfFinish: dto.deadLine? dayjs(dto.deadLine) : null,
+	dateOfStart: dto.dateOfStart ? dayjs(dto.dateOfStart) : null,
+	dateOfFinish: dto.deadLine ? dayjs(dto.deadLine) : null,
+	endDate: dto.endDate ? dayjs(dto.endDate) : null,
+	clientId: dto.clientId!,
 	description: dto.description!,
 	isCompleted: dto.isCompleted!,
 })
@@ -31,11 +33,11 @@ export const mapProjectDto = (dto: ProjectDto): Project => ({
 export const mapToProjectDto = (project: Project): ProjectDto => ({
 	id: project.id,
 	projectType: project.projectType,
-	address: project.address,
-	clientId: project.clientId,
 	contractNumber: project.contractNumber,
-	dateOfApplication: project.dateOfStart?.toISOString(),
+	dateOfStart: project.dateOfStart?.toISOString(),
 	deadLine: project.dateOfFinish?.toISOString(),
+	endDate: project.endDate?.toISOString(),
+	clientId: project.clientId,
 	description: project.description,
 	isCompleted: project.isCompleted,
 })
