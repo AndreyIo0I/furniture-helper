@@ -1,3 +1,4 @@
+import {blue} from '@ant-design/colors'
 import {SxProps} from '@mui/material'
 import {Dayjs} from 'dayjs'
 
@@ -6,6 +7,10 @@ export const pageContainerId = 'projectBudgetPageContainer'
 export const formStyle: SxProps = {
 	mt: 3,
 	maxWidth: 'fit-content',
+}
+
+export const addRowStyle = {
+	background: blue[0],
 }
 
 export function getPopupContainer() {
@@ -19,19 +24,11 @@ export function toApiModelDate(date: Dayjs | null): Date {
 	return date.toDate()
 }
 
-export function toApiModelNumber(value?: number): number {
-	if (value === undefined) {
+export function toApiModelNumber(value: number | null): number {
+	if (value === null) {
 		throw 'required field is missing'
 	}
 	return value
-}
-
-export function toViewModelNumber(value: string): number | undefined {
-	return value !== '' ? Number(value) : undefined
-}
-
-export function toViewNumber(value?: number): number | '' {
-	return value !== undefined ? value : ''
 }
 
 export function toViewStatus(hasError?: boolean): 'error' | undefined {

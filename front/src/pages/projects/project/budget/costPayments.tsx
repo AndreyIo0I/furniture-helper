@@ -1,6 +1,5 @@
-import {AddCircleOutline, Delete} from '@mui/icons-material'
+import {PlusCircleOutlined, DeleteFilled} from '@ant-design/icons'
 import {
-	IconButton,
 	Paper,
 	Table,
 	TableBody,
@@ -8,17 +7,15 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	TextField,
 } from '@mui/material'
-import {DatePicker, Select} from 'antd'
+import {Button, DatePicker, InputNumber, Select} from 'antd'
 import {Dayjs} from 'dayjs'
 import React from 'react'
 import {CostType} from '../../../../../api/costTypes/useCostTypes'
 import {
+	addRowStyle,
 	formStyle,
 	getPopupContainer,
-	toViewModelNumber,
-	toViewNumber,
 	toViewStatus,
 } from './common'
 import * as model from './model'
@@ -72,7 +69,7 @@ function CostPayment(props: CostPaymentProps) {
 		})
 	}
 
-	function setAmount(amount?: number) {
+	function setAmount(amount: number | null) {
 		props.setPayment({
 			...props.payment,
 			amount,
@@ -96,15 +93,11 @@ function CostPayment(props: CostPaymentProps) {
 				/>
 			</TableCell>
 			<TableCell>
-				<TextField
-					type="number"
-					variant="standard"
-					value={toViewNumber(props.payment.amount)}
-					onChange={event =>
-						setAmount(toViewModelNumber(event.target.value))
-					}
+				<InputNumber
+					value={props.payment.amount}
+					onChange={setAmount}
 					className={styles.form_control}
-					error={props.payment.amount === undefined}
+					status={toViewStatus(props.payment.amount === null)}
 				/>
 			</TableCell>
 			<TableCell>
@@ -117,9 +110,11 @@ function CostPayment(props: CostPaymentProps) {
 				/>
 			</TableCell>
 			<TableCell>
-				<IconButton onClick={props.removePayment}>
-					<Delete/>
-				</IconButton>
+				<Button
+					type="link"
+					icon={<DeleteFilled/>}
+					onClick={props.removePayment}
+				/>
 			</TableCell>
 		</TableRow>
 	)
@@ -130,7 +125,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		needsValidation: boolean,
 		paymentId: number,
 		costId?: number,
-		amount?: number,
+		amount: number | null,
 		paymentDate: Dayjs | null,
 	}
 
@@ -138,6 +133,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		return {
 			needsValidation: false,
 			paymentId,
+			amount: null,
 			paymentDate: null,
 		}
 	}
@@ -160,7 +156,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 		})
 	}
 
-	function setNewPaymentAmount(amount?: number) {
+	function setNewPaymentAmount(amount: number | null) {
 		setNewPayment({
 			...newPayment,
 			amount,
@@ -175,7 +171,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 	}
 
 	function addPayment() {
-		if (newPayment.costId === undefined || newPayment.amount === undefined || newPayment.paymentDate === null) {
+		if (newPayment.costId === undefined || newPayment.amount === null || newPayment.paymentDate === null) {
 			setNewPaymentNeedsValidation()
 			return
 		}
@@ -221,7 +217,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					<TableRow>
+					<TableRow style={addRowStyle}>
 						<TableCell>
 							<CostSelect
 								error={newPayment.needsValidation && newPayment.costId === undefined}
@@ -231,18 +227,11 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 							/>
 						</TableCell>
 						<TableCell>
-							<TextField
-								type="number"
-								variant="standard"
-								value={toViewNumber(newPayment.amount)}
-								onChange={event =>
-									setNewPaymentAmount(toViewModelNumber(event.target.value))
-								}
+							<InputNumber
+								value={newPayment.amount}
+								onChange={setNewPaymentAmount}
 								className={styles.form_control}
-								error={
-									newPayment.needsValidation
-									&& newPayment.amount === undefined
-								}
+								status={toViewStatus(newPayment.needsValidation && newPayment.amount === null)}
 							/>
 						</TableCell>
 						<TableCell>
@@ -255,9 +244,11 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 							/>
 						</TableCell>
 						<TableCell>
-							<IconButton onClick={addPayment}>
-								<AddCircleOutline/>
-							</IconButton>
+							<Button
+								type="link"
+								icon={<PlusCircleOutlined/>}
+								onClick={addPayment}
+							/>
 						</TableCell>
 					</TableRow>
 					{props.costPayments.map(payment => (

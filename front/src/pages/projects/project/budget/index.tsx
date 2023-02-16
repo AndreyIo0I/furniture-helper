@@ -1,5 +1,5 @@
-import {Container, Paper, SxProps, TextField} from '@mui/material'
-import {Button} from 'antd'
+import {Container, Paper, SxProps} from '@mui/material'
+import {Button, Form, InputNumber, message} from 'antd'
 import dayjs from 'dayjs'
 import React from 'react'
 import useCostTypes, {CostType} from '../../../../../api/costTypes/useCostTypes'
@@ -12,15 +12,31 @@ import {
 	pageContainerId,
 	toApiModelDate,
 	toApiModelNumber,
-	toViewModelNumber,
-	toViewNumber,
+	toViewStatus,
 } from './common'
 import CostPaymentsTable from './costPayments'
 import * as model from './model'
 import styles from './styles.module.css'
 
 const projectCostStyle: SxProps = {
-	m: 2,
+	...formStyle,
+	p: 2,
+}
+
+function isValidProjectBudget(projectBudget: model.ProjectBudget) {
+	function isValidClientPayment(payment: model.ClientPayment) {
+		return payment.amount !== null && payment.paymentDate !== null
+	}
+
+	function isValidCostPayment(payment: model.CostPayment) {
+		return payment.amount !== null && payment.paymentDate !== null
+	}
+
+	return (
+		projectBudget.projectCost !== null
+		&& projectBudget.clientPayments.every(isValidClientPayment)
+		&& projectBudget.costPayments.every(isValidCostPayment)
+	)
 }
 
 const mapToProjectBudgetViewModel = (projectBudget: ProjectBudget): model.ProjectBudget => ({
@@ -36,6 +52,7 @@ const mapToProjectBudgetViewModel = (projectBudget: ProjectBudget): model.Projec
 		amount: payment.amount,
 		paymentDate: dayjs(payment.paymentDate),
 	})),
+	hasChangesInModel: false,
 })
 
 const mapToApiProjectBudget = (projectBudget: model.ProjectBudget, projectId: number): ProjectBudget => ({
@@ -66,21 +83,26 @@ function Content(props: ContentProps) {
 	}
 
 	async function updateProjectBudget() {
-		let apiProjectBudget
 		try {
-			apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
+			let apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
+			await saveProjectBudget(apiProjectBudget)
+			mutate(apiProjectBudget)
+			setBudget({
+				...budget!,
+				hasChangesInModel: false,
+			})
+			message.success('Изменения успешно сохранены')
 		} catch (err) {
-			console.log(err)
-			return
+			console.error(err)
+			message.error('Не удалось сохранить изменения')
 		}
-		await saveProjectBudget(apiProjectBudget)
-		await mutate(apiProjectBudget)
 	}
 
-	function setProjectCost(projectCost?: number) {
+	function setProjectCost(projectCost: number | null) {
 		setBudget({
 			...budget!,
 			projectCost,
+			hasChangesInModel: true,
 		})
 	}
 
@@ -88,6 +110,7 @@ function Content(props: ContentProps) {
 		setBudget({
 			...budget!,
 			clientPayments,
+			hasChangesInModel: true,
 		})
 	}
 
@@ -95,6 +118,7 @@ function Content(props: ContentProps) {
 		setBudget({
 			...budget!,
 			costPayments,
+			hasChangesInModel: true,
 		})
 	}
 
@@ -107,19 +131,20 @@ function Content(props: ContentProps) {
 				style={{position: 'relative'}}
 				maxWidth="lg"
 			>
-				<Paper sx={formStyle}>
-					<TextField
-						type="number"
-						variant="standard"
-						label="Цена для клиента"
-						value={toViewNumber(budget.projectCost)}
-						onChange={event =>
-							setProjectCost(toViewModelNumber(event.target.value))
-						}
-						sx={projectCostStyle}
-						className={styles.form_control}
-						error={budget.projectCost === undefined}
-					/>
+				<Paper sx={projectCostStyle}>
+					<Form layout="vertical">
+						<Form.Item
+							label="Цена для клиента"
+							style={{margin: 0}}
+						>
+							<InputNumber
+								value={budget.projectCost}
+								onChange={setProjectCost}
+								className={styles.form_control}
+								status={toViewStatus(budget.projectCost === null)}
+							/>
+						</Form.Item>
+					</Form>
 				</Paper>
 				<ClientPaymentsTable
 					clientPayments={budget.clientPayments}
@@ -134,6 +159,7 @@ function Content(props: ContentProps) {
 					type="primary"
 					onClick={updateProjectBudget}
 					style={{margin: '16px 0'}}
+					disabled={!budget.hasChangesInModel || !isValidProjectBudget(budget)}
 				>
                     Сохранить
 				</Button>
