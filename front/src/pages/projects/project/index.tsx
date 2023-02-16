@@ -1,37 +1,32 @@
-import {Autocomplete, Box, Container, TextField} from '@mui/material'
-import {DatePicker} from '@mui/x-date-pickers'
-import {Button} from 'antd'
+import {Button, DatePicker, Form, Input, Select, Space} from 'antd'
+import dayjs, {Dayjs} from 'dayjs'
 import * as React from 'react'
-import {useRef, useState} from 'react'
+import {useState} from 'react'
 import useClients, {Client} from '../../../../api/clients/useClients'
 import completeProject from '../../../../api/projects/completeProject'
 import saveProject from '../../../../api/projects/saveProject'
 import useProject from '../../../../api/projects/useProject'
 import {Project} from '../../../../api/projects/useProjects'
+import {Contract} from '../../../components/Contract'
 import MainLayout from '../../../components/MainLayout'
+
+type ProjectFormData = {
+	name: string
+	address: string
+	dateOfStart: Dayjs | null
+	clientId: number
+	description: string
+}
 
 interface ContentProps {
 	project: Project
 	clients: Client[]
 }
 
-interface ClientOption {
-	id: number
-	label: string
-}
-
-const areClientsEqual = (a: ClientOption, b: ClientOption) => a.id === b.id
-
 function Content({
 	project,
 	clients,
 }: ContentProps) {
-	const nameRef = useRef<HTMLInputElement>(null)
-	const clientIdRef = useRef<number>(project.clientId)
-	const [startDate, setStartDate] = useState(project.dateOfStart || null)
-	const [finishDate, setFinishDate] = useState(project.dateOfFinish || null)
-	const contractRef = useRef<HTMLInputElement>(null)
-	const descriptionRef = useRef<HTMLInputElement>(null)
 	const [isCompleted, setIsCompleted] = useState(project.isCompleted)
 
 	const onCompleteProject = async () => {
@@ -40,56 +35,43 @@ function Content({
 		await completeProject(project.id) // TODO: добавить "вы уверены?"
 	}
 
-	const onSaveProject = async (event?: React.FormEvent<HTMLFormElement>) => {
-		event?.preventDefault()
+	const onSaveProject = async (data: ProjectFormData) => {
 		await saveProject({
 			id: project.id,
-			projectType: nameRef.current!.value,
-			contractNumber: contractRef.current!.value,
-			dateOfStart: startDate,
-			dateOfFinish: finishDate,
-			clientId: clientIdRef.current!,
-			description: descriptionRef.current!.value,
+			contractNumber: project.contractNumber,
+			dateOfFinish: project.dateOfFinish,
+			projectType: data.name,
+			address: data.address,
+			dateOfStart: data.dateOfStart,
+			clientId: data.clientId,
+			description: data.description,
 		})
 	}
 
-	const clientsOptions = clients.map(client => ({
-		label: client.fullName,
-		id: client.id,
-	}))
-
 	return (
-		<Container maxWidth="lg">
-			<Box
-				sx={{
-					display: 'grid',
-					gridTemplate: 'auto / 1fr',
-					maxWidth: '600px',
-					gap: '16px',
-					padding: '20px 0',
+		<Space size={'large'}>
+			<Form
+				name="basic"
+				style={{width: '100%', minWidth: 500, maxWidth: 800}}
+				initialValues={{
+					name: project.projectType,
+					clientId: project.clientId,
+					address: project.address,
+					description: project.description,
+					dateOfApplication: dayjs(),
 				}}
-				component="form"
-				onSubmit={onSaveProject}
+				onFinish={onSaveProject}
+				autoComplete="off"
+				layout="vertical"
 			>
-				<div
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						gap: '24px',
-					}}
-				>
-					<TextField
-						inputRef={nameRef}
-						margin="none"
-						required
+				<Space>
+					<Form.Item
 						label="Тип проекта"
-						autoFocus
-						defaultValue={project.projectType}
-						sx={{
-							width: '100%',
-						}}
-						disabled={isCompleted}
-					/>
+						name="name"
+						rules={[{required: true, message: 'Пожалуйста, введите тип проекта'}]}
+					>
+						<Input autoFocus/>
+					</Form.Item>
 					<Button
 						onClick={() => onCompleteProject()}
 						type="primary"
@@ -97,72 +79,52 @@ function Content({
 					>
 						Завершить
 					</Button>
-				</div>
-				<Autocomplete
-					disablePortal
-					onChange={(event, newValue) => {
-						if (newValue) {
-							clientIdRef.current = newValue.id
+				</Space>
+				<Form.Item
+					label="Клиент"
+					name="clientId"
+					style={{width: '200px'}}
+				>
+					<Select
+						showSearch
+						filterOption={(input, option) =>
+							(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
 						}
-					}}
-					options={clientsOptions}
-					sx={{width: 300}}
-					defaultValue={clientsOptions.find(v => v.id === project.clientId)}
-					renderInput={(params) => <TextField {...params} label="Клиент"/>}
-					isOptionEqualToValue={areClientsEqual}
-					disabled={isCompleted}
-				/>
-				<DatePicker
-					label="Дата начала"
-					value={startDate}
-					onChange={newValue => {
-						if (newValue) {
-							setStartDate(newValue)
-						}
-					}}
-					renderInput={params => <TextField {...params} />}
-					disabled={isCompleted}
-				/>
-				<DatePicker
-					label="Дата планируемого завершения"
-					value={finishDate}
-					onChange={newValue => {
-						if (newValue) {
-							setFinishDate(newValue)
-						}
-					}}
-					renderInput={params => <TextField {...params} />}
-					disabled={isCompleted}
-				/>
-				<TextField
-					inputRef={contractRef}
-					margin="none"
-					required
-					label="Номер контракта"
-					defaultValue={project.contractNumber}
-					disabled={isCompleted}
-				/>
-				<TextField
-					inputRef={descriptionRef}
-					margin="none"
-					label="Описание"
-					multiline
-					minRows={4}
-					maxRows={16}
-					defaultValue={project.description}
-					disabled={isCompleted}
-				/>
-				<div>
-					<Button
-						type="primary"
-						htmlType="submit"
+						options={clients?.map(client => ({
+							label: client.fullName,
+							value: client.id,
+						}))}
 						disabled={project.isCompleted}
-					>
-						Сохранить
-					</Button>
-				</div>
-			</Box>
-		</Container>
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Дата заявки"
+					name="dateOfApplication"
+				>
+					<DatePicker allowClear={false} disabled={project.isCompleted}/>
+				</Form.Item>
+				<Form.Item
+					label="Адрес"
+					name="address"
+				>
+					<Input disabled={project.isCompleted}/>
+				</Form.Item>
+				<Form.Item
+					label="Описание"
+					name="description"
+				>
+					<Input.TextArea autoSize={{minRows: 4, maxRows: 10}} disabled={project.isCompleted}/>
+				</Form.Item>
+				<Button
+					htmlType="submit"
+					type="primary"
+					disabled={project.isCompleted}
+				>
+					Сохранить
+				</Button>
+			</Form>
+			<Contract/>
+		</Space>
 	)
 }
 
@@ -176,9 +138,7 @@ export default function ProjectPage(props: ProjectPageProps) {
 
 	return (
 		<MainLayout projectId={props.projectId}>
-			<Container maxWidth="lg">
-				{project && clients && <Content project={project} clients={clients}/>}
-			</Container>
+			{project && clients && <Content project={project} clients={clients}/>}
 		</MainLayout>
 	)
 }

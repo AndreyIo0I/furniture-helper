@@ -7,6 +7,7 @@ import useAuthenticatedSWR from '../useAuthenticatedSWR'
 export interface Project {
 	id: number
 	projectType: string
+	address: string
 	clientId: number
 	contractNumber: string
 	dateOfStart: Dayjs|null
@@ -18,9 +19,10 @@ export interface Project {
 export const mapProjectDto = (dto: ProjectDto): Project => ({
 	id: dto.id!,
 	projectType: dto.projectType!,
+	address: dto.address!,
 	clientId: dto.clientId!,
 	contractNumber: dto.contractNumber!,
-	dateOfStart: dto.dateOfStart ? dayjs(dto.dateOfStart) : null,
+	dateOfStart: dto.dateOfStart ? dayjs(dto.dateOfApplication) : null,
 	dateOfFinish: dto.deadLine? dayjs(dto.deadLine) : null,
 	description: dto.description!,
 	isCompleted: dto.isCompleted!,
@@ -29,9 +31,10 @@ export const mapProjectDto = (dto: ProjectDto): Project => ({
 export const mapToProjectDto = (project: Project): ProjectDto => ({
 	id: project.id,
 	projectType: project.projectType,
+	address: project.address,
 	clientId: project.clientId,
 	contractNumber: project.contractNumber,
-	dateOfStart: project.dateOfStart?.toISOString(),
+	dateOfApplication: project.dateOfStart?.toISOString(),
 	deadLine: project.dateOfFinish?.toISOString(),
 	description: project.description,
 	isCompleted: project.isCompleted,

@@ -36,7 +36,6 @@ export default function NewClientPopup({
 				name="basic"
 				labelCol={{span: 8}}
 				style={{maxWidth: 600}}
-				initialValues={{remember: true}}
 				onFinish={handleOnSubmit}
 				autoComplete="off"
 				layout="vertical"

@@ -4,9 +4,8 @@ import {makeAuthenticatedReq} from '../useAuthenticatedSWR'
 interface CreateProjectParams {
 	projectType: string
 	address: string
-	contractNumber: string
-	dateOfStart: string
-	deadLine: string
+	contractNumber?: string
+	dateOfApplication: string
 	clientId: number
 	description: string
 }
