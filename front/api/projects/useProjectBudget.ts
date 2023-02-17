@@ -3,7 +3,7 @@ import {projectBudgetApi} from '../api'
 import {ProjectBudgetDto} from '../typescript-fetch-client-generated'
 import useAuthenticatedSWR from '../useAuthenticatedSWR'
 
-interface ClientPayment {
+export interface ClientPayment {
 	paymentDate: Date,
 	amount: number,
 }

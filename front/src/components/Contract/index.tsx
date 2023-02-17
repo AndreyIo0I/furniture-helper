@@ -1,13 +1,37 @@
 import {Card, DatePicker, Form, Input, InputNumber} from 'antd'
+import dayjs from 'dayjs'
 import * as React from 'react'
+import useProject from '../../../api/projects/useProject'
+import useProjectBudget from '../../../api/projects/useProjectBudget'
+import useAccountSettings from '../../../api/useAccountSettings'
 
-export function Contract() {
+type ContractProps = {
+	projectId: number
+}
+
+export function Contract({projectId}: ContractProps) {
+	const {data: project} = useProject(projectId)
+	const {data: budget} = useProjectBudget(projectId)
+	const {data: settings} = useAccountSettings()
+
+	if (!project || !budget || !settings) {
+		return null
+	}
+
+	const startDate = dayjs(budget.clientPayments[0]?.paymentDate ?? project.dateOfStart)
+	const endDate = project.endDate ?? (
+		budget.clientPayments[1]
+			? dayjs(budget.clientPayments[1].paymentDate)
+			: dayjs().add(settings.defaultProjectDurationDays, 'day')
+	)
+
 	return (
-		<Card title="Договор" style={{width: 400}}>
+		<Card title="Договор">
 			<Form.Item
 				label="Номер договора"
 				name="contractNumber"
 				rules={[{required: true}]}
+				initialValue={project.contractNumber}
 			>
 				<Input/>
 			</Form.Item>
@@ -15,6 +39,7 @@ export function Contract() {
 				label="Начало"
 				name="dateOfStart"
 				rules={[{required: true}]}
+				initialValue={startDate}
 			>
 				<DatePicker/>
 			</Form.Item>
@@ -22,6 +47,7 @@ export function Contract() {
 				label="Конец"
 				name="deadLine"
 				rules={[{required: true}]}
+				initialValue={endDate}
 			>
 				<DatePicker/>
 			</Form.Item>
@@ -29,15 +55,49 @@ export function Contract() {
 				label="Цена"
 				name="price"
 				rules={[{required: true}]}
+				initialValue={budget.projectCost}
 			>
 				<InputNumber addonAfter="₽"/>
 			</Form.Item>
 			<Form.Item
 				label="Предоплата"
-				name="clientPayment"
-				rules={[{required: true}]}
 			>
-				<InputNumber addonAfter="₽"/>
+				<Input.Group compact>
+					<Form.Item
+						name="clientPayment1"
+						initialValue={budget.clientPayments[0]?.amount}
+						noStyle
+					>
+						<InputNumber addonAfter="₽"/>
+					</Form.Item>
+					<Form.Item
+						name="clientPayment1Date"
+						initialValue={startDate}
+						noStyle
+					>
+						<DatePicker allowClear={false}/>
+					</Form.Item>
+				</Input.Group>
+			</Form.Item>
+			<Form.Item
+				label="Оплата"
+			>
+				<Input.Group compact>
+					<Form.Item
+						name="clientPayment2"
+						noStyle
+						initialValue={budget.clientPayments[1]?.amount}
+					>
+						<InputNumber addonAfter="₽"/>
+					</Form.Item>
+					<Form.Item
+						name="clientPayment2Date"
+						noStyle
+						initialValue={endDate}
+					>
+						<DatePicker allowClear={false}/>
+					</Form.Item>
+				</Input.Group>
 			</Form.Item>
 		</Card>
 	)
