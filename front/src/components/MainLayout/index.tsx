@@ -1,7 +1,8 @@
 import {ArrowLeftOutlined} from '@ant-design/icons'
-import {Layout, Menu, theme, Button} from 'antd'
+import {Button, Layout, Menu, theme, Typography} from 'antd'
 import {useRouter} from 'next/router'
 import React, {ReactNode} from 'react'
+import useCurrentUser from '../../../api/users/useCurrentUser'
 
 type Route = {
 	label: string
@@ -93,6 +94,8 @@ export default function MainLayout({
 		await router.push('/login')
 	}
 
+	const {data: currentUser} = useCurrentUser()
+
 	return (
 		<Layout style={{height: '100vh'}}>
 			<Layout.Header className="header">
@@ -115,6 +118,14 @@ export default function MainLayout({
 					items={routes}
 					onClick={item => router.push(item.key)}
 				/>
+				<Typography.Text
+					style={{
+						position: 'absolute',
+						right: '40px',
+						top: '20px',
+						color: '#ffffffa6',
+					}}
+				>{currentUser?.email}</Typography.Text>
 			</Layout.Header>
 			<Layout hasSider>
 				<Layout.Sider width={200} style={{background: colorBgContainer}}>
