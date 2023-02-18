@@ -1,15 +1,10 @@
 ## Описание prod среды
 Виртуальный сервер «Dominating Natalia»
 
-IP-адрес:   62.217.179.210
+IP-адрес:   62.217.183.33
 Имя пользователя:   root
 ОС:   Ubuntu 22.04
 Способ авторизации:   Password
-
-Пароль: ? пароль захотел? тут l - букавка 'ай', а не 'эл'
-
-Fingerprint:
-ssh-ed25519 255 SHA256:38sBB0SvPoPTjhEuxlC0agued2uYqiRr+XA0En+RmP4
 
 ## Установка .Net 6 sdk
 *информация на 20.12.22 - сейчас на ubuntu нет .net 7, поэтому качаем 6*
@@ -34,24 +29,28 @@ Host:
 ## Запуск приложения
 
 ### Clone
-cd src/app
+cd src
 git clone https://github.com/AndreyIo0I/furniture-helper
 
 ### Run
 *данная команда нужна только для проверки работы приложения, для реального запуска будем использовать publish*
 
-cd /root/src/app/furniture-helper/back/FurnitureHelper/src/ExtranetAPI
+cd /root/src/furniture-helper/back/FurnitureHelper/src/ExtranetAPI
 dotnet run -c Release
 
 ### Publish
 *компилируем приложение в папку, из которой оно будет развернуто*
 dotnet publish -c Release --runtime ubuntu.22.04-x64 -o /root/srv/FurnitureHelper --self-contained false /p:EnvironmentName=prod
 
+### open port
+ufw allow 5000
+ufw enable
+ufw reload
+
 ### Запуск
+cd /root/src/furniture-helper/back/FurnitureHelper/hosting/linux_raw
 
-cd /root/src/app/furniture-helper/back/FurnitureHelper/hosting/linux_raw
-
-cp FHExtranetAPI.service /etc/system/systemd/FHExtranetAPI.service
+cp FHExtranetAPI.service /etc/systemd/system/FHExtranetAPI.service
 
 systemctl daemon-reload
 
@@ -61,14 +60,13 @@ systemctl status FHExtranetAPI:
 ![ожидаемый результат](./status_result.png)
 
 health check:
-http://62.217.179.210:5000/health
+http://62.217.183.33:5000/health
 
 Если что-то не так, то логи зауска:
 journalctl -u FHExtranetAPI.service -b -n 100 --no-pager
 
 
 ### Выполнение миграций:
-
 После publish:
 
 cd /root/srv/FurnitureHelper
