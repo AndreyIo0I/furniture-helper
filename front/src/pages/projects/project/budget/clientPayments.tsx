@@ -10,12 +10,14 @@ import styles from './styles.module.css'
 interface ClientPaymentsTableProps {
 	clientPayments: model.ClientPayment[]
 	setClientPayments: (clientPayments: model.ClientPayment[]) => void
+	disabled: boolean
 }
 
 interface ClientPaymentProps {
 	payment: model.ClientPayment
 	setPayment: (payment: model.ClientPayment) => void
 	removePayment: () => void
+	disabled: boolean
 }
 
 function ClientPayment(props: ClientPaymentProps) {
@@ -41,6 +43,7 @@ function ClientPayment(props: ClientPaymentProps) {
 					onChange={setAmount}
 					className={styles.form_control}
 					status={toViewStatus(props.payment.amount === null)}
+					disabled={props.disabled}
 				/>
 			</TableCell>
 			<TableCell>
@@ -50,6 +53,7 @@ function ClientPayment(props: ClientPaymentProps) {
 					className={styles.form_control}
 					getPopupContainer={getPopupContainer}
 					status={toViewStatus(props.payment.paymentDate === null)}
+					disabled={props.disabled}
 				/>
 			</TableCell>
 			<TableCell>
@@ -57,6 +61,7 @@ function ClientPayment(props: ClientPaymentProps) {
 					type="link"
 					icon={<DeleteFilled/>}
 					onClick={props.removePayment}
+					disabled={props.disabled}
 				/>
 			</TableCell>
 		</TableRow>
@@ -157,6 +162,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 								onChange={setNewPaymentAmount}
 								className={styles.form_control}
 								status={toViewStatus(newPayment.needsValidation && newPayment.amount === null)}
+								disabled={props.disabled}
 							/>
 						</TableCell>
 						<TableCell>
@@ -166,6 +172,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 								className={styles.form_control}
 								getPopupContainer={getPopupContainer}
 								status={toViewStatus(newPayment.needsValidation && newPayment.paymentDate === null)}
+								disabled={props.disabled}
 							/>
 						</TableCell>
 						<TableCell>
@@ -173,6 +180,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 								type="link"
 								icon={<PlusCircleOutlined/>}
 								onClick={addPayment}
+								disabled={props.disabled}
 							/>
 						</TableCell>
 					</TableRow>
@@ -182,6 +190,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 							payment={payment}
 							setPayment={setPayment}
 							removePayment={() => removePayment(payment.paymentId)}
+							disabled={props.disabled}
 						/>
 					))}
 				</TableBody>

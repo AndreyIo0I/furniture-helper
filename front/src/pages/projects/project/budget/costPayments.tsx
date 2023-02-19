@@ -12,6 +12,7 @@ interface CostPaymentsTableProps {
 	costPayments: model.CostPayment[]
 	setCostPayments: (costPayments: model.CostPayment[]) => void
 	costs: CostType[]
+	disabled: boolean
 }
 
 interface CostSelectProps {
@@ -19,6 +20,7 @@ interface CostSelectProps {
 	costId?: number
 	setCostId: (costId: number) => void
 	costs: CostType[]
+	disabled: boolean
 }
 
 interface CostPaymentProps {
@@ -26,6 +28,7 @@ interface CostPaymentProps {
 	setPayment: (payment: model.CostPayment) => void
 	removePayment: () => void
 	costs: CostType[]
+	disabled: boolean
 }
 
 function CostSelect(props: CostSelectProps) {
@@ -44,6 +47,7 @@ function CostSelect(props: CostSelectProps) {
 			optionFilterProp="label"
 			showSearch
 			status={toViewStatus(props.error)}
+			disabled={props.disabled}
 		/>
 	)
 }
@@ -77,6 +81,7 @@ function CostPayment(props: CostPaymentProps) {
 					costId={props.payment.costId}
 					setCostId={setCostId}
 					costs={props.costs}
+					disabled={props.disabled}
 				/>
 			</TableCell>
 			<TableCell>
@@ -85,6 +90,7 @@ function CostPayment(props: CostPaymentProps) {
 					onChange={setAmount}
 					className={styles.form_control}
 					status={toViewStatus(props.payment.amount === null)}
+					disabled={props.disabled}
 				/>
 			</TableCell>
 			<TableCell>
@@ -94,6 +100,7 @@ function CostPayment(props: CostPaymentProps) {
 					className={styles.form_control}
 					getPopupContainer={getPopupContainer}
 					status={toViewStatus(props.payment.paymentDate === null)}
+					disabled={props.disabled}
 				/>
 			</TableCell>
 			<TableCell>
@@ -101,6 +108,7 @@ function CostPayment(props: CostPaymentProps) {
 					type="link"
 					icon={<DeleteFilled/>}
 					onClick={props.removePayment}
+					disabled={props.disabled}
 				/>
 			</TableCell>
 		</TableRow>
@@ -211,6 +219,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 								costId={newPayment.costId}
 								setCostId={setNewPaymentCostId}
 								costs={props.costs}
+								disabled={props.disabled}
 							/>
 						</TableCell>
 						<TableCell>
@@ -219,6 +228,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 								onChange={setNewPaymentAmount}
 								className={styles.form_control}
 								status={toViewStatus(newPayment.needsValidation && newPayment.amount === null)}
+								disabled={props.disabled}
 							/>
 						</TableCell>
 						<TableCell>
@@ -228,6 +238,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 								className={styles.form_control}
 								getPopupContainer={getPopupContainer}
 								status={toViewStatus(newPayment.needsValidation && newPayment.paymentDate === null)}
+								disabled={props.disabled}
 							/>
 						</TableCell>
 						<TableCell>
@@ -235,6 +246,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 								type="link"
 								icon={<PlusCircleOutlined/>}
 								onClick={addPayment}
+								disabled={props.disabled}
 							/>
 						</TableCell>
 					</TableRow>
@@ -245,6 +257,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 							setPayment={setPayment}
 							removePayment={() => removePayment(payment.paymentId)}
 							costs={props.costs}
+							disabled={props.disabled}
 						/>
 					))}
 				</TableBody>
