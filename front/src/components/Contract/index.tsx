@@ -7,9 +7,10 @@ import useAccountSettings from '../../../api/useAccountSettings'
 
 type ContractProps = {
 	projectId: number
+	disabled: boolean
 }
 
-export function Contract({projectId}: ContractProps) {
+export function Contract({projectId, disabled}: ContractProps) {
 	const {data: project} = useProject(projectId)
 	const {data: budget} = useProjectBudget(projectId)
 	const {data: settings} = useAccountSettings()
@@ -33,7 +34,7 @@ export function Contract({projectId}: ContractProps) {
 				rules={[{required: true}]}
 				initialValue={project.contractNumber}
 			>
-				<Input/>
+				<Input disabled={disabled}/>
 			</Form.Item>
 			<Form.Item
 				label="Начало"
@@ -41,7 +42,7 @@ export function Contract({projectId}: ContractProps) {
 				rules={[{required: true}]}
 				initialValue={startDate}
 			>
-				<DatePicker/>
+				<DatePicker disabled={disabled}/>
 			</Form.Item>
 			<Form.Item
 				label="Конец"
@@ -49,7 +50,7 @@ export function Contract({projectId}: ContractProps) {
 				rules={[{required: true}]}
 				initialValue={endDate}
 			>
-				<DatePicker/>
+				<DatePicker disabled={disabled}/>
 			</Form.Item>
 			<Form.Item
 				label="Цена"
@@ -57,7 +58,7 @@ export function Contract({projectId}: ContractProps) {
 				rules={[{required: true}]}
 				initialValue={budget.projectCost}
 			>
-				<InputNumber addonAfter="₽"/>
+				<InputNumber addonAfter="₽" disabled={disabled}/>
 			</Form.Item>
 			<Form.Item
 				label="Предоплата"
@@ -68,14 +69,14 @@ export function Contract({projectId}: ContractProps) {
 						initialValue={budget.clientPayments[0]?.amount}
 						noStyle
 					>
-						<InputNumber addonAfter="₽"/>
+						<InputNumber addonAfter="₽" disabled={disabled}/>
 					</Form.Item>
 					<Form.Item
 						name="clientPayment1Date"
 						initialValue={startDate}
 						noStyle
 					>
-						<DatePicker allowClear={false}/>
+						<DatePicker allowClear={false} disabled={disabled}/>
 					</Form.Item>
 				</Input.Group>
 			</Form.Item>
@@ -88,14 +89,14 @@ export function Contract({projectId}: ContractProps) {
 						noStyle
 						initialValue={budget.clientPayments[1]?.amount}
 					>
-						<InputNumber addonAfter="₽"/>
+						<InputNumber addonAfter="₽" disabled={disabled}/>
 					</Form.Item>
 					<Form.Item
 						name="clientPayment2Date"
 						noStyle
 						initialValue={endDate}
 					>
-						<DatePicker allowClear={false}/>
+						<DatePicker allowClear={false} disabled={disabled}/>
 					</Form.Item>
 				</Input.Group>
 			</Form.Item>

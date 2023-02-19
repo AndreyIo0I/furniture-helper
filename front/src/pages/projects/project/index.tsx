@@ -45,7 +45,7 @@ function Content({
 	clients,
 	budget,
 }: ContentProps) {
-	const [isCompleted, setIsCompleted] = useState(project.isCompleted)
+	const [isCompleted, setIsCompleted] = useState(!!project.isCompleted)
 	const [withContract, setWithContract] = useState(!!project.contractNumber)
 
 	const onSaveProject = (data: ProjectFormData) => {
@@ -116,18 +116,18 @@ function Content({
 							name="name"
 							rules={[{required: true, message: 'Пожалуйста, введите тип проекта'}]}
 						>
-							<Input autoFocus/>
+							<Input disabled={isCompleted} autoFocus/>
 						</Form.Item>
 						<Popconfirm
 							placement="right"
 							title={'Редактирование проекта будет недоступно после завершения'}
 							onConfirm={() => setIsCompleted(true)}
-							okText="Завершить"
+							okText="Ок"
 							cancelText="Отмена"
 						>
 							<Button
 								type="primary"
-								disabled={project.isCompleted}
+								disabled={isCompleted}
 							>
 								Завершить
 							</Button>
@@ -147,36 +147,36 @@ function Content({
 								label: client.fullName,
 								value: client.id,
 							}))}
-							disabled={project.isCompleted}
+							disabled={isCompleted}
 						/>
 					</Form.Item>
 					<Form.Item
 						label="Дата заявки"
 						name="dateOfApplication"
 					>
-						<DatePicker allowClear={false} disabled={project.isCompleted}/>
+						<DatePicker allowClear={false} disabled={isCompleted}/>
 					</Form.Item>
 					<Form.Item
 						label="Адрес"
 						name="address"
 					>
-						<Input disabled={project.isCompleted}/>
+						<Input disabled={isCompleted}/>
 					</Form.Item>
 					<Form.Item
 						label="Описание"
 						name="description"
 					>
-						<Input.TextArea autoSize={{minRows: 4, maxRows: 10}} disabled={project.isCompleted}/>
+						<Input.TextArea autoSize={{minRows: 4, maxRows: 10}} disabled={isCompleted}/>
 					</Form.Item>
 				</Col>
 				<Col flex={2}>
 					<Form.Item>
 						{withContract
 							? (
-								<Contract projectId={project.id}/>
+								<Contract projectId={project.id} disabled={isCompleted}/>
 							)
 							: (
-								<Button onClick={() => setWithContract(true)}>
+								<Button onClick={() => setWithContract(true)} disabled={isCompleted}>
 									Добавить договор
 								</Button>
 							)}
@@ -187,7 +187,7 @@ function Content({
 				<Button
 					htmlType="submit"
 					type="primary"
-					disabled={project.isCompleted}
+					disabled={!!project.isCompleted}
 				>
 					Сохранить
 				</Button>
