@@ -1,4 +1,4 @@
-import {Button, Col, DatePicker, Form, Input, message, Popconfirm, Row, Select, Space} from 'antd'
+import {Button, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Space} from 'antd'
 import {Dayjs} from 'dayjs'
 import * as React from 'react'
 import {useState} from 'react'
@@ -15,11 +15,12 @@ import useProjectBudget, {ClientPayment, ProjectBudget} from '../../../../api/pr
 import {Project} from '../../../../api/projects/useProjects'
 import {Contract} from '../../../components/Contract'
 import MainLayout from '../../../components/MainLayout'
+import {saveChangesWithMsg} from '../../../saveChangesWithMsg'
 
 type ProjectFormData = {
 	name: string
 	address: string
-	dateOfApplication: Dayjs|null
+	dateOfApplication: Dayjs | null
 	clientId: number
 	description: string
 } & ({
@@ -47,49 +48,50 @@ function Content({
 	const [isCompleted, setIsCompleted] = useState(project.isCompleted)
 	const [withContract, setWithContract] = useState(!!project.contractNumber)
 
-	const onSaveProject = async (data: ProjectFormData) => {
-		await saveProject({
-			...project,
-			projectType: data.name,
-			address: data.address,
-			dateOfStart: data.dateOfApplication,
-			clientId: data.clientId,
-			description: data.description,
+	const onSaveProject = (data: ProjectFormData) => {
+		saveChangesWithMsg(async () => {
+			await saveProject({
+				...project,
+				projectType: data.name,
+				address: data.address,
+				dateOfStart: data.dateOfApplication,
+				clientId: data.clientId,
+				description: data.description,
+			})
+
+			if (data.contractNumber) {
+				const clientPayments: ClientPayment[] = []
+
+				if (data.clientPayment1) {
+					clientPayments.push({
+						amount: data.clientPayment1,
+						paymentDate: data.clientPayment1Date.toDate(),
+					})
+				}
+				if (data.clientPayment2) {
+					clientPayments.push({
+						amount: data.clientPayment2,
+						paymentDate: data.clientPayment2Date.toDate(),
+					})
+				}
+
+				await Promise.all([
+					contractNumber(project.id, data.contractNumber),
+					startDate(project.id, data.dateOfStart.toDate()),
+					deadline(project.id, data.deadLine.toDate()),
+					data.clientPayment2 && endDate(project.id, data.clientPayment2Date.toDate()),
+					saveProjectBudget({
+						...budget,
+						projectCost: data.price,
+						clientPayments: clientPayments,
+					}),
+				])
+			}
+
+			if (isCompleted) {
+				await completeProject(project.id)
+			}
 		})
-
-		if (data.contractNumber) {
-			const clientPayments: ClientPayment[] = []
-
-			if (data.clientPayment1) {
-				clientPayments.push({
-					amount: data.clientPayment1,
-					paymentDate: data.clientPayment1Date.toDate(),
-				})
-			}
-			if (data.clientPayment2) {
-				clientPayments.push({
-					amount: data.clientPayment2,
-					paymentDate: data.clientPayment2Date.toDate(),
-				})
-			}
-
-			await Promise.all([
-				contractNumber(project.id, data.contractNumber),
-				startDate(project.id, data.dateOfStart.toDate()),
-				deadline(project.id, data.deadLine.toDate()),
-				data.clientPayment2 && endDate(project.id, data.clientPayment2Date.toDate()),
-				saveProjectBudget({
-					...budget,
-					projectCost: data.price,
-					clientPayments: clientPayments,
-				}),
-			])
-		}
-
-		if (isCompleted) {
-			await completeProject(project.id)
-		}
-		message.success('Изменения успешно сохранены')
 	}
 
 	return (

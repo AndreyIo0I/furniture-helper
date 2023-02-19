@@ -1,11 +1,12 @@
 import {Container, Paper, SxProps} from '@mui/material'
-import {Button, Form, InputNumber, message} from 'antd'
+import {Button, Form, InputNumber} from 'antd'
 import dayjs from 'dayjs'
 import React from 'react'
 import useCostTypes, {CostType} from '../../../../../api/costTypes/useCostTypes'
 import saveProjectBudget from '../../../../../api/projects/saveProjectBudget'
 import useProjectBudget, {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
 import MainLayout from '../../../../components/MainLayout'
+import {saveChangesWithMsg} from '../../../../saveChangesWithMsg'
 import ClientPaymentsTable from './clientPayments'
 import {formStyle, pageContainerId, toApiModelDate, toApiModelNumber, toViewStatus} from './common'
 import CostPaymentsTable from './costPayments'
@@ -76,8 +77,8 @@ function Content(props: ContentProps) {
 		setBudget(mapToProjectBudgetViewModel(apiProjectBudget))
 	}
 
-	async function updateProjectBudget() {
-		try {
+	function updateProjectBudget() {
+		saveChangesWithMsg(async () => {
 			let apiProjectBudget = mapToApiProjectBudget(budget!, props.projectId)
 			await saveProjectBudget(apiProjectBudget)
 			mutate(apiProjectBudget)
@@ -85,11 +86,7 @@ function Content(props: ContentProps) {
 				...budget!,
 				hasChangesInModel: false,
 			})
-			message.success('Изменения успешно сохранены')
-		} catch (err) {
-			console.error(err)
-			message.error('Не удалось сохранить изменения')
-		}
+		})
 	}
 
 	function setProjectCost(projectCost: number | null) {
@@ -121,43 +118,43 @@ function Content(props: ContentProps) {
 			projectId={props.projectId}
 		>
 			{budget && <Container
-				id={pageContainerId}
-				style={{position: 'relative'}}
-				maxWidth="lg"
-			>
-				<Paper sx={projectCostStyle}>
-					<Form layout="vertical">
-						<Form.Item
-							label="Цена для клиента"
-							style={{margin: 0}}
-						>
-							<InputNumber
-								value={budget.projectCost}
-								onChange={setProjectCost}
-								className={styles.form_control}
-								status={toViewStatus(budget.projectCost === null)}
-							/>
-						</Form.Item>
-					</Form>
-				</Paper>
-				<ClientPaymentsTable
-					clientPayments={budget.clientPayments}
-					setClientPayments={setClientPayments}
-				/>
-				<CostPaymentsTable
-					costPayments={budget.costPayments}
-					setCostPayments={setCostPayments}
-					costs={props.costTypes}
-				/>
-				<Button
-					type="primary"
-					onClick={updateProjectBudget}
-					style={{margin: '16px 0'}}
-					disabled={!budget.hasChangesInModel || !isValidProjectBudget(budget)}
-				>
+                id={pageContainerId}
+                style={{position: 'relative'}}
+                maxWidth="lg"
+            >
+                <Paper sx={projectCostStyle}>
+                    <Form layout="vertical">
+                        <Form.Item
+                            label="Цена для клиента"
+                            style={{margin: 0}}
+                        >
+                            <InputNumber
+                                value={budget.projectCost}
+                                onChange={setProjectCost}
+                                className={styles.form_control}
+                                status={toViewStatus(budget.projectCost === null)}
+                            />
+                        </Form.Item>
+                    </Form>
+                </Paper>
+                <ClientPaymentsTable
+                    clientPayments={budget.clientPayments}
+                    setClientPayments={setClientPayments}
+                />
+                <CostPaymentsTable
+                    costPayments={budget.costPayments}
+                    setCostPayments={setCostPayments}
+                    costs={props.costTypes}
+                />
+                <Button
+                    type="primary"
+                    onClick={updateProjectBudget}
+                    style={{margin: '16px 0'}}
+                    disabled={!budget.hasChangesInModel || !isValidProjectBudget(budget)}
+                >
                     Сохранить
-				</Button>
-			</Container>}
+                </Button>
+            </Container>}
 		</MainLayout>
 	)
 }
