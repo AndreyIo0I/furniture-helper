@@ -10,6 +10,11 @@ namespace Infrastructure.Repositories
         {
         }
 
+        public async Task<List<ProjectStage>> GetByProjectIds(List<int> projectIds)
+        {
+            return await Entities.Where(x => projectIds.Contains(x.ProjectId)).ToListAsync();
+        }
+
         public async Task<ProjectStage> Get( int id, int projectId )
         {
             return await Entities.FirstOrDefaultAsync( x => x.Id == id && x.ProjectId == projectId );
