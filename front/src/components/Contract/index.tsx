@@ -19,7 +19,7 @@ export function Contract({projectId, disabled}: ContractProps) {
 		return null
 	}
 
-	const startDate = dayjs(budget.clientPayments[0]?.paymentDate ?? project.dateOfStart)
+	const startDate = dayjs(budget.clientPayments[0]?.paymentDate || project.dateOfStart || dayjs())
 	const endDate = project.endDate ?? (
 		budget.clientPayments[1]
 			? dayjs(budget.clientPayments[1].paymentDate)
