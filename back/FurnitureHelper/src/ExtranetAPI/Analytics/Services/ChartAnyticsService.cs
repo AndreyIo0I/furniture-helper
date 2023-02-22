@@ -58,14 +58,14 @@ public class ChartAnyticsService: IChartAnyticsService
     private async Task<List<ChartItemDto>> ProjectsDataByDays( Period period )
     {
         Dictionary<DateTime, List<int>> projectsByDate =
-            _projects.GroupBy(x => x.EndDate)
-                .ToDictionary(x => x.Key.Value, x => x.Select(x => x.Id).ToList());
+            _projects.GroupBy(x => x.EndDate.Value.Date)
+                .ToDictionary(x => x.Key, x => x.Select(x => x.Id).ToList());
 
         Dictionary<DateTime, decimal> projectDataByDate = new Dictionary<DateTime, decimal>();
         
         foreach (var projectByDate in projectsByDate)
         {
-            decimal value = await _projectsDataCollector.GetValueForProjects(projectByDate.Value);
+            decimal value = await _projectsDataCollector.GetValueForProjects(projectByDate.Value, new Period(projectByDate.Key, projectByDate.Key.AddDays(1)));
             
             projectDataByDate.Add( projectByDate.Key, value );
         }
@@ -80,14 +80,14 @@ public class ChartAnyticsService: IChartAnyticsService
     private async Task<List<ChartItemWeeksDto>> ProjectCostByWeeks( Period period )
     {
         Dictionary<Period, List<int>> projectsByDate =
-            _projects.GroupBy( x => x.EndDate.Value.Week())
+            _projects.GroupBy( x => x.EndDate.Value.Date.Week())
                 .ToDictionary(x => x.Key, x => x.Select(x => x.Id).ToList());
 
         Dictionary<Period, decimal> projectCostsByDate = new Dictionary<Period, decimal>();
 
         foreach (var projectByDate in projectsByDate)
         {
-            decimal value = await _projectsDataCollector.GetValueForProjects(projectByDate.Value);
+            decimal value = await _projectsDataCollector.GetValueForProjects(projectByDate.Value, projectByDate.Key);
             
             projectCostsByDate.Add( projectByDate.Key, value );
         }
@@ -115,7 +115,11 @@ public class ChartAnyticsService: IChartAnyticsService
 
         foreach (var projectByDate in projectsByDate)
         {
-            decimal value = await _projectsDataCollector.GetValueForProjects(projectByDate.Value);
+            decimal value = await _projectsDataCollector.GetValueForProjects(
+                projectByDate.Value,
+                new Period(
+                    projectByDate.Key,
+                    projectByDate.Key.AddMonths(1)));
             
             projectCostsByDate.Add( projectByDate.Key, value );
         }
@@ -142,7 +146,11 @@ public class ChartAnyticsService: IChartAnyticsService
 
         foreach (var projectByDate in projectsByDate)
         {
-            decimal value = await _projectsDataCollector.GetValueForProjects(projectByDate.Value);
+            decimal value = await _projectsDataCollector.GetValueForProjects(
+                projectByDate.Value,
+                new Period(
+                    new DateTime(projectByDate.Key, 1, 1),
+                    new DateTime(projectByDate.Key + 1, 1, 1)));
             
             projectCostsByDate.Add( projectByDate.Key, value );
         }

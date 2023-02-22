@@ -1,4 +1,5 @@
 ﻿using Domain.ProjectManagement;
+using ExtranetAPI.Models;
 
 namespace ExtranetAPI.Analytics.Services.ChartAnalytics;
 
@@ -15,7 +16,7 @@ public class ProjectsKTwoCollector: IProjectsDataCollector
         _analyticsService = analyticsService;
     }
     
-    public async Task<decimal> GetValueForProjects(List<int> projectsIds)
+    public async Task<decimal> GetValueForProjects(List<int> projectsIds, Period? period = null)
     {
         IReadOnlyList<ProjectBudget> projectBudgets = await _projectBudgetRepository.GetByProjectIds(projectsIds);
         

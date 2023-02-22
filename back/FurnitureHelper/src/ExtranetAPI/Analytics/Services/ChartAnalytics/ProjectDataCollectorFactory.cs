@@ -35,6 +35,8 @@ public class ProjectDataCollectorFactory: IProjectDataCollectorFactory
                 return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectInstallationCollector));
             case ChartType.Payment:
                 return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectPaymentCollector));
+            case ChartType.Profit:
+                return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectProfitCollector));
             default:
                 throw new ArgumentOutOfRangeException("Invalid chart type");
         }

@@ -1,4 +1,6 @@
-﻿namespace ExtranetAPI.Analytics.Services.ChartAnalytics;
+﻿using ExtranetAPI.Models;
+
+namespace ExtranetAPI.Analytics.Services.ChartAnalytics;
 
 public class ProjectInstallationCollector: IProjectsDataCollector
 {
@@ -9,7 +11,7 @@ public class ProjectInstallationCollector: IProjectsDataCollector
         _projectStageCalculator = projectStageCalculator;
     }
 
-    public async Task<decimal> GetValueForProjects( List<int> projectsIds )
+    public async Task<decimal> GetValueForProjects( List<int> projectsIds, Period? period = null )
     {
         return await _projectStageCalculator.CalculateStage(projectsIds, "Installation");
     }

@@ -11,5 +11,6 @@ public enum ChartType
     Contract = 6,
     Assembly = 7,
     Installation = 8,
-    Payment = 9
+    Payment = 9,
+    Profit = 10
 }
