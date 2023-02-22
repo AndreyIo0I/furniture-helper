@@ -6,5 +6,10 @@ public enum ChartType
     Cost = 1,
     Margin = 2,
     K1 = 3,
-    K2 = 4
+    K2 = 4,
+    Calculation = 5,
+    Contract = 6,
+    Assembly = 7,
+    Installation = 8,
+    Payment = 9
 }

@@ -25,6 +25,16 @@ public class ProjectDataCollectorFactory: IProjectDataCollectorFactory
                 return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectsKOneCollector));
             case ChartType.K2:
                 return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectsKTwoCollector));
+            case ChartType.Assembly:
+                return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectAssemblyCollector));
+            case ChartType.Calculation:
+                return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectCalculationCollector));
+            case ChartType.Contract: 
+                return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectContractCollector));
+            case ChartType.Installation:
+                return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectInstallationCollector));
+            case ChartType.Payment:
+                return (IProjectsDataCollector)_serviceProvider.GetService(typeof(ProjectPaymentCollector));
             default:
                 throw new ArgumentOutOfRangeException("Invalid chart type");
         }

@@ -11,7 +11,7 @@ export default function NumericalIndicatorsComponent(props: NumericalIndicators)
 		<Card title="Числовые показатели" bordered={false} style={{width: '100%'}}>
 			<div className={styles.cardItemListWrapper}>
 				<div className={styles.cartItemWrapper}>
-					<span className={styles.cardItem}>Средний чек: {prepareRenderValue(props.averageCheck)} ₽</span>
+					<span className={styles.cardItem}>Средний чек: {prepareRenderValue(props.averageCheck?.toFixed(1))} ₽</span>
 				</div>
 				<div className={styles.cartItemWrapper}>
 					<span

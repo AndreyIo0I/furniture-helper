@@ -14,6 +14,7 @@ public static class ExtranetApiBindings
             .AddScoped<IAuthentificationService, AuthentificationService>()
             .AddScoped<IAnalyticsService, AnalyticsService>()
             .AddScoped<IUserBuilder, UserBuilder>()
+            .AddScoped<IProjectStageCalculator, ProjectStageCalculator>()
             .AddScoped<IPasswordCryptionService, PasswordCryptionService>(
                 sp => new PasswordCryptionService(securityKey))
             .AddScoped<IProjectSummaryBuilder, ProjectSummaryBuilder>()
@@ -35,6 +36,22 @@ public static class ExtranetApiBindings
                 s.GetService<ProjectsKOneCollector>())
             .AddScoped<ProjectsKTwoCollector>()
             .AddScoped<IProjectsDataCollector, ProjectsKTwoCollector>(s =>
-                s.GetService<ProjectsKTwoCollector>());
+                s.GetService<ProjectsKTwoCollector>())
+            .AddScoped<ProjectAssemblyCollector>()
+            .AddScoped<IProjectsDataCollector, ProjectAssemblyCollector>(s =>
+                s.GetService<ProjectAssemblyCollector>())
+            .AddScoped<ProjectCalculationCollector>()
+            .AddScoped<IProjectsDataCollector, ProjectCalculationCollector>(s =>
+                s.GetService<ProjectCalculationCollector>())
+            .AddScoped<ProjectContractCollector>()
+            .AddScoped<IProjectsDataCollector, ProjectContractCollector>(s =>
+                s.GetService<ProjectContractCollector>())
+            .AddScoped<ProjectInstallationCollector>()
+            .AddScoped<IProjectsDataCollector, ProjectInstallationCollector>(s =>
+                s.GetService<ProjectInstallationCollector>())
+            .AddScoped<ProjectPaymentCollector>()
+            .AddScoped<IProjectsDataCollector, ProjectPaymentCollector>(s =>
+                s.GetService<ProjectPaymentCollector>());
+
     }
 }

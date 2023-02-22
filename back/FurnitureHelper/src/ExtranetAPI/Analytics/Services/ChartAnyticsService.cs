@@ -31,9 +31,9 @@ public class ChartAnyticsService: IChartAnyticsService
             case ChartPeriodType.ByDays:
                 return await ProjectsDataByDays( period );
             case ChartPeriodType.ByMonths:
-                return await ProjectCostByMonths(period);
+                return await ProjectCostByMonths( period );
             case ChartPeriodType.ByYears:
-                return await ProjectCostByYears(period);
+                return await ProjectCostByYears( period );
             default:
                 throw new ArgumentOutOfRangeException( "Invalid chart period type" );
         }

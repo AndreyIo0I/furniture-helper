@@ -12,7 +12,7 @@ interface CharComponentProps {
 
 export interface ChartDataItem {
 	name: string,
-	value: number
+	value: string
 }
 
 
@@ -27,7 +27,7 @@ function CustomizedAxisTick(props: any) {
 	)
 }
 
-function resolveChartKindName(chartKind: ChartKind): string {
+export function resolveChartKindName(chartKind: ChartKind): string {
 	switch (chartKind) {
 		case ChartKind.Revenue:
 			return 'Выручка'
@@ -39,6 +39,16 @@ function resolveChartKindName(chartKind: ChartKind): string {
 			return 'K1'
 		case ChartKind.K2:
 			return 'K2'
+		case ChartKind.Calculation:
+			return 'Расчеты'
+		case ChartKind.Contract:
+			return 'Договора'
+		case ChartKind.Assembly:
+			return 'Сборки'
+		case ChartKind.Installation:
+			return 'Установки'
+		case ChartKind.Payment:
+			return 'Оплаты'
 		default:
 			return 'Unknown'
 	}
@@ -56,25 +66,28 @@ export default function ChartComponent(props: CharComponentProps) {
 	}
 
 	return (
-		<ResponsiveContainer width="100%" height="56%">
-			<BarChart
-				width={500}
-				height={300}
-				data={props.data}
-				margin={{
-					top: 20,
-					right: 30,
-					left: 20,
-					bottom: 10,
-				}}
-			>
-				<CartesianGrid strokeDasharray="3 3"/>
-				<XAxis dataKey="name" height={60} allowDataOverflow={true} angle={90} interval={0}
-					   tick={<CustomizedAxisTick/>}/>
-				<YAxis/>
-				<Tooltip/>
-				<Bar dataKey="value" fill="#8884d8"/>
-			</BarChart>
-		</ResponsiveContainer>
+		<>
+			<h4>{resolveChartKindName(props.chartKind)}</h4>
+			<ResponsiveContainer width="100%" height="56%" >
+				<BarChart
+					width={500}
+					height={300}
+					data={props.data}
+					margin={{
+						top: 20,
+						right: 30,
+						left: 20,
+						bottom: 10,
+					}}
+				>
+					<CartesianGrid strokeDasharray="3 3"/>
+					<XAxis dataKey="name" height={60} allowDataOverflow={true} angle={90} interval={0}
+						   tick={<CustomizedAxisTick/>}/>
+					<YAxis/>
+					<Tooltip/>
+					<Bar dataKey="value" fill="#8884d8"/>
+				</BarChart>
+			</ResponsiveContainer>
+		</>
 	)
 }

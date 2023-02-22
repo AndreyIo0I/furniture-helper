@@ -15,7 +15,7 @@ import {
 	PeriodItem,
 	PeriodParams,
 } from '../../../api/useAnalytics'
-import ChartComponent, {ChartDataItem} from '../../components/Analytics/Chart'
+import ChartComponent, {ChartDataItem, resolveChartKindName} from '../../components/Analytics/Chart'
 import NumericalIndicatorsComponent from '../../components/Analytics/NumericalIndicators'
 import MainLayout from '../../components/MainLayout'
 import styles from './styles.module.css'
@@ -34,27 +34,28 @@ export enum ChartKind {
 	Cost = 1,
 	Margin = 2,
 	K1 = 3,
-	K2 = 4
+	K2 = 4,
+	Calculation = 5,
+	Contract = 6,
+	Assembly = 7,
+	Installation = 8,
+	Payment = 9
 }
 
-const renderDatePicker = (discretenessKind: Discreteness, onRangeChange: (dates: null | (Dayjs | null)[], dateStrings: string[]) => void) => {
+const renderDatePicker = (discretenessKind: Discreteness, startDate: Dayjs, endDate: Dayjs, onRangeChange: (dates: null | (Dayjs | null)[], dateStrings: string[]) => void) => {
 	return (
 		<>
-			{discretenessKind === Discreteness.Day && <RangePicker onChange={onRangeChange}/>}
-			{discretenessKind === Discreteness.Week && <RangePicker onChange={onRangeChange} picker="week"/>}
-			{discretenessKind === Discreteness.Month && <RangePicker onChange={onRangeChange} picker="month"/>}
-			{discretenessKind === Discreteness.Year && <RangePicker onChange={onRangeChange} picker="year"/>}
+			{discretenessKind === Discreteness.Day && <RangePicker onChange={onRangeChange} defaultValue={[startDate, endDate]}/>}
+			{discretenessKind === Discreteness.Week && <RangePicker onChange={onRangeChange} defaultValue={[startDate, endDate]} picker="week"/>}
+			{discretenessKind === Discreteness.Month && <RangePicker onChange={onRangeChange} defaultValue={[startDate, endDate]} picker="month"/>}
+			{discretenessKind === Discreteness.Year && <RangePicker onChange={onRangeChange} defaultValue={[startDate, endDate]} picker="year"/>}
 		</>
 	)
 }
 
-const convertToMonthChartTypeName = (date: Dayjs): string => {
-	return `${date.format('MMM')} ${date.get('year')}`
-}
-
 export default function AnalyticsPage() {
-	const dateOfStart = useRef<Dayjs>(dayjs())
-	const endDate = useRef<Dayjs>(dayjs())
+	const dateOfStart = useRef<Dayjs>(dayjs().add(-1, 'month'))
+	const endDate = useRef<Dayjs>(dayjs().add(1, 'month'))
 	const [discretenessKind, setDiscretenessKind] = useState<Discreteness>(Discreteness.Day)
 	const [chartKind, setChartKind] = useState<ChartKind>(ChartKind.Revenue)
 
@@ -95,8 +96,9 @@ export default function AnalyticsPage() {
 		setChartKind(value)
 	}
 
-	useEffect(() => {
-	}, [discretenessKind])
+	useEffect( () => {
+		 analyzeOnClickHandler()
+	}, [discretenessKind, chartKind])
 
 	const createPeriodParams = (): PeriodParams => {
 		return {
@@ -136,18 +138,28 @@ export default function AnalyticsPage() {
 				return ChartType.NUMBER_3
 			case ChartKind.K2:
 				return ChartType.NUMBER_4
+			case ChartKind.Calculation:
+				return ChartType.NUMBER_5
+			case ChartKind.Contract:
+				return ChartType.NUMBER_6
+			case ChartKind.Assembly:
+				return ChartType.NUMBER_7
+			case ChartKind.Installation:
+				return ChartType.NUMBER_8
+			case ChartKind.Payment:
+				return ChartType.NUMBER_9
 		}
 	}
 
 	const mapChartItemToChartDataItem = (item: ChartItem): ChartDataItem => {
-		const value = item.value
+		const value = item.value.toFixed(2)
 		const name = mapChartItemDateToName(item.date)
 
 		return {name, value}
 	}
 
 	const mapChartItemWeeksToChartDataItem = (item: ChartItemWeeks): ChartDataItem => {
-		const value = item.value
+		const value = item.value.toFixed(2)
 		const name = mapChartItemPeriodToName(item.period)
 
 		return {name, value}
@@ -186,7 +198,7 @@ export default function AnalyticsPage() {
 					<div className={styles.panelControlsWrapper}>
 						<div>
 							<div
-								className={styles.dateWrapperDatePicker}>{renderDatePicker(discretenessKind, onRangeChange)}</div>
+								className={styles.dateWrapperDatePicker}>{renderDatePicker(discretenessKind, dateOfStart.current, endDate.current, onRangeChange)}</div>
 							<div>
 								<Radio.Group onChange={onChangeRadio} value={discretenessKind}>
 									<Radio value={Discreteness.Day}>Д</Radio>
@@ -203,11 +215,16 @@ export default function AnalyticsPage() {
 								style={{width: 200}}
 								onChange={onChartKindChange}
 								options={[
-									{value: ChartKind.Revenue, label: 'Выручка'},
-									{value: ChartKind.Cost, label: 'Себестоимость'},
-									{value: ChartKind.Margin, label: 'Маржа'},
-									{value: ChartKind.K1, label: 'K1'},
-									{value: ChartKind.K2, label: 'K2'},
+									{value: ChartKind.Revenue, label: resolveChartKindName(ChartKind.Revenue)},
+									{value: ChartKind.Cost, label: resolveChartKindName(ChartKind.Cost)},
+									{value: ChartKind.Margin, label: resolveChartKindName(ChartKind.Margin)},
+									{value: ChartKind.K1, label: resolveChartKindName(ChartKind.K1)},
+									{value: ChartKind.K2, label: resolveChartKindName(ChartKind.K2)},
+									{value: ChartKind.Calculation, label: resolveChartKindName(ChartKind.Calculation)},
+									{value: ChartKind.Contract, label: resolveChartKindName(ChartKind.Contract)},
+									{value: ChartKind.Assembly, label: resolveChartKindName(ChartKind.Assembly)},
+									{value: ChartKind.Installation, label: resolveChartKindName(ChartKind.Installation)},
+									{value: ChartKind.Payment, label: resolveChartKindName(ChartKind.Payment)},
 								]}
 							/>
 						</div>
