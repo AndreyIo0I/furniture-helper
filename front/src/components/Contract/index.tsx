@@ -1,16 +1,65 @@
 import {Card, DatePicker, Form, Input, InputNumber} from 'antd'
-import dayjs from 'dayjs'
-import * as React from 'react'
+import dayjs, {Dayjs} from 'dayjs'
+import contractNumber from '../../../api/projects/contractNumber'
+import deadline from '../../../api/projects/deadline'
+import endDate from '../../../api/projects/endDate'
+import saveProjectBudget from '../../../api/projects/saveProjectBudget'
+import startDate from '../../../api/projects/startDate'
 import useProject from '../../../api/projects/useProject'
-import useProjectBudget from '../../../api/projects/useProjectBudget'
+import useProjectBudget, {ClientPayment, ProjectBudget} from '../../../api/projects/useProjectBudget'
 import useAccountSettings from '../../../api/useAccountSettings'
+
+export interface ContractForm {
+	contractNumber: string
+	dateOfStart: Dayjs | null
+	deadLine: Dayjs | null
+	price: number | null
+	clientPayment1?: number | null
+	clientPayment1Date: Dayjs
+	clientPayment2?: number | null
+	clientPayment2Date: Dayjs
+}
+
+export async function saveBudget(data: ContractForm, projectId: number, budget: ProjectBudget) {
+	const clientPayments: ClientPayment[] = []
+
+	if (data.clientPayment1 || data.clientPayment2) {
+		clientPayments.push({
+			amount: data.clientPayment1 || 0,
+			paymentDate: data.clientPayment1Date.toDate(),
+		})
+	}
+	if (data.clientPayment2) {
+		clientPayments.push({
+			amount: data.clientPayment2,
+			paymentDate: data.clientPayment2Date.toDate(),
+		})
+
+		await endDate(projectId, data.clientPayment2Date.toDate())
+	}
+	await saveProjectBudget({
+		...budget,
+		projectCost: data.price!,
+		clientPayments,
+	})
+}
+
+export function saveContract(data: ContractForm, projectId: number, budget: ProjectBudget) {
+	return Promise.all([
+		contractNumber(projectId, data.contractNumber),
+		startDate(projectId, data.dateOfStart!.toDate()),
+		deadline(projectId, data.deadLine!.toDate()),
+		saveBudget(data, projectId, budget),
+	])
+}
 
 type ContractProps = {
 	projectId: number
 	disabled: boolean
+	getPopupContainer?: (node: HTMLElement) => HTMLElement
 }
 
-export function Contract({projectId, disabled}: ContractProps) {
+export function Contract({projectId, disabled, getPopupContainer}: ContractProps) {
 	const {data: project} = useProject(projectId)
 	const {data: budget} = useProjectBudget(projectId)
 	const {data: settings} = useAccountSettings()
@@ -42,7 +91,10 @@ export function Contract({projectId, disabled}: ContractProps) {
 				rules={[{required: true}]}
 				initialValue={startDate}
 			>
-				<DatePicker disabled={disabled}/>
+				<DatePicker
+					getPopupContainer={getPopupContainer}
+					disabled={disabled}
+				/>
 			</Form.Item>
 			<Form.Item
 				label="Конец"
@@ -50,7 +102,10 @@ export function Contract({projectId, disabled}: ContractProps) {
 				rules={[{required: true}]}
 				initialValue={endDate}
 			>
-				<DatePicker disabled={disabled}/>
+				<DatePicker
+					getPopupContainer={getPopupContainer}
+					disabled={disabled}
+				/>
 			</Form.Item>
 			<Form.Item
 				label="Цена"
@@ -76,7 +131,11 @@ export function Contract({projectId, disabled}: ContractProps) {
 						initialValue={startDate}
 						noStyle
 					>
-						<DatePicker allowClear={false} disabled={disabled}/>
+						<DatePicker
+							getPopupContainer={getPopupContainer}
+							allowClear={false}
+							disabled={disabled}
+						/>
 					</Form.Item>
 				</Input.Group>
 			</Form.Item>
@@ -96,7 +155,11 @@ export function Contract({projectId, disabled}: ContractProps) {
 						noStyle
 						initialValue={endDate}
 					>
-						<DatePicker allowClear={false} disabled={disabled}/>
+						<DatePicker
+							getPopupContainer={getPopupContainer}
+							allowClear={false}
+							disabled={disabled}
+						/>
 					</Form.Item>
 				</Input.Group>
 			</Form.Item>

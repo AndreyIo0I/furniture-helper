@@ -4,16 +4,11 @@ import * as React from 'react'
 import {useState} from 'react'
 import useClients, {Client} from '../../../../api/clients/useClients'
 import completeProject from '../../../../api/projects/completeProject'
-import contractNumber from '../../../../api/projects/contractNumber'
-import deadline from '../../../../api/projects/deadline'
-import endDate from '../../../../api/projects/endDate'
 import saveProject from '../../../../api/projects/saveProject'
-import saveProjectBudget from '../../../../api/projects/saveProjectBudget'
-import startDate from '../../../../api/projects/startDate'
 import useProject from '../../../../api/projects/useProject'
-import useProjectBudget, {ClientPayment, ProjectBudget} from '../../../../api/projects/useProjectBudget'
+import useProjectBudget, {ProjectBudget} from '../../../../api/projects/useProjectBudget'
 import {Project} from '../../../../api/projects/useProjects'
-import {Contract} from '../../../components/Contract'
+import {Contract, ContractForm, saveContract} from '../../../components/Contract'
 import MainLayout from '../../../components/MainLayout'
 import {saveChangesWithMsg} from '../../../saveChangesWithMsg'
 
@@ -23,16 +18,7 @@ type ProjectFormData = {
 	dateOfApplication: Dayjs | null
 	clientId: number
 	description: string
-} & ({
-	contractNumber: string
-	dateOfStart: Dayjs
-	deadLine: Dayjs
-	price: number
-	clientPayment1?: number
-	clientPayment1Date: Dayjs
-	clientPayment2?: number
-	clientPayment2Date: Dayjs
-} | undefined)
+} & (ContractForm | undefined)
 
 interface ContentProps {
 	project: Project
@@ -60,32 +46,7 @@ function Content({
 			})
 
 			if (data.contractNumber) {
-				const clientPayments: ClientPayment[] = []
-
-				if (data.clientPayment1) {
-					clientPayments.push({
-						amount: data.clientPayment1,
-						paymentDate: data.clientPayment1Date.toDate(),
-					})
-				}
-				if (data.clientPayment2) {
-					clientPayments.push({
-						amount: data.clientPayment2,
-						paymentDate: data.clientPayment2Date.toDate(),
-					})
-				}
-
-				await Promise.all([
-					contractNumber(project.id, data.contractNumber),
-					startDate(project.id, data.dateOfStart.toDate()),
-					deadline(project.id, data.deadLine.toDate()),
-					data.clientPayment2 && endDate(project.id, data.clientPayment2Date.toDate()),
-					saveProjectBudget({
-						...budget,
-						projectCost: data.price,
-						clientPayments: clientPayments,
-					}),
-				])
+				await saveContract(data, project.id, budget)
 			}
 
 			if (isCompleted) {
