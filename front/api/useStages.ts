@@ -4,13 +4,13 @@ import {ProjectStage} from './typescript-fetch-client-generated'
 import useAuthenticatedSWR from './useAuthenticatedSWR'
 
 export interface Stage {
-	id: number;
-	projectId: number;
-	projectStageCode?: string;
-	name: string;
-	description: string;
-	completedOn: Date | null;
-	isCompleted: boolean;
+	id: number
+	projectId: number
+	projectStageCode?: string
+	name: string
+	description: string
+	completedOn: Date | null
+	isCompleted: boolean
 }
 
 export const mapStageDto = (dto: ProjectStage): Stage => ({

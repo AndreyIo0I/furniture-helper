@@ -1,5 +1,6 @@
 import {Table, TableBody} from '@mui/material'
 import {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
+import {Project} from '../../../../../api/projects/useProjects'
 import * as model from './model'
 import ProjectStage, {saveProjectStage} from './project'
 
@@ -17,7 +18,7 @@ export async function saveGroupStage(
 }
 
 interface GroupStageProps {
-	projectId: number,
+	project: Project,
 	contract: model.Contract,
 	stage: model.GroupStage,
 	setContract: (contract: model.Contract) => void,
@@ -42,7 +43,7 @@ export default function GroupStage(props: GroupStageProps) {
 				{props.stage.stages.map(stage => (
 					<ProjectStage
 						key={stage.id}
-						projectId={props.projectId}
+						project={props.project}
 						contract={props.contract}
 						stage={stage}
 						setContract={props.setContract}

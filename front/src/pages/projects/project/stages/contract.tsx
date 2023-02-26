@@ -1,6 +1,7 @@
-import {Form} from 'antd'
-import React from 'react'
+import {Button, Form} from 'antd'
+import React, {useState} from 'react'
 import {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
+import {Project} from '../../../../../api/projects/useProjects'
 import saveStage from '../../../../../api/saveStage'
 import {Contract, ContractForm, saveContract} from '../../../../components/Contract'
 import {isDeepEqual} from '../../../../helpers'
@@ -13,51 +14,53 @@ export async function saveContractStage(
 	projectId: number,
 	apiBudget: ProjectBudget,
 ) {
-	if (stage.isCompleted) {
-		await saveContract(contract.form!, projectId, apiBudget)
+	if (contract.form) {
+		await saveContract(contract.form, projectId, apiBudget)
 	}
 	await saveStage(mapToApiStage(stage, projectId))
 }
 
 interface ContractStageProps {
-	projectId: number,
-	contract: model.Contract,
-	stage: model.ContractStage,
-	setContract: (contract: model.Contract) => void,
-	setStage: (stage: model.ContractStage) => void,
-	setOpen: (isOpen: boolean) => void,
+	project: Project
+	contract: model.Contract
+	stage: model.ContractStage
+	setContract: (contract: model.Contract) => void
+	setStage: (stage: model.ContractStage) => void
+	setOpen: (isOpen: boolean) => void
 }
 
 export default function ContractStage(props: ContractStageProps) {
+	const [withContract, setWithContract] = useState(!!props.project.contractNumber)
 	const [form] = Form.useForm()
 
 	React.useEffect(() => {
-		if (!props.contract.form) {
+		if (!props.contract.form && withContract) {
 			props.setContract({
 				form: form.getFieldsValue(true),
 			})
 		}
-	}, []) // eslint-disable-line react-hooks/exhaustive-deps
+	}, [withContract]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	React.useEffect(() => {
-		if (props.contract.form && !isDeepEqual(form.getFieldsValue(true), props.contract.form))
-		{
+		if (withContract && props.contract.form && !isDeepEqual(form.getFieldsValue(true), props.contract.form)) {
 			form.setFieldsValue({...props.contract.form})
 		}
 	}, [props.contract.form]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	React.useEffect(() => {
-		if (props.stage.isCompleted) {
-			form.validateFields().catch(err => {
-				if (err.errorFields.length) {
-					props.setOpen(true)
-				}
-			})
-		} else {
-			form.resetFields()
-			form.setFieldsValue({...props.contract.form})
+		if (withContract) {
+			if (props.stage.isCompleted) {
+				form.validateFields().catch(err => {
+					if (err.errorFields.length) {
+						props.setOpen(true)
+					}
+				})
+			} else {
+				form.resetFields()
+				form.setFieldsValue({...props.contract.form})
+			}
 		}
-	}, [props.stage.isCompleted]) // eslint-disable-line react-hooks/exhaustive-deps
+	}, [withContract, props.stage.isCompleted]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	function updateContract(form: ContractForm) {
 		props.setContract({
@@ -76,20 +79,33 @@ export default function ContractStage(props: ContractStageProps) {
 				stage={props.stage}
 				setStage={props.setStage}
 			/>
-			<Form
-				form={form}
-				onValuesChange={updateContract}
-				layout="vertical"
-				style={{
-					margin: '0 0 16px',
-				}}
-			>
-				<Contract
-					projectId={props.projectId}
-					disabled={!props.stage.isCompleted}
-					getPopupContainer={getPopupContainer}
-				/>
-			</Form>
+			{withContract
+				? (
+					<Form
+						form={form}
+						onValuesChange={updateContract}
+						layout="vertical"
+						style={{
+							margin: '0 0 16px',
+						}}
+					>
+						<Contract
+							projectId={props.project.id}
+							disabled={false}
+							getPopupContainer={getPopupContainer}
+						/>
+					</Form>
+				)
+				: (
+					<Button
+						onClick={() => setWithContract(true)}
+						style={{
+							marginBottom: '16px',
+						}}
+					>
+						Добавить договор
+					</Button>
+				)}
 		</>
 	)
 }

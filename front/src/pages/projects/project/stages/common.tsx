@@ -49,20 +49,21 @@ export function CommonStageFields<S extends CommonStage>(props: CommonStageField
 
 	return (
 		<>
-			<Form.Item
-				label="Дата завершения"
-				style={{
-					margin: '16px 0 0',
-				}}
-			>
-				<DatePicker
-					value={props.stage.completedOn}
-					onChange={value => setCompletedOn(value!)}
-					getPopupContainer={getPopupContainer}
-					allowClear={false}
-					disabled={!props.stage.isCompleted}
-				/>
-			</Form.Item>
+			{props.stage.isCompleted && (
+				<Form.Item
+					label="Дата завершения"
+					style={{
+						margin: '16px 0 0',
+					}}
+				>
+					<DatePicker
+						value={props.stage.completedOn}
+						onChange={value => setCompletedOn(value!)}
+						getPopupContainer={getPopupContainer}
+						allowClear={false}
+					/>
+				</Form.Item>
+			)}
 			<TextField
 				value={props.stage.description}
 				onChange={event => setDescription(event.target.value)}

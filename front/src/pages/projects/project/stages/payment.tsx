@@ -12,8 +12,8 @@ export async function savePaymentStage(
 	projectId: number,
 	apiBudget: ProjectBudget,
 ) {
-	if (stage.isCompleted) {
-		await saveBudget(contract.form!, projectId, apiBudget)
+	if (contract.form) {
+		await saveBudget(contract.form, projectId, apiBudget)
 	}
 	await saveStage(mapToApiStage(stage, projectId))
 }
@@ -48,8 +48,6 @@ export default function PaymentStage(props: PaymentStageProps) {
 		props.setStage(props.stage)
 	}
 
-	const disabled = !props.stage.isCompleted
-
 	return (
 		<>
 			<CommonStageFields
@@ -63,14 +61,12 @@ export default function PaymentStage(props: PaymentStageProps) {
 							value={props.contract.form.clientPayment2}
 							onChange={setClientPayment2}
 							addonAfter="₽"
-							disabled={disabled}
 						/>
 						<DatePicker
 							value={props.contract.form.clientPayment2Date}
 							onChange={value => setClientPayment2Date(value!)}
 							getPopupContainer={getPopupContainer}
 							allowClear={false}
-							disabled={disabled}
 						/>
 					</Input.Group>
 				</Form.Item>

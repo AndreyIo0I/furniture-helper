@@ -3,6 +3,7 @@ import {Checkbox, Collapse, FormControlLabel, TableCell, TableRow} from '@mui/ma
 import {Button} from 'antd'
 import React from 'react'
 import {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
+import {Project} from '../../../../../api/projects/useProjects'
 import ContractStage, {saveContractStage} from './contract'
 import GenericStage, {saveGenericStage} from './generic'
 import GroupStage, {saveGroupStage} from './group'
@@ -29,7 +30,7 @@ export function saveProjectStage(
 }
 
 interface ProjectStageProps {
-	projectId: number,
+	project: Project,
 	contract: model.Contract,
 	stage: model.ProjectStage,
 	setContract: (contract: model.Contract) => void,
@@ -110,14 +111,14 @@ export default function ProjectStage(props: ProjectStageProps) {
 							setStage={setStage}
 						/>}
 						{props.stage.stageType === model.StageType.Group && <GroupStage
-							projectId={props.projectId}
+							project={props.project}
 							contract={props.contract}
 							stage={props.stage}
 							setContract={props.setContract}
 							setStage={setStage}
 						/>}
 						{props.stage.stageType === model.StageType.Contract && <ContractStage
-							projectId={props.projectId}
+							project={props.project}
 							contract={props.contract}
 							stage={props.stage}
 							setContract={props.setContract}

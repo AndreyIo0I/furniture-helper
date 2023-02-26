@@ -1,17 +1,10 @@
-import {
-	Container,
-	Paper,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-} from '@mui/material'
+import {Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
 import {Button} from 'antd'
 import dayjs from 'dayjs'
 import React from 'react'
+import useProject from '../../../../../api/projects/useProject'
 import useProjectBudget, {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
+import {Project} from '../../../../../api/projects/useProjects'
 import useStages, {Stage} from '../../../../../api/useStages'
 import MainLayout from '../../../../components/MainLayout'
 import {saveChangesWithMsg} from '../../../../saveChangesWithMsg'
@@ -88,7 +81,7 @@ function mapToProjectStagesViewModel(apiStages: Stage[]): model.ProjectStage[] {
 }
 
 interface ContentProps {
-	projectId: number
+	project: Project
 	apiStages: Stage[]
 	apiBudget: ProjectBudget
 	mutate: () => void
@@ -97,19 +90,21 @@ interface ContentProps {
 function Content(props: ContentProps) {
 	const [contract, setContract] = React.useState<model.Contract>({})
 	const [stages, setStages] = React.useState(
-		() => mapToProjectStagesViewModel(props.apiStages)
+		() => mapToProjectStagesViewModel(props.apiStages),
 	)
 
 	const resetHasChangesFlag = (stages: model.ProjectStage[]): model.ProjectStage[] => (
 		stages.map(stage => (
-			stage.stageType === model.StageType.Group ? {
-				...stage,
-				stages: resetHasChangesFlag(stage.stages),
-				hasChangesInModel: false,
-			} : {
-				...stage,
-				hasChangesInModel: false,
-			}
+			stage.stageType === model.StageType.Group
+				? {
+					...stage,
+					stages: resetHasChangesFlag(stage.stages),
+					hasChangesInModel: false,
+				}
+				: {
+					...stage,
+					hasChangesInModel: false,
+				}
 		))
 	)
 
@@ -124,7 +119,7 @@ function Content(props: ContentProps) {
 			try {
 				for (const stage of stages) {
 					if (stage.hasChangesInModel) {
-						await saveProjectStage(stage, contract, props.projectId, props.apiBudget)
+						await saveProjectStage(stage, contract, props.project.id, props.apiBudget)
 					}
 				}
 				setStages(resetHasChangesFlag(stages))
@@ -135,7 +130,7 @@ function Content(props: ContentProps) {
 	}
 
 	return (
-		<MainLayout projectId={props.projectId}>
+		<MainLayout projectId={props.project.id}>
 			<Container
 				id={pageContainerId}
 				style={{position: 'relative'}}
@@ -170,7 +165,7 @@ function Content(props: ContentProps) {
 							{stages.map(stage => (
 								<ProjectStage
 									key={stage.id}
-									projectId={props.projectId}
+									project={props.project}
 									contract={contract}
 									stage={stage}
 									setContract={setContract}
@@ -190,15 +185,16 @@ interface ProjectStagesPageProps {
 }
 
 export default function ProjectStagesPage(props: ProjectStagesPageProps) {
+	const {data: project} = useProject(props.projectId)
 	const {data: apiStages, mutate: mutateStages} = useStages(props.projectId)
 	const {data: apiBudget, mutate: mutateBudget} = useProjectBudget(props.projectId)
 
-	if (!apiStages || !apiBudget)
+	if (!apiStages || !apiBudget || !project)
 		return null
 
 	return (
 		<Content
-			projectId={props.projectId}
+			project={project}
 			apiStages={apiStages}
 			apiBudget={apiBudget}
 			mutate={() => {
