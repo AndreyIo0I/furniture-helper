@@ -56,9 +56,10 @@ export function saveContract(data: ContractForm, projectId: number, budget: Proj
 type ContractProps = {
 	projectId: number
 	disabled: boolean
+	getPopupContainer?: (node: HTMLElement) => HTMLElement
 }
 
-export function Contract({projectId, disabled}: ContractProps) {
+export function Contract({projectId, disabled, getPopupContainer}: ContractProps) {
 	const {data: project} = useProject(projectId)
 	const {data: budget} = useProjectBudget(projectId)
 	const {data: settings} = useAccountSettings()
@@ -90,7 +91,10 @@ export function Contract({projectId, disabled}: ContractProps) {
 				rules={[{required: true}]}
 				initialValue={startDate}
 			>
-				<DatePicker disabled={disabled}/>
+				<DatePicker
+					getPopupContainer={getPopupContainer}
+					disabled={disabled}
+				/>
 			</Form.Item>
 			<Form.Item
 				label="Конец"
@@ -98,7 +102,10 @@ export function Contract({projectId, disabled}: ContractProps) {
 				rules={[{required: true}]}
 				initialValue={endDate}
 			>
-				<DatePicker disabled={disabled}/>
+				<DatePicker
+					getPopupContainer={getPopupContainer}
+					disabled={disabled}
+				/>
 			</Form.Item>
 			<Form.Item
 				label="Цена"
@@ -124,7 +131,11 @@ export function Contract({projectId, disabled}: ContractProps) {
 						initialValue={startDate}
 						noStyle
 					>
-						<DatePicker allowClear={false} disabled={disabled}/>
+						<DatePicker
+							getPopupContainer={getPopupContainer}
+							allowClear={false}
+							disabled={disabled}
+						/>
 					</Form.Item>
 				</Input.Group>
 			</Form.Item>
@@ -144,7 +155,11 @@ export function Contract({projectId, disabled}: ContractProps) {
 						noStyle
 						initialValue={endDate}
 					>
-						<DatePicker allowClear={false} disabled={disabled}/>
+						<DatePicker
+							getPopupContainer={getPopupContainer}
+							allowClear={false}
+							disabled={disabled}
+						/>
 					</Form.Item>
 				</Input.Group>
 			</Form.Item>

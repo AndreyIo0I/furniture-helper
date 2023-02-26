@@ -3,7 +3,7 @@ import {Dayjs} from 'dayjs'
 import {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
 import saveStage from '../../../../../api/saveStage'
 import {saveBudget} from '../../../../components/Contract'
-import {CommonStageFields, mapToApiStage} from './common'
+import {CommonStageFields, getPopupContainer, mapToApiStage} from './common'
 import * as model from './model'
 
 export async function savePaymentStage(
@@ -68,6 +68,7 @@ export default function PaymentStage(props: PaymentStageProps) {
 						<DatePicker
 							value={props.contract.form.clientPayment2Date}
 							onChange={value => setClientPayment2Date(value!)}
+							getPopupContainer={getPopupContainer}
 							allowClear={false}
 							disabled={disabled}
 						/>

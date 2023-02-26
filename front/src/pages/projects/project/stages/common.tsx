@@ -3,6 +3,12 @@ import {DatePicker, Form} from 'antd'
 import {Dayjs} from 'dayjs'
 import * as model from './model'
 
+export const pageContainerId = 'projectStagesPageContainer'
+
+export function getPopupContainer() {
+	return document.getElementById(pageContainerId)!
+}
+
 export const mapToApiStage = (
 	stage: model.GenericStage | model.ContractStage | model.PaymentStage,
 	projectId: number,
@@ -52,6 +58,7 @@ export function CommonStageFields<S extends CommonStage>(props: CommonStageField
 				<DatePicker
 					value={props.stage.completedOn}
 					onChange={value => setCompletedOn(value!)}
+					getPopupContainer={getPopupContainer}
 					allowClear={false}
 					disabled={!props.stage.isCompleted}
 				/>

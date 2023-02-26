@@ -4,7 +4,7 @@ import {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
 import saveStage from '../../../../../api/saveStage'
 import {Contract, ContractForm, saveContract} from '../../../../components/Contract'
 import {isDeepEqual} from '../../../../helpers'
-import {CommonStageFields, mapToApiStage} from './common'
+import {CommonStageFields, getPopupContainer, mapToApiStage} from './common'
 import * as model from './model'
 
 export async function saveContractStage(
@@ -87,6 +87,7 @@ export default function ContractStage(props: ContractStageProps) {
 				<Contract
 					projectId={props.projectId}
 					disabled={!props.stage.isCompleted}
+					getPopupContainer={getPopupContainer}
 				/>
 			</Form>
 		</>

@@ -15,6 +15,7 @@ import useProjectBudget, {ProjectBudget} from '../../../../../api/projects/usePr
 import useStages, {Stage} from '../../../../../api/useStages'
 import MainLayout from '../../../../components/MainLayout'
 import {saveChangesWithMsg} from '../../../../saveChangesWithMsg'
+import {pageContainerId} from './common'
 import * as model from './model'
 import ProjectStage, {saveProjectStage} from './project'
 import styles from './styles.module.css'
@@ -135,7 +136,11 @@ function Content(props: ContentProps) {
 
 	return (
 		<MainLayout projectId={props.projectId}>
-			<Container maxWidth="lg">
+			<Container
+				id={pageContainerId}
+				style={{position: 'relative'}}
+				maxWidth="lg"
+			>
 				<div
 					style={{
 						display: 'flex',
