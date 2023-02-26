@@ -6,6 +6,7 @@ import useAuthenticatedSWR from './useAuthenticatedSWR'
 export interface Stage {
 	id: number;
 	projectId: number;
+	projectStageCode?: string;
 	name: string;
 	description: string;
 	completedOn: Date | null;
@@ -15,6 +16,7 @@ export interface Stage {
 export const mapStageDto = (dto: ProjectStage): Stage => ({
 	id: dto.id!,
 	projectId: dto.projectId!,
+	projectStageCode: dto.projectStageCode,
 	name: dto.name!,
 	description: dto.description!,
 	completedOn: dto.completedOn || null,

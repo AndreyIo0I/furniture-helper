@@ -1,9 +1,5 @@
-import {DownOutlined, UpOutlined} from '@ant-design/icons'
 import {
-	Checkbox,
-	Collapse,
 	Container,
-	FormControlLabel,
 	Paper,
 	Table,
 	TableBody,
@@ -11,139 +7,134 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	TextField,
 } from '@mui/material'
-import {DatePicker} from '@mui/x-date-pickers'
 import {Button} from 'antd'
 import dayjs from 'dayjs'
-import React, {useEffect, useRef, useState} from 'react'
-import saveStage from '../../../../../api/saveStage'
+import React from 'react'
+import useProjectBudget, {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
 import useStages, {Stage} from '../../../../../api/useStages'
 import MainLayout from '../../../../components/MainLayout'
-import {isDeepEqual} from '../../../../helpers'
+import {saveChangesWithMsg} from '../../../../saveChangesWithMsg'
+import * as model from './model'
+import ProjectStage, {saveProjectStage} from './project'
 import styles from './styles.module.css'
 
-interface ProjectStageProps {
-	stage: Stage
-	onChange: (stage: Stage) => void
-}
+const mapToDayjs = (date: Date | null) => dayjs(date || undefined)
 
-function ProjectStage({
-	stage,
-	onChange,
-}: ProjectStageProps) {
-	const [open, setOpen] = useState(false)
-	const [isCompleted, setIsCompleted] = useState(stage.isCompleted)
-	const [completedOn, setCompletedOn] = useState(dayjs())
-	const [description, setDescription] = useState(stage.description)
+function mapToProjectStagesViewModel(apiStages: Stage[]): model.ProjectStage[] {
+	const projectStages: model.ProjectStage[] = []
+	let productionGroup: model.GroupStage | undefined
 
-	useEffect(() => {
-		onChange({
-			...stage,
-			description,
-			isCompleted,
-			completedOn: isCompleted ? completedOn.toDate() : null,
-		})
-	})
-
-	return (
-		<>
-			<TableRow
-				style={{
-					background: isCompleted ? 'lightgreen' : 'white',
-				}}
-			>
-				<TableCell
-					onClick={() => setOpen(!open)}
-					sx={{cursor: 'pointer'}}
-				>
-					<Button
-						shape="circle"
-						icon={open ? <DownOutlined/> : <UpOutlined/>}
-						type="link"
-					/>
-				</TableCell>
-				<TableCell
-					sx={{cursor: 'pointer'}}
-					onClick={() => setOpen(!open)}
-					component="th"
-					scope="row"
-					className={styles.col_stage_name}
-				>
-					{stage.name}
-				</TableCell>
-				<TableCell className={styles.col_content_sized}>
-					<FormControlLabel
-						control={<Checkbox/>}
-						label="Завершить этап"
-						labelPlacement="start"
-						checked={isCompleted}
-						onChange={() => {
-							setIsCompleted(!isCompleted)
-						}}
-					/>
-				</TableCell>
-			</TableRow>
-			<TableRow>
-				<TableCell
-					colSpan={3}
-					style={{paddingBottom: 0, paddingTop: 0}}
-				>
-					<Collapse in={open}>
-						<DatePicker
-							label="Дата завершения"
-							value={completedOn}
-							onChange={newValue => {
-								if (newValue) {
-									setCompletedOn(newValue)
-								}
-							}}
-							renderInput={params => (
-								<TextField {...params} margin="normal"/>
-							)}
-						/>
-						<TextField
-							value={description}
-							onChange={event => setDescription(event.target.value)}
-							margin="normal"
-							label="Описание"
-							multiline
-							minRows={4}
-							maxRows={16}
-							fullWidth
-							style={{marginBottom: 24}}
-						/>
-					</Collapse>
-				</TableCell>
-			</TableRow>
-		</>
-	)
+	for (const apiStage of apiStages) {
+		switch (apiStage.projectStageCode!.toLowerCase()) {
+			case 'contract':
+				projectStages.push({
+					stageType: model.StageType.Contract,
+					id: apiStage.id,
+					name: apiStage.name,
+					isCompleted: apiStage.isCompleted,
+					completedOn: mapToDayjs(apiStage.completedOn),
+					description: apiStage.description,
+					hasChangesInModel: false,
+				})
+				break
+			case 'production':
+				if (productionGroup === undefined) {
+					projectStages.push(productionGroup = {
+						stageType: model.StageType.Group,
+						id: apiStage.id,
+						name: 'Производство',
+						isCompleted: true,
+						stages: [],
+						hasChangesInModel: false,
+					})
+				}
+				productionGroup.isCompleted &&= apiStage.isCompleted
+				productionGroup.stages.push({
+					stageType: model.StageType.Generic,
+					id: apiStage.id,
+					name: apiStage.name,
+					isCompleted: apiStage.isCompleted,
+					completedOn: mapToDayjs(apiStage.completedOn),
+					description: apiStage.description,
+					hasChangesInModel: false,
+				})
+				break
+			case 'payment':
+				projectStages.push({
+					stageType: model.StageType.Payment,
+					id: apiStage.id,
+					name: apiStage.name,
+					isCompleted: apiStage.isCompleted,
+					completedOn: mapToDayjs(apiStage.completedOn),
+					description: apiStage.description,
+					hasChangesInModel: false,
+				})
+				break
+			default:
+				projectStages.push({
+					stageType: model.StageType.Generic,
+					id: apiStage.id,
+					name: apiStage.name,
+					isCompleted: apiStage.isCompleted,
+					completedOn: mapToDayjs(apiStage.completedOn),
+					description: apiStage.description,
+					hasChangesInModel: false,
+				})
+		}
+	}
+	return projectStages
 }
 
 interface ContentProps {
 	projectId: number
-	stages: Stage[]
+	apiStages: Stage[]
+	apiBudget: ProjectBudget
+	mutate: () => void
 }
 
-function Content({projectId, stages: _stages}: ContentProps) {
-	const [stages, setStages] = useState<Stage[]>(_stages)
+function Content(props: ContentProps) {
+	const [contract, setContract] = React.useState<model.Contract>({})
+	const [stages, setStages] = React.useState(
+		() => mapToProjectStagesViewModel(props.apiStages)
+	)
 
-	const changedStagesRef = useRef<Record<number, Stage>>({})
+	const resetHasChangesFlag = (stages: model.ProjectStage[]): model.ProjectStage[] => (
+		stages.map(stage => (
+			stage.stageType === model.StageType.Group ? {
+				...stage,
+				stages: resetHasChangesFlag(stage.stages),
+				hasChangesInModel: false,
+			} : {
+				...stage,
+				hasChangesInModel: false,
+			}
+		))
+	)
 
-	const onSave = () => {
-		const mutatable = JSON.parse(JSON.stringify(stages))
-		Object.values(changedStagesRef.current).forEach(async newStage => {
-			const stageIndex = stages.findIndex(stage => stage.id === newStage.id)!
-			if (stageIndex !== -1 && !isDeepEqual(newStage, stages[stageIndex])) {
-				mutatable[stageIndex] = newStage
-				await saveStage(newStage)
+	function setStage(stage: model.ProjectStage) {
+		setStages(stages.map(oldStage =>
+			oldStage.id === stage.id ? stage : oldStage,
+		))
+	}
+
+	function saveStages() {
+		saveChangesWithMsg(async () => {
+			try {
+				for (const stage of stages) {
+					if (stage.hasChangesInModel) {
+						await saveProjectStage(stage, contract, props.projectId, props.apiBudget)
+					}
+				}
+				setStages(resetHasChangesFlag(stages))
+			} finally {
+				props.mutate()
 			}
 		})
-		setStages(mutatable)
 	}
 
 	return (
-		<MainLayout projectId={projectId}>
+		<MainLayout projectId={props.projectId}>
 			<Container maxWidth="lg">
 				<div
 					style={{
@@ -154,15 +145,14 @@ function Content({projectId, stages: _stages}: ContentProps) {
 				>
 					<Button
 						type="primary"
-						onClick={onSave}
 						style={{margin: '16px 0'}}
+						onClick={saveStages}
+						disabled={stages.every(stage => !stage.hasChangesInModel)}
 					>
 						Сохранить
 					</Button>
 				</div>
-				<TableContainer
-					component={Paper}
-				>
+				<TableContainer component={Paper}>
 					<Table>
 						<TableHead>
 							<TableRow>
@@ -175,10 +165,11 @@ function Content({projectId, stages: _stages}: ContentProps) {
 							{stages.map(stage => (
 								<ProjectStage
 									key={stage.id}
+									projectId={props.projectId}
+									contract={contract}
 									stage={stage}
-									onChange={newStage => {
-										changedStagesRef.current[stage.id] = newStage
-									}}
+									setContract={setContract}
+									setStage={setStage}
 								/>
 							))}
 						</TableBody>
@@ -194,10 +185,21 @@ interface ProjectStagesPageProps {
 }
 
 export default function ProjectStagesPage(props: ProjectStagesPageProps) {
-	const {data: _stages} = useStages(props.projectId)
+	const {data: apiStages, mutate: mutateStages} = useStages(props.projectId)
+	const {data: apiBudget, mutate: mutateBudget} = useProjectBudget(props.projectId)
 
-	if (!_stages)
+	if (!apiStages || !apiBudget)
 		return null
 
-	return <Content projectId={props.projectId} stages={_stages}/>
+	return (
+		<Content
+			projectId={props.projectId}
+			apiStages={apiStages}
+			apiBudget={apiBudget}
+			mutate={() => {
+				mutateStages()
+				mutateBudget()
+			}}
+		/>
+	)
 }
