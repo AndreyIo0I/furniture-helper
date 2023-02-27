@@ -221,7 +221,8 @@ export enum ChartType {
 	NUMBER_6 = <any> 6,
 	NUMBER_7 = <any> 7,
 	NUMBER_8 = <any> 8,
-	NUMBER_9 = <any> 9
+	NUMBER_9 = <any> 9,
+	NUMBER_10 = <any> 10
 }
 
 /**

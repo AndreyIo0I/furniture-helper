@@ -49,6 +49,8 @@ export function resolveChartKindName(chartKind: ChartKind): string {
 			return 'Установки'
 		case ChartKind.Payment:
 			return 'Оплаты'
+		case ChartKind.Profit:
+			return 'Выгода'
 		default:
 			return 'Unknown'
 	}

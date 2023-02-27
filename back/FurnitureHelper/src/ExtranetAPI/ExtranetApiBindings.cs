@@ -51,7 +51,10 @@ public static class ExtranetApiBindings
                 s.GetService<ProjectInstallationCollector>())
             .AddScoped<ProjectPaymentCollector>()
             .AddScoped<IProjectsDataCollector, ProjectPaymentCollector>(s =>
-                s.GetService<ProjectPaymentCollector>());
+                s.GetService<ProjectPaymentCollector>())
+            .AddScoped<ProjectProfitCollector>()
+            .AddScoped<IProjectsDataCollector, ProjectProfitCollector>(s =>
+                s.GetService<ProjectProfitCollector>());
 
     }
 }
