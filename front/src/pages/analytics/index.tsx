@@ -39,7 +39,8 @@ export enum ChartKind {
 	Contract = 6,
 	Assembly = 7,
 	Installation = 8,
-	Payment = 9
+	Payment = 9,
+	Profit = 10
 }
 
 const renderDatePicker = (discretenessKind: Discreteness, startDate: Dayjs, endDate: Dayjs, onRangeChange: (dates: null | (Dayjs | null)[], dateStrings: string[]) => void) => {
@@ -148,6 +149,8 @@ export default function AnalyticsPage() {
 				return ChartType.NUMBER_8
 			case ChartKind.Payment:
 				return ChartType.NUMBER_9
+			case ChartKind.Profit:
+				return ChartType.NUMBER_10
 		}
 	}
 
@@ -225,6 +228,7 @@ export default function AnalyticsPage() {
 									{value: ChartKind.Assembly, label: resolveChartKindName(ChartKind.Assembly)},
 									{value: ChartKind.Installation, label: resolveChartKindName(ChartKind.Installation)},
 									{value: ChartKind.Payment, label: resolveChartKindName(ChartKind.Payment)},
+									{value: ChartKind.Profit, label: resolveChartKindName(ChartKind.Profit)},
 								]}
 							/>
 						</div>
