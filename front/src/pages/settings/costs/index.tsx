@@ -1,7 +1,6 @@
-import DeleteIcon from '@mui/icons-material/Delete'
+import {DeleteOutlined} from '@ant-design/icons'
 import {
 	Container,
-	IconButton,
 	Paper,
 	Table,
 	TableBody,
@@ -12,17 +11,18 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material'
-import {Input, InputRef} from 'antd'
+import {Button, Input} from 'antd'
 import React, {useRef, useState} from 'react'
 import {KeyedMutator} from 'swr'
 import createCostType from '../../../../api/costTypes/createCostType'
 import deleteCostType from '../../../../api/costTypes/deleteCostType'
 import editCostType from '../../../../api/costTypes/editCostType'
 import useCostTypes, {CostType} from '../../../../api/costTypes/useCostTypes'
-import MainLayout from '../../../components/MainLayout'
-import useCurrentUser from '../../../../api/users/useCurrentUser'
 import {User, UserRole} from '../../../../api/users/createUser'
+import useCurrentUser from '../../../../api/users/useCurrentUser'
+import MainLayout from '../../../components/MainLayout'
 import {saveChangesWithMsg} from '../../../saveChangesWithMsg'
+import {blurActiveElement} from '../../costs'
 
 type CostInputProps = {
 	row: CostType
@@ -35,7 +35,6 @@ function CostInput({
 	currentUser,
 	mutate,
 }: CostInputProps) {
-	const ref = useRef<InputRef>(null)
 	const isEnterPressed = useRef(false)
 	const [value, setValue] = useState(row.name)
 
@@ -43,7 +42,7 @@ function CostInput({
 
 	const onEdit = () =>
 		isEditable && saveChangesWithMsg(async () => {
-			ref.current?.blur()
+			blurActiveElement()
 			await editCostType({
 				id: row.id,
 				name: value,
@@ -64,7 +63,6 @@ function CostInput({
 		>
 			<TableCell sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
 				<Input
-					ref={ref}
 					value={value}
 					onChange={e => setValue(e.target.value)}
 					disabled={!isEditable}
@@ -79,13 +77,13 @@ function CostInput({
 						}
 					}}
 				/>
-				<IconButton
-					size="small"
-					disabled={!isEditable}
+				<Button
+					shape="circle"
+					icon={<DeleteOutlined/>}
+					type="link"
 					onClick={onDelete}
-				>
-					<DeleteIcon fontSize="small"/>
-				</IconButton>
+					disabled={!isEditable}
+				/>
 			</TableCell>
 		</TableRow>
 	)
