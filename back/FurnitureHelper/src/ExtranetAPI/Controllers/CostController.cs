@@ -90,7 +90,7 @@ namespace ExtranetAPI.Controllers
         /// <param name="costId"></param>
         /// <returns></returns>
         [Authorize( Roles = "Admin, Owner" )]
-        [HttpDelete( "{clientId}" )]
+        [HttpDelete( "{costId}" )]
         [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Удалить издержку" )]
         public async Task<IActionResult> DeleteCost(
             [FromRoute, Required] int costId )
