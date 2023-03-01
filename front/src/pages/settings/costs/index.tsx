@@ -12,42 +12,104 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material'
-import React, {useState} from 'react'
+import {Input, InputRef} from 'antd'
+import React, {useRef, useState} from 'react'
+import {KeyedMutator} from 'swr'
 import createCostType from '../../../../api/costTypes/createCostType'
+import deleteCostType from '../../../../api/costTypes/deleteCostType'
+import editCostType from '../../../../api/costTypes/editCostType'
 import useCostTypes, {CostType} from '../../../../api/costTypes/useCostTypes'
 import MainLayout from '../../../components/MainLayout'
 import useCurrentUser from '../../../../api/users/useCurrentUser'
-import {UserRole} from '../../../../api/users/createUser'
+import {User, UserRole} from '../../../../api/users/createUser'
+import {saveChangesWithMsg} from '../../../saveChangesWithMsg'
+
+type CostInputProps = {
+	row: CostType
+	currentUser: User
+	mutate: KeyedMutator<CostType[]>
+}
+
+function CostInput({
+	row,
+	currentUser,
+	mutate,
+}: CostInputProps) {
+	const ref = useRef<InputRef>(null)
+	const isEnterPressed = useRef(false)
+	const [value, setValue] = useState(row.name)
+
+	const isEditable = currentUser.role === UserRole.Owner
+
+	const onEdit = () =>
+		isEditable && saveChangesWithMsg(async () => {
+			ref.current?.blur()
+			await editCostType({
+				id: row.id,
+				name: value,
+			})
+			await mutate()
+		})
+
+	const onDelete = () =>
+		isEditable && saveChangesWithMsg(async () => {
+			await deleteCostType(row.id)
+			await mutate()
+		})
+
+	return (
+		<TableRow
+			key={row.id}
+			sx={{'&:last-child td, &:last-child th': {border: 0}}}
+		>
+			<TableCell sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+				<Input
+					ref={ref}
+					value={value}
+					onChange={e => setValue(e.target.value)}
+					disabled={!isEditable}
+					onPressEnter={() => {
+						isEnterPressed.current = true
+						onEdit()
+					}}
+					onBlur={() => {
+						if (!isEnterPressed.current) {
+							setValue(row.name)
+							isEnterPressed.current = false
+						}
+					}}
+				/>
+				<IconButton
+					size="small"
+					disabled={!isEditable}
+					onClick={onDelete}
+				>
+					<DeleteIcon fontSize="small"/>
+				</IconButton>
+			</TableCell>
+		</TableRow>
+	)
+}
 
 interface ContentProps {
 	rows: CostType[]
+	mutate: KeyedMutator<CostType[]>
 }
 
-function Content({rows}: ContentProps) {
+function Content({
+	rows,
+	mutate,
+}: ContentProps) {
 	const {data: currentUser} = useCurrentUser()
+
+	if (!currentUser) {
+		return null
+	}
 
 	return (
 		<>
 			{rows.map(row => (
-				<TableRow
-					key={row.id}
-					sx={{'&:last-child td, &:last-child th': {border: 0}}}
-				>
-					<TableCell sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-						<TextField
-							variant="standard"
-							defaultValue={row.name}
-							fullWidth={true}
-							disabled={currentUser?.role !== UserRole.Owner}
-						/>
-						<IconButton
-							size="small"
-							disabled
-						>
-							<DeleteIcon fontSize="small"/>
-						</IconButton>
-					</TableCell>
-				</TableRow>
+				<CostInput key={row.id} row={row} currentUser={currentUser} mutate={mutate}/>
 			))}
 		</>
 	)
@@ -58,13 +120,14 @@ export default function CostTypesPage() {
 
 	const {data: rows, mutate} = useCostTypes()
 
-	const onAdd = async () => {
-		await createCostType({
-			name: newValue,
+	const onAdd = () =>
+		saveChangesWithMsg(async () => {
+			await createCostType({
+				name: newValue,
+			})
+			await mutate()
+			setNewValue('')
 		})
-		await mutate()
-		setNewValue('')
-	}
 
 	return (
 		<MainLayout>
@@ -96,7 +159,7 @@ export default function CostTypesPage() {
 									/>
 								</TableCell>
 							</TableRow>
-							{rows ? <Content rows={rows}/> : null}
+							{rows ? <Content rows={rows} mutate={mutate}/> : null}
 						</TableBody>
 					</Table>
 				</TableContainer>
