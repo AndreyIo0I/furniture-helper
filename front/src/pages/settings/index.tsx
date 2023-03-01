@@ -7,6 +7,7 @@ import * as Yup from 'yup'
 import saveAccountSettings from '../../../api/saveAccountSettings'
 import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
 import MainLayout from '../../components/MainLayout'
+import {saveChangesWithMsg} from '../../saveChangesWithMsg'
 import styles from './styles.module.css'
 
 type Form = {
@@ -58,10 +59,12 @@ function Content({accountSettings}: ContentProps) {
 	})
 
 	const handleOnSubmit = async (data: Form) => {
-		await saveAccountSettings({
-			daysForDeadlineYellow: data.beforeDeadlineYellowColorDays,
-			daysForDeadlineRed: data.beforeDeadlineRedColorDays,
-			defaultProjectDurationDays: data.projectDurationDays,
+		await saveChangesWithMsg( async () => {
+			await saveAccountSettings({
+				daysForDeadlineYellow: data.beforeDeadlineYellowColorDays,
+				daysForDeadlineRed: data.beforeDeadlineRedColorDays,
+				defaultProjectDurationDays: data.projectDurationDays,
+			})
 		})
 	}
 

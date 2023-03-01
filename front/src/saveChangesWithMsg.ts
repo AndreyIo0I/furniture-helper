@@ -5,6 +5,6 @@ export const saveChangesWithMsg = (fn: () => Promise<void>) => {
 		.then(() => message.success('Изменения успешно сохранены'))
 		.catch(error => {
 			console.error(error)
-			message.error('Не удалось сохранить изменения')
+			message.error('Не удалось сохранить изменения').then()
 		})
 }
