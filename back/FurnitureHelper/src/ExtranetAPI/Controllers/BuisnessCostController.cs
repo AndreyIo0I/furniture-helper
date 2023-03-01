@@ -49,6 +49,26 @@ namespace ExtranetAPI.Controllers
         }
 
         /// <summary>
+        /// Обновить бизнесовую издержку
+        /// </summary>
+        /// <param name="costDto"></param>
+        /// <param name="costId"></param>
+        /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
+        [HttpPost( "{costId}/cost-updating" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновить издержку" )]
+        public async Task<IActionResult> UpdadeCost(
+            [FromRoute, Required] int costId,
+            [FromBody, Required] BuisnessCost costDto )
+        {
+            BuisnessCost cost = await _buisnessCostRepository.GetById( costId );
+            cost.Update( costDto );
+            await _unitOfWork.Commit();
+
+            return Ok( costDto.Id );
+        }
+
+        /// <summary>
         /// Удалить бизнесовую издержку
         /// </summary>
         /// <param name="id"></param>

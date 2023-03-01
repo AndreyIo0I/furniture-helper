@@ -63,5 +63,47 @@ namespace ExtranetAPI.Controllers
 
             return Ok( costDto.Id );
         }
+
+        /// <summary>
+        /// Обновить издержку
+        /// </summary>
+        /// <param name="costDto"></param>
+        /// <param name="costId"></param>
+        /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
+        [HttpPost( "{costId}/cost-updating" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Обновить издержку" )]
+        public async Task<IActionResult> UpdadeCost(
+            [FromRoute, Required] int costId,
+            [FromBody, Required] Cost costDto )
+        {
+            Cost cost = await _costRepository.Get( costId );
+            cost.Update( costDto );
+            await _unitOfWork.Commit();
+
+            return Ok( costDto.Id );
+        }
+
+        /// <summary>
+        /// Удалить издержку
+        /// </summary>
+        /// <param name="costId"></param>
+        /// <returns></returns>
+        [Authorize( Roles = "Admin, Owner" )]
+        [HttpDelete( "{clientId}" )]
+        [SwaggerResponse( statusCode: 200, type: typeof( int ), description: "Удалить издержку" )]
+        public async Task<IActionResult> DeleteCost(
+            [FromRoute, Required] int costId )
+        {
+            Cost cost = await _costRepository.Get( costId );
+            if ( cost is null )
+            {
+                return BadRequest( $"Cost with id {costId} is not exist" );
+            }
+            _costRepository.Remove( cost );
+            await _unitOfWork.Commit();
+
+            return Ok();
+        }
     }
 }

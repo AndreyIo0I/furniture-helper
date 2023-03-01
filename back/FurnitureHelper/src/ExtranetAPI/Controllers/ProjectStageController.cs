@@ -50,15 +50,28 @@ namespace ExtranetAPI.Controllers
         {
             List<ProjectStage> stages = await _projectStageRepository.GetByProjectId( projectId );
             List<ProjectStage>? orderedStages = stages.OrderBy( item => item.Id ).ToList();
+            int lastOrderedStageId = orderedStages.Last().Id;
+            ProjectStage tempLastCompletedStage = null;
+
             foreach ( var stage in orderedStages )
             {
-                if ( !stage.IsCompleted )
+                if ( stage.IsCompleted )
                 {
-                    return Ok( stage );
+                    tempLastCompletedStage = stage;
                 }
             }
 
-            return Ok( orderedStages.Last() );
+            if ( tempLastCompletedStage == null )
+            {
+                return Ok( orderedStages.First() );
+            }
+
+            if ( tempLastCompletedStage.Id == lastOrderedStageId )
+            {
+                return Ok();
+            }
+
+            return Ok( orderedStages.First( item => item.Id == ( tempLastCompletedStage.Id + 1 ) ) );
         }
 
         /// <summary>

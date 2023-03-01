@@ -10,5 +10,10 @@
             Id = id;
             Name = name;
         }
+
+        public void Update( Cost cost )
+        {
+            Name = cost.Name;
+        }
     }
 }
