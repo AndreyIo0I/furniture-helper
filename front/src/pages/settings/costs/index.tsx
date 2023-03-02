@@ -38,7 +38,7 @@ function CostInput({
 	const isEnterPressed = useRef(false)
 	const [value, setValue] = useState(row.name)
 
-	const isEditable = currentUser.role === UserRole.Owner
+	const isEditable = [UserRole.Admin, UserRole.Owner].includes(currentUser.role)
 
 	const onEdit = () =>
 		isEditable && saveChangesWithMsg(async () => {
