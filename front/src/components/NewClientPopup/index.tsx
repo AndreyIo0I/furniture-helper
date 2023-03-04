@@ -12,26 +12,24 @@ type Form = {
 
 type NewClientPopupProps = {
 	open: boolean
-	onCancel: () => void
+	onCancel: (clientId?: number) => void
 }
 
 export default function NewClientPopup({
 	open,
 	onCancel,
 }: NewClientPopupProps) {
-	const handleOnSubmit = async (data: Form) => {
-		await createClient({
+	const handleOnSubmit = async (data: Form) =>
+		onCancel(await createClient({
 			name: data.fullName,
 			communicationChannel: data.source,
 			phoneNumber: data.phone,
 			mail: data.email,
 			description: data.description,
-		})
-		onCancel()
-	}
+		}))
 
 	return (
-		<Modal title={'Создать нового клиента'} open={open} onCancel={onCancel} footer={null} centered>
+		<Modal title={'Создать нового клиента'} open={open} onCancel={() => onCancel()} footer={null} centered>
 			<Form
 				name="basic"
 				labelCol={{span: 8}}
