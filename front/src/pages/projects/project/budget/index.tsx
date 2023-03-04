@@ -131,7 +131,7 @@ function Content({
 				<Paper sx={projectCostStyle}>
 					<Form layout="vertical">
 						<Form.Item
-							label="Цена для клиента"
+							label="Цена изделия"
 							style={{margin: 0}}
 						>
 							<InputNumber
