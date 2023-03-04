@@ -1,4 +1,4 @@
-import {Button, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Space} from 'antd'
+import {Button, Col, DatePicker, Form, Input, Row, Select, Space, Switch, Tooltip} from 'antd'
 import {Dayjs} from 'dayjs'
 import * as React from 'react'
 import {useState} from 'react'
@@ -15,10 +15,10 @@ import {saveChangesWithMsg} from '../../../saveChangesWithMsg'
 type ProjectFormData = {
 	name: string
 	address: string
-	dateOfApplication: Dayjs | null
+	dateOfApplication: Dayjs|null
 	clientId: number
 	description: string
-} & (ContractForm | undefined)
+}&(ContractForm|undefined)
 
 interface ContentProps {
 	project: Project
@@ -79,20 +79,20 @@ function Content({
 						>
 							<Input disabled={isCompleted} autoFocus/>
 						</Form.Item>
-						<Popconfirm
-							placement="right"
-							title={'Редактирование проекта будет недоступно после завершения'}
-							onConfirm={() => setIsCompleted(true)}
-							okText="Ок"
-							cancelText="Отмена"
+						<Form.Item
+							label="Завершить"
 						>
-							<Button
-								type="primary"
-								disabled={isCompleted}
+							<Tooltip
+								title={'Редактирование проекта будет недоступно после завершения'}
+								placement="bottom"
 							>
-								Завершить
-							</Button>
-						</Popconfirm>
+								<Switch
+									defaultChecked={isCompleted}
+									onChange={setIsCompleted}
+									disabled={project.isCompleted}
+								/>
+							</Tooltip>
+						</Form.Item>
 					</Space>
 					<Form.Item
 						label="Клиент"
