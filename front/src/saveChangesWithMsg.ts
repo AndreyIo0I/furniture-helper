@@ -1,6 +1,6 @@
 import {message} from 'antd'
 
-export const saveChangesWithMsg = (fn: () => Promise<void>) => {
+export const saveChangesWithMsg = (fn: () => Promise<any>): void => {
 	fn()
 		.then(() => message.success('Изменения успешно сохранены'))
 		.catch(error => {

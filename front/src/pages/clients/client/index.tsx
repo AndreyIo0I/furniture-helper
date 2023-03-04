@@ -13,6 +13,7 @@ import {UserRole} from '../../../../api/users/createUser'
 import useCurrentUser from '../../../../api/users/useCurrentUser'
 import MainLayout from '../../../components/MainLayout'
 import styles from './styles.module.css'
+import {saveChangesWithMsg} from '../../../saveChangesWithMsg'
 
 type Form = {
 	fullName: string
@@ -37,16 +38,15 @@ function Content({client}: { client: Client }) {
 		resolver: yupResolver(validationSchema),
 	})
 
-	const handleOnSubmit = async (data: Form) => {
-		await updateClient({
+	const handleOnSubmit = (data: Form) =>
+		saveChangesWithMsg(() => updateClient({
 			id: client.id,
 			name: data.fullName,
 			communicationChannel: data.source,
 			phoneNumber: data.phone,
 			mail: data.email,
 			description: data.description || '',
-		})
-	}
+		}))
 
 	useEffect(() => {
 		reset(formValues => ({
@@ -59,6 +59,11 @@ function Content({client}: { client: Client }) {
 	const {data: currentUser} = useCurrentUser()
 
 	const isEditable = currentUser && currentUser.role !== UserRole.Manager
+
+	const handleOnDelete = async () => {
+		await saveChangesWithMsg(() => deleteClient(client.id))
+		await router.push('/clients')
+	}
 
 	return (
 		<Container maxWidth="lg">
@@ -130,10 +135,7 @@ function Content({client}: { client: Client }) {
 					</Button>
 					{isEditable && (
 						<Button
-							onClick={async () => {
-								await deleteClient(client.id)
-								await router.push('/clients')
-							}}
+							onClick={handleOnDelete}
 						>
 							Удалить
 						</Button>

@@ -7,31 +7,35 @@ import useCurrentUser from '../../../../../api/users/useCurrentUser'
 import useUser from '../../../../../api/users/useUser'
 import MainLayout from '../../../../components/MainLayout'
 import styles from './styles.module.css'
+import {useRouter} from 'next/router'
+import {saveChangesWithMsg} from '../../../../saveChangesWithMsg'
 
 interface UserPageContentProps {
 	user: User
 }
 
 function Content({user}: UserPageContentProps) {
+	const router = useRouter()
 	const nameRef = useRef<HTMLInputElement>()
 	const emailRef = useRef<HTMLInputElement>()
 	const [role, setRole] = useState(UserRole.Manager)
 	const [password, setPassword] = useState('')
 	const [passwordConfirmation, setPasswordConfirmation] = useState('')
 
-	const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+	const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		await updateUser({
+		saveChangesWithMsg(() => updateUser({
 			id: user.id,
 			name: nameRef.current!.value,
 			email: emailRef.current!.value,
 			role: role,
 			password: password || undefined,
-		})
+		}))
 	}
 
 	const onUserRemove = async () => {
-		await deleteUser(user.id)
+		await saveChangesWithMsg(() => deleteUser(user.id))
+		await router.push('/settings/users')
 	}
 
 	const confirmError = passwordConfirmation !== password
@@ -103,8 +107,6 @@ function Content({user}: UserPageContentProps) {
 					Сохранить изменения
 				</Button>
 				{!isMe && <Button
-					type="submit"
-					variant="contained"
 					onClick={onUserRemove}
 				>
 					Удалить пользователя
