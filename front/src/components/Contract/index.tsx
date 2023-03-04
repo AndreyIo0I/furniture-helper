@@ -7,16 +7,18 @@ import saveProjectBudget from '../../../api/projects/saveProjectBudget'
 import startDate from '../../../api/projects/startDate'
 import useProject from '../../../api/projects/useProject'
 import useProjectBudget, {ClientPayment, ProjectBudget} from '../../../api/projects/useProjectBudget'
-import useAccountSettings from '../../../api/useAccountSettings'
+import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
+import {useEffect} from 'react'
+import {Project} from '../../../api/projects/useProjects'
 
 export interface ContractForm {
 	contractNumber: string
-	dateOfStart: Dayjs | null
-	deadLine: Dayjs | null
-	price: number | null
-	clientPayment1?: number | null
+	dateOfStart: Dayjs|null
+	deadLine: Dayjs|null
+	price: number|null
+	clientPayment1?: number|null
 	clientPayment1Date: Dayjs
-	clientPayment2?: number | null
+	clientPayment2?: number|null
 	clientPayment2Date: Dayjs
 }
 
@@ -59,21 +61,32 @@ type ContractProps = {
 	getPopupContainer?: (node: HTMLElement) => HTMLElement
 }
 
-export function Contract({projectId, disabled, getPopupContainer}: ContractProps) {
-	const {data: project} = useProject(projectId)
-	const {data: budget} = useProjectBudget(projectId)
-	const {data: settings} = useAccountSettings()
+type ContentProps = {
+	project: Project
+	budget: ProjectBudget
+	settings: AccountSettings
+	disabled: boolean
+	getPopupContainer?: (node: HTMLElement) => HTMLElement
+}
 
-	if (!project || !budget || !settings) {
-		return null
-	}
+function Content({
+	project,
+	budget,
+	settings,
+	disabled,
+	getPopupContainer,
+}: ContentProps) {
+	const form = Form.useFormInstance()
 
-	const startDate = dayjs(budget.clientPayments[0]?.paymentDate || project.dateOfStart || dayjs())
-	const endDate = project.endDate ?? (
-		budget.clientPayments[1]
-			? dayjs(budget.clientPayments[1].paymentDate)
-			: dayjs().add(settings.defaultProjectDurationDays, 'day')
-	)
+	const dateOfStart = Form.useWatch('dateOfStart', form)
+	useEffect(() => {
+		if (dateOfStart) {
+			form.setFieldValue('deadLine', (dateOfStart as Dayjs).add(settings.defaultProjectDurationDays, 'day'))
+		}
+	}, [dateOfStart, form, settings.defaultProjectDurationDays])
+
+	const dateOfStartInitial = dayjs()
+	const deadlineInitial = dateOfStartInitial.add(settings.defaultProjectDurationDays, 'day')
 
 	return (
 		<Card title="Договор">
@@ -88,23 +101,25 @@ export function Contract({projectId, disabled, getPopupContainer}: ContractProps
 			<Form.Item
 				label="Начало"
 				name="dateOfStart"
+				initialValue={dateOfStartInitial}
 				rules={[{required: true}]}
-				initialValue={startDate}
 			>
 				<DatePicker
 					getPopupContainer={getPopupContainer}
 					disabled={disabled}
+					allowClear={false}
 				/>
 			</Form.Item>
 			<Form.Item
 				label="Конец"
 				name="deadLine"
+				initialValue={deadlineInitial}
 				rules={[{required: true}]}
-				initialValue={endDate}
 			>
 				<DatePicker
 					getPopupContainer={getPopupContainer}
 					disabled={disabled}
+					allowClear={false}
 				/>
 			</Form.Item>
 			<Form.Item
@@ -128,7 +143,7 @@ export function Contract({projectId, disabled, getPopupContainer}: ContractProps
 					</Form.Item>
 					<Form.Item
 						name="clientPayment1Date"
-						initialValue={startDate}
+						initialValue={dayjs()}
 						noStyle
 					>
 						<DatePicker
@@ -153,7 +168,7 @@ export function Contract({projectId, disabled, getPopupContainer}: ContractProps
 					<Form.Item
 						name="clientPayment2Date"
 						noStyle
-						initialValue={endDate}
+						initialValue={dayjs()}
 					>
 						<DatePicker
 							getPopupContainer={getPopupContainer}
@@ -165,4 +180,15 @@ export function Contract({projectId, disabled, getPopupContainer}: ContractProps
 			</Form.Item>
 		</Card>
 	)
+}
+
+export function Contract(props: ContractProps) {
+	const {data: project} = useProject(props.projectId)
+	const {data: budget} = useProjectBudget(props.projectId)
+	const {data: settings} = useAccountSettings()
+
+	if (!project || !budget || !settings)
+		return null
+
+	return <Content project={project} budget={budget} settings={settings} {...props}/>
 }
