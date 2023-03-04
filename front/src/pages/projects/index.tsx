@@ -29,7 +29,7 @@ const columns: ColumnsType<ProjectRow> = [{
 	key: 'contractNumber',
 	render: contractNumber => contractNumber ? contractNumber : '–',
 }, {
-	title: 'Тип проекта',
+	title: 'Продукт',
 	dataIndex: 'projectType',
 	key: 'projectType',
 }, {
@@ -75,7 +75,14 @@ function compareProjects(lhs: ProjectRow, rhs: ProjectRow): number {
 
 function CurrentStageCell(props: CurrentStageCellProps) {
 	const {data: currentStage} = useCurrentStage(props.projectId)
-	return <>{currentStage?.name}</>
+	if (!currentStage)
+		return null
+
+	return <>{
+		currentStage.isCompleted && currentStage.completedOn
+			? 'Завершен: ' + dayjs(currentStage.completedOn).format('DD/MM/YYYY')
+			: currentStage.name
+	}</>
 }
 
 export default function ProjectsPage() {

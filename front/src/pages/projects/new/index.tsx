@@ -47,9 +47,9 @@ export default function NewProjectPage() {
 				layout="vertical"
 			>
 				<Form.Item
-					label="Тип проекта"
+					label="Продукт"
 					name="name"
-					rules={[{required: true, message: 'Пожалуйста, укажите тип проекта'}]}
+					rules={[{required: true, message: 'Пожалуйста, укажите Продукт'}]}
 				>
 					<Input autoFocus/>
 				</Form.Item>

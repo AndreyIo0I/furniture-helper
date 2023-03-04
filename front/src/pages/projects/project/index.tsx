@@ -73,9 +73,9 @@ function Content({
 				<Col flex={4}>
 					<Space>
 						<Form.Item
-							label="Тип проекта"
+							label="Продукт"
 							name="name"
-							rules={[{required: true, message: 'Пожалуйста, введите тип проекта'}]}
+							rules={[{required: true, message: 'Пожалуйста, введите Продукт'}]}
 						>
 							<Input disabled={isCompleted} autoFocus/>
 						</Form.Item>
