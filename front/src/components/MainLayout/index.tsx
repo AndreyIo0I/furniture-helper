@@ -3,9 +3,10 @@ import {Button, Layout, Menu, theme, Typography} from 'antd'
 import {useRouter} from 'next/router'
 import React, {ReactNode} from 'react'
 import useCurrentUser from '../../../api/users/useCurrentUser'
+import Link from 'next/link'
 
 type Route = {
-	label: string
+	label: JSX.Element
 	key: string
 	regexp: RegExp
 	items?: Route[]
@@ -66,6 +67,14 @@ const routes: Route[] = [{
 	regexp: /^\/costs$/,
 	key: '/costs',
 }]
+	.map(item => ({
+		...item,
+		label: <Link href={item.key}>{item.label}</Link>,
+		items: item.items?.map(subItem => ({
+			...subItem,
+			label: <Link href={item.key}>{subItem.label}</Link>,
+		})),
+	}))
 
 interface MainLayoutProps {
 	children: ReactNode
