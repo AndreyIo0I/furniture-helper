@@ -88,10 +88,7 @@ function Content({
 							}
 							options={clientOptions}
 							value={client}
-							onChange={value => {
-								console.log('#########', value)
-								setClient(value)
-							}}
+							onChange={setClient}
 						/>
 					</Form.Item>
 					<Button
