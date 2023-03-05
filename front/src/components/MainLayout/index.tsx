@@ -6,7 +6,7 @@ import useCurrentUser from '../../../api/users/useCurrentUser'
 import Link from 'next/link'
 
 type Route = {
-	label: JSX.Element
+	label: ReactNode
 	key: string
 	regexp: RegExp
 	items?: Route[]
@@ -70,10 +70,6 @@ const routes: Route[] = [{
 	.map(item => ({
 		...item,
 		label: <Link href={item.key}>{item.label}</Link>,
-		items: item.items?.map(subItem => ({
-			...subItem,
-			label: <Link href={subItem.key}>{subItem.label}</Link>,
-		})),
 	}))
 
 interface MainLayoutProps {
@@ -91,12 +87,18 @@ export default function MainLayout({
 	} = theme.useToken()
 
 	const currentTopItem = routes.find(item => item.regexp.test(router.asPath))!
-	const sidebarItems = currentTopItem.key === '/projects' && projectId
-		? currentTopItem.items!.map(item => ({
-			...item,
-			key: '/' + projectId + item.key,
+	const sidebarItems = (
+		currentTopItem.key === '/projects' && projectId
+			? currentTopItem.items!.map(item => ({
+				...item,
+				key: '/' + projectId + item.key,
+			}))
+			: currentTopItem.key !== '/projects' && currentTopItem.items || []
+	)
+		.map(subItem => ({
+			...subItem,
+			label: <Link href={currentTopItem.key + subItem.key}>{subItem.label}</Link>,
 		}))
-		: currentTopItem.key !== '/projects' && currentTopItem.items
 
 	const onLogout = async () => {
 		await fetch('/api/logout', {method: 'POST'})
@@ -138,7 +140,7 @@ export default function MainLayout({
 			</Layout.Header>
 			<Layout hasSider>
 				<Layout.Sider width={200} style={{background: colorBgContainer}}>
-					{!!sidebarItems && (
+					{!!sidebarItems.length && (
 						<Menu
 							mode="inline"
 							defaultSelectedKeys={[sidebarItems.find(item => item.regexp.test(router.asPath))!.key]}
