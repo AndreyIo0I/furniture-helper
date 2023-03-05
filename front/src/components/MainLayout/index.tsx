@@ -72,7 +72,7 @@ const routes: Route[] = [{
 		label: <Link href={item.key}>{item.label}</Link>,
 		items: item.items?.map(subItem => ({
 			...subItem,
-			label: <Link href={item.key}>{subItem.label}</Link>,
+			label: <Link href={subItem.key}>{subItem.label}</Link>,
 		})),
 	}))
 
