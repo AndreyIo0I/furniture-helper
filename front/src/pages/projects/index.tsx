@@ -45,7 +45,7 @@ const columns: ColumnsType<ProjectRow> = [{
 	title: 'Дедлайн',
 	dataIndex: 'dateOfFinish',
 	key: 'dateOfFinish',
-	render: dateOfFinish => dateOfFinish?.format('DD/MM/YYYY'),
+	render: dateOfFinish => dateOfFinish?.format('DD.MM.YYYY'),
 }]
 
 function compareDates(lhs: Dayjs | null, rhs: Dayjs | null, options = {nullIsLess: false}): number {
@@ -80,7 +80,7 @@ function CurrentStageCell(props: CurrentStageCellProps) {
 
 	return <>{
 		currentStage.isCompleted && currentStage.completedOn
-			? 'Завершен: ' + dayjs(currentStage.completedOn).format('DD/MM/YYYY')
+			? 'Завершен: ' + dayjs(currentStage.completedOn).format('DD.MM.YYYY')
 			: currentStage.name
 	}</>
 }

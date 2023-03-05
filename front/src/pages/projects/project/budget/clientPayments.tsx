@@ -54,6 +54,7 @@ function ClientPayment(props: ClientPaymentProps) {
 					getPopupContainer={getPopupContainer}
 					status={toViewStatus(props.payment.paymentDate === null)}
 					disabled={props.disabled}
+					format="DD.MM.YYYY"
 				/>
 			</TableCell>
 			<TableCell>
@@ -116,12 +117,12 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 			return
 		}
 		props.setClientPayments([
+			...props.clientPayments,
 			{
 				paymentId: newPayment.paymentId,
 				amount: newPayment.amount,
 				paymentDate: newPayment.paymentDate,
 			},
-			...props.clientPayments,
 		])
 		setNewPayment(makeNewPayment(newPayment.paymentId + 1))
 	}
@@ -140,6 +141,8 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 		)
 	}
 
+	const canAddPayment = props.clientPayments.length < 2
+
 	return (
 		<TableContainer
 			component={Paper}
@@ -155,7 +158,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					<TableRow style={addRowStyle}>
+					{canAddPayment && <TableRow style={addRowStyle}>
 						<TableCell>
 							<InputNumber
 								value={newPayment.amount}
@@ -173,6 +176,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 								getPopupContainer={getPopupContainer}
 								status={toViewStatus(newPayment.needsValidation && newPayment.paymentDate === null)}
 								disabled={props.disabled}
+								format="DD.MM.YYYY"
 							/>
 						</TableCell>
 						<TableCell>
@@ -183,7 +187,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 								disabled={props.disabled}
 							/>
 						</TableCell>
-					</TableRow>
+					</TableRow>}
 					{props.clientPayments.map(payment => (
 						<ClientPayment
 							key={payment.paymentId}

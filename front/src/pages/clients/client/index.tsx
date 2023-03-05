@@ -25,6 +25,7 @@ type Form = {
 
 const validationSchema = Yup.object().shape({
 	fullName: Yup.string().required('Поле не должно быть пустым'),
+	source: Yup.string().required('Поле не должно быть пустым'),
 })
 
 function Content({client}: { client: Client }) {
@@ -84,7 +85,7 @@ function Content({client}: { client: Client }) {
 				/>
 				<TextField
 					margin="normal"
-					label="Канал"
+					label="Канал привлечения"
 					defaultValue={client.source}
 					{...register('source')}
 					FormHelperTextProps={{error: !!errors.source?.message}}

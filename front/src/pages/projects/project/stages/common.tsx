@@ -61,6 +61,7 @@ export function CommonStageFields<S extends CommonStage>(props: CommonStageField
 						onChange={value => setCompletedOn(value!)}
 						getPopupContainer={getPopupContainer}
 						allowClear={false}
+						format="DD.MM.YYYY"
 					/>
 				</Form.Item>
 			)}

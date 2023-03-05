@@ -133,7 +133,7 @@ function buildStringValue(stringValue: string): string {
 }
 
 function buildDateValue(date: Dayjs): string {
-	return `${!date ? noData : date.format('DD/MM/YYYY')}`
+	return `${!date ? noData : date.format('DD.MM.YYYY')}`
 }
 
 function buildNumberValue(numberValue: number): string {

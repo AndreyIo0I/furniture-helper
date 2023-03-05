@@ -50,6 +50,7 @@ export default function NewClientPopup({
 				<Form.Item
 					label="Канал привлечения"
 					name="source"
+					rules={[{required: true, message: 'Пожалуйста, укажите канал привлечения'}]}
 				>
 					<Input/>
 				</Form.Item>

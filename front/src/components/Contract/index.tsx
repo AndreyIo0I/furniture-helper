@@ -85,8 +85,8 @@ function Content({
 		}
 	}, [dateOfStart, form, settings.defaultProjectDurationDays])
 
-	const dateOfStartInitial = dayjs()
-	const deadlineInitial = dateOfStartInitial.add(settings.defaultProjectDurationDays, 'day')
+	const dateOfStartInitial = project.dateOfStart ?? dayjs()
+	const deadlineInitial = project.deadLine ?? dateOfStartInitial.add(settings.defaultProjectDurationDays, 'day')
 
 	return (
 		<Card title="Договор">
@@ -108,6 +108,7 @@ function Content({
 					getPopupContainer={getPopupContainer}
 					disabled={disabled}
 					allowClear={false}
+					format="DD.MM.YYYY"
 				/>
 			</Form.Item>
 			<Form.Item
@@ -120,6 +121,7 @@ function Content({
 					getPopupContainer={getPopupContainer}
 					disabled={disabled}
 					allowClear={false}
+					format="DD.MM.YYYY"
 				/>
 			</Form.Item>
 			<Form.Item
@@ -143,13 +145,14 @@ function Content({
 					</Form.Item>
 					<Form.Item
 						name="clientPayment1Date"
-						initialValue={dayjs()}
+						initialValue={dayjs(budget.clientPayments[0]?.paymentDate)}
 						noStyle
 					>
 						<DatePicker
 							getPopupContainer={getPopupContainer}
 							allowClear={false}
 							disabled={disabled}
+							format="DD.MM.YYYY"
 						/>
 					</Form.Item>
 				</Input.Group>
@@ -168,12 +171,13 @@ function Content({
 					<Form.Item
 						name="clientPayment2Date"
 						noStyle
-						initialValue={dayjs()}
+						initialValue={dayjs(budget.clientPayments[1]?.paymentDate)}
 					>
 						<DatePicker
 							getPopupContainer={getPopupContainer}
 							allowClear={false}
 							disabled={disabled}
+							format="DD.MM.YYYY"
 						/>
 					</Form.Item>
 				</Input.Group>

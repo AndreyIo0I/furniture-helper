@@ -60,7 +60,7 @@ export default function ChartComponent(props: CharComponentProps) {
 	if (!props.data || props.data.length == 0) {
 		return <div className={styles.noDataWrapper}>
 			<span className="">На период 
-				<b className={styles.ml5}>{props.startDate.format('DD/MM/YYYY')}-{props.endDate.format('DD/MM/YYYY')}</b> не удалось найти данных для типа аналитики 
+				<b className={styles.ml5}>{props.startDate.format('DD.MM.YYYY')}-{props.endDate.format('DD/MM/YYYY')}</b> не удалось найти данных для типа аналитики
 				{/* eslint-disable-next-line react/no-unescaped-entities */}
 				<b className={styles.ml5}>"{resolveChartKindName(props.chartKind)}"</b>
 			</span>

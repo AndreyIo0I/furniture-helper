@@ -67,6 +67,7 @@ export default function PaymentStage(props: PaymentStageProps) {
 							onChange={value => setClientPayment2Date(value!)}
 							getPopupContainer={getPopupContainer}
 							allowClear={false}
+							format="DD.MM.YYYY"
 						/>
 					</Input.Group>
 				</Form.Item>

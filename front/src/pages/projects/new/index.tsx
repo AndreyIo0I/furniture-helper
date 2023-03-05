@@ -7,6 +7,7 @@ import useClients, {Client} from '../../../../api/clients/useClients'
 import createProject from '../../../../api/projects/createProject'
 import MainLayout from '../../../components/MainLayout'
 import NewClientPopup from '../../../components/NewClientPopup'
+import {saveChangesWithMsg} from '../../../saveChangesWithMsg'
 
 type ProjectFormData = {
 	name: string
@@ -40,21 +41,25 @@ function Content({
 	const createdClientId = useRef<number|null>(null)
 	const [client, setClient] = useState<ClientOption|null>(null)
 	const createdClient = typeof createdClientId.current === 'number' && clientOptions?.find(option => option.value === createdClientId.current)
-	if (createdClient) { // todo по магичесой причине в dev сбрасывается (сбрасывается на беке?!)
+	if (createdClient) {
 		setClient(createdClient)
 		createdClientId.current = null
 	}
 
-	const createNewProject = async (data: ProjectFormData) => {
-		const newProjectId = await createProject({
-			projectType: data.name,
-			address: data.address,
-			dateOfApplication: data.dateOfApplication.toISOString(),
-			clientId: client!.value,
-			description: data.description || '',
+	const createNewProject = (data: ProjectFormData) =>
+		saveChangesWithMsg(async () => {
+			if (!clients.map(v => v.id).includes(client!.value)) // todo по магичесой причине в dev сбрасывается добавленный клиент (ssr?!)
+				throw Error('Unknown client id')
+
+			const newProjectId = await createProject({
+				projectType: data.name,
+				address: data.address,
+				dateOfApplication: data.dateOfApplication.toISOString(),
+				clientId: client!.value,
+				description: data.description || '',
+			})
+			await router.push(`/projects/${encodeURIComponent(newProjectId)}`)
 		})
-		await router.push(`/projects/${encodeURIComponent(newProjectId)}`)
-	}
 
 	return (
 		<>
@@ -103,7 +108,7 @@ function Content({
 					name="dateOfApplication"
 					rules={[{required: true}]}
 				>
-					<DatePicker allowClear={false}/>
+					<DatePicker allowClear={false} format="DD.MM.YYYY"/>
 				</Form.Item>
 				<Form.Item
 					label="Адрес"

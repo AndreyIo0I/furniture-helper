@@ -81,6 +81,7 @@ function Row({
 						onEdit()
 					}
 				}}
+				format="DD.MM.YYYY"
 			/>
 			<InputNumber
 				disabled={!isEditable}
@@ -172,6 +173,7 @@ function Content({
 							value={date}
 							onChange={newDate => setDate(newDate!)}
 							allowClear={false}
+							format="DD.MM.YYYY"
 						/>
 						<TextField
 							inputRef={amountRef}

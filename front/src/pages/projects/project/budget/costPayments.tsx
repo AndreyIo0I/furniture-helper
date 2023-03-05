@@ -101,6 +101,7 @@ function CostPayment(props: CostPaymentProps) {
 					getPopupContainer={getPopupContainer}
 					status={toViewStatus(props.payment.paymentDate === null)}
 					disabled={props.disabled}
+					format="DD.MM.YYYY"
 				/>
 			</TableCell>
 			<TableCell>
@@ -239,6 +240,7 @@ export default function CostPaymentsTable(props: CostPaymentsTableProps) {
 								getPopupContainer={getPopupContainer}
 								status={toViewStatus(newPayment.needsValidation && newPayment.paymentDate === null)}
 								disabled={props.disabled}
+								format="DD.MM.YYYY"
 							/>
 						</TableCell>
 						<TableCell>

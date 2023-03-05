@@ -77,7 +77,7 @@ function Content({
 							name="name"
 							rules={[{required: true, message: 'Пожалуйста, введите Продукт'}]}
 						>
-							<Input disabled={isCompleted} autoFocus/>
+							<Input disabled={isCompleted}/>
 						</Form.Item>
 						<Form.Item
 							label="Завершить"
@@ -115,7 +115,7 @@ function Content({
 						label="Дата заявки"
 						name="dateOfApplication"
 					>
-						<DatePicker allowClear={false} disabled={isCompleted}/>
+						<DatePicker allowClear={false} disabled={isCompleted} format="DD.MM.YYYY"/>
 					</Form.Item>
 					<Form.Item
 						label="Адрес"
