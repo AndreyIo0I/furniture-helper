@@ -155,14 +155,14 @@ export default function AnalyticsPage() {
 	}
 
 	const mapChartItemToChartDataItem = (item: ChartItem): ChartDataItem => {
-		const value = item.value.toFixed(2)
+		const value = parseFloat(item.value.toFixed(2))
 		const name = mapChartItemDateToName(item.date)
 
 		return {name, value}
 	}
 
 	const mapChartItemWeeksToChartDataItem = (item: ChartItemWeeks): ChartDataItem => {
-		const value = item.value.toFixed(2)
+		const value = parseFloat(item.value.toFixed(2))
 		const name = mapChartItemPeriodToName(item.period)
 
 		return {name, value}
