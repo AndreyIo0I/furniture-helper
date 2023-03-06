@@ -21,13 +21,15 @@ public class ChartAnalyticsBuilder: IChartAnalyticsBuilder
     {
         IProjectsDataCollector projectsDataCollector = _projectDataCollectorFactory.GetProjectDataCollector(chartType);
 
-        return await _chartAnyticsService.CreateChartAnalyticsByDate(projectsDataCollector, chartPeriodType, period);
+        return ( await _chartAnyticsService.CreateChartAnalyticsByDate(projectsDataCollector, chartPeriodType, period) )
+            .OrderBy( x => x.Date ).ToList();
     }
     
     public async Task<List<ChartItemWeeksDto>> BuildByPeriod( ChartType chartType, ChartPeriodType chartPeriodType, Period period )
     {
         IProjectsDataCollector projectsDataCollector = _projectDataCollectorFactory.GetProjectDataCollector(chartType);
 
-        return await _chartAnyticsService.CreateChartAnalyticsByPeriod(projectsDataCollector, chartPeriodType, period);
+        return ( await _chartAnyticsService.CreateChartAnalyticsByPeriod(projectsDataCollector, chartPeriodType, period) )
+            .OrderBy( x => x.Period.StartDate ).ToList();
     }
 }

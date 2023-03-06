@@ -8,14 +8,16 @@ namespace ExtranetAPI.Analytics.Services;
 
 public class ChartAnyticsService: IChartAnyticsService
 {
-    private IReadOnlyList<Project> _projects;
+    private IReadOnlyList<Tuple<Project, DateTime>> _projects;
     private IProjectsDataCollector _projectsDataCollector;
 
     private readonly IProjectRepository _projectRepository;
+    private readonly IProjectsPayService _projectsPayService;
 
-    public ChartAnyticsService( IProjectRepository projectRepository )
+    public ChartAnyticsService( IProjectRepository projectRepository, IProjectsPayService projectsPayService)
     {
         _projectRepository = projectRepository;
+        _projectsPayService = projectsPayService;
     }
 
     public async Task<List<ChartItemDto>> CreateChartAnalyticsByDate(
@@ -23,7 +25,7 @@ public class ChartAnyticsService: IChartAnyticsService
         ChartPeriodType chartPeriodType,
         Period period )
     {
-        _projects = await _projectRepository.GetByPeriod(period.StartDate, period.EndDate);
+        _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
         _projectsDataCollector = projectsDataCollector;
 
         switch (chartPeriodType)
@@ -44,7 +46,7 @@ public class ChartAnyticsService: IChartAnyticsService
         ChartPeriodType chartPeriodType,
         Period period)
     {
-        _projects = await _projectRepository.GetByPeriod(period.StartDate, period.EndDate);
+        _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
         _projectsDataCollector = projectsDataCollector;
 
         if (chartPeriodType != ChartPeriodType.ByWeeks)
@@ -58,8 +60,8 @@ public class ChartAnyticsService: IChartAnyticsService
     private async Task<List<ChartItemDto>> ProjectsDataByDays( Period period )
     {
         Dictionary<DateTime, List<int>> projectsByDate =
-            _projects.GroupBy(x => x.EndDate.Value.Date)
-                .ToDictionary(x => x.Key, x => x.Select(x => x.Id).ToList());
+            _projects.GroupBy(x => x.Item2.Date)
+                .ToDictionary(x => x.Key, x => x.Select(x => x.Item1.Id).ToList());
 
         Dictionary<DateTime, decimal> projectDataByDate = new Dictionary<DateTime, decimal>();
         
@@ -80,8 +82,8 @@ public class ChartAnyticsService: IChartAnyticsService
     private async Task<List<ChartItemWeeksDto>> ProjectCostByWeeks( Period period )
     {
         Dictionary<Period, List<int>> projectsByDate =
-            _projects.GroupBy( x => x.EndDate.Value.Date.Week())
-                .ToDictionary(x => x.Key, x => x.Select(x => x.Id).ToList());
+            _projects.GroupBy( x => x.Item2.Date.Week())
+                .ToDictionary(x => x.Key, x => x.Select(x => x.Item1.Id).ToList());
 
         Dictionary<Period, decimal> projectCostsByDate = new Dictionary<Period, decimal>();
 
@@ -104,12 +106,12 @@ public class ChartAnyticsService: IChartAnyticsService
         Dictionary<DateTime, List<int>> projectsByDate =
             _projects.GroupBy(x => new
                 {
-                    Month = x.EndDate.Value.Month,
-                    Year = x.EndDate.Value.Year
+                    Month = x.Item2.Month,
+                    Year = x.Item2.Year
                 })
                 .ToDictionary(x =>
                         new DateTime(x.Key.Year, x.Key.Month, 1),
-                    x => x.Select(x => x.Id).ToList() );
+                    x => x.Select(x => x.Item1.Id).ToList() );
 
         Dictionary<DateTime, decimal> projectCostsByDate = new Dictionary<DateTime, decimal>();
 
@@ -136,11 +138,11 @@ public class ChartAnyticsService: IChartAnyticsService
         Dictionary<int, List<int>> projectsByDate =
             _projects.GroupBy(x => new
                 {
-                    Year = x.EndDate.Value.Year
+                    Year = x.Item2.Year
                 })
                 .ToDictionary(x =>
                         x.Key.Year,
-                    x => x.Select(x => x.Id).ToList() );
+                    x => x.Select(x => x.Item1.Id).ToList() );
 
         Dictionary<int, decimal> projectCostsByDate = new Dictionary<int, decimal>();
 

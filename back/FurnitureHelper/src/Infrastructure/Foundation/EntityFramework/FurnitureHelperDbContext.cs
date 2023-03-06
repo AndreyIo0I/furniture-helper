@@ -1,3 +1,4 @@
+using Domain.ProjectManagement;
 using Domain.UserManagement;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,9 @@ namespace Infrastructure.Foundation.EntityFramwork
         static FurnitureHelperDbContext()
         {
         }
+        
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectBudget> ProjectBudgets { get; set; }
 
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
         {

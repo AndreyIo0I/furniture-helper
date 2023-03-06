@@ -20,6 +20,7 @@ public static class ExtranetApiBindings
             .AddScoped<IProjectSummaryBuilder, ProjectSummaryBuilder>()
             .AddScoped<IProjectNumericalIndicatorsBuilder, ProjectNumericalIndicatorsBuilder>()
             .AddScoped<IChartAnyticsService, ChartAnyticsService>()
+            .AddScoped<IProjectsPayService, ProjectsPayService>()
             .AddScoped<IChartAnalyticsBuilder, ChartAnalyticsBuilder>()
             .AddScoped<IProjectDataCollectorFactory, ProjectDataCollectorFactory>()
             .AddScoped<ProjectsRevenueCollector>()
