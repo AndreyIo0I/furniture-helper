@@ -1,4 +1,4 @@
-import {Button, DatePicker, Form, Input, Select, Space} from 'antd'
+import {Button, DatePicker, Form, FormInstance, Input, Select, Space} from 'antd'
 import dayjs, {Dayjs} from 'dayjs'
 import {useRouter} from 'next/router'
 import * as React from 'react'
@@ -17,11 +17,6 @@ type ProjectFormData = {
 	description: string
 }
 
-type ClientOption = {
-	label: string
-	value: number
-}
-
 function Content({
 	clients,
 	updateClients,
@@ -29,6 +24,7 @@ function Content({
 	clients: Client[]
 	updateClients: () => void
 }) {
+	const formRef = useRef<FormInstance>(null)
 	const router = useRouter()
 
 	const [isNewClientPopupOpen, setIsNewClientPopupOpen] = useState(false)
@@ -38,24 +34,13 @@ function Content({
 		value: client.id,
 	}))
 
-	const createdClientId = useRef<number|null>(null)
-	const [client, setClient] = useState<ClientOption|null>(null)
-	const createdClient = typeof createdClientId.current === 'number' && clientOptions?.find(option => option.value === createdClientId.current)
-	if (createdClient) {
-		setClient(createdClient)
-		createdClientId.current = null
-	}
-
 	const createNewProject = (data: ProjectFormData) =>
 		saveChangesWithMsg(async () => {
-			if (!clients.map(v => v.id).includes(client!.value)) // todo по магичесой причине в dev сбрасывается добавленный клиент (ssr?!)
-				throw Error('Unknown client id')
-
 			const newProjectId = await createProject({
 				projectType: data.name,
 				address: data.address,
 				dateOfApplication: data.dateOfApplication.toISOString(),
-				clientId: client!.value,
+				clientId: data.clientId,
 				description: data.description || '',
 			})
 			await router.push(`/projects/${encodeURIComponent(newProjectId)}`)
@@ -64,6 +49,7 @@ function Content({
 	return (
 		<>
 			<Form
+				ref={formRef}
 				name="basic"
 				style={{maxWidth: 800}}
 				initialValues={{
@@ -84,6 +70,7 @@ function Content({
 					<Form.Item
 						label="Клиент"
 						style={{width: '200px'}}
+						name="clientId"
 						rules={[{required: true, message: 'Пожалуйста, укажите клиента'}]}
 					>
 						<Select
@@ -92,8 +79,6 @@ function Content({
 								(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
 							}
 							options={clientOptions}
-							value={client}
-							onChange={setClient}
 						/>
 					</Form.Item>
 					<Button
@@ -135,7 +120,7 @@ function Content({
 				onCancel={async clientId => {
 					if (typeof clientId === 'number') {
 						await updateClients()
-						createdClientId.current = clientId
+						formRef.current?.setFieldValue('clientId', clientId)
 					}
 					setIsNewClientPopupOpen(false)
 				}}

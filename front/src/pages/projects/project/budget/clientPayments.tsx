@@ -1,7 +1,7 @@
 import {DeleteFilled, PlusCircleOutlined} from '@ant-design/icons'
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
 import {Button, DatePicker, InputNumber} from 'antd'
-import {Dayjs} from 'dayjs'
+import dayjs, {Dayjs} from 'dayjs'
 import React from 'react'
 import {addRowStyle, formStyle, getPopupContainer, toViewStatus} from './common'
 import * as model from './model'
@@ -82,7 +82,7 @@ export default function ClientPaymentsTable(props: ClientPaymentsTableProps) {
 			needsValidation: false,
 			paymentId,
 			amount: null,
-			paymentDate: null,
+			paymentDate: dayjs(),
 		}
 	}
 
