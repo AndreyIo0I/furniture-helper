@@ -80,7 +80,7 @@ function CurrentStageCell(props: CurrentStageCellProps) {
 
 	return <>{
 		currentStage.isCompleted && currentStage.completedOn
-			? 'Завершен: ' + dayjs(currentStage.completedOn).format('DD.MM.YYYY')
+			? 'Оплачено: ' + dayjs(currentStage.completedOn).format('DD.MM.YYYY')
 			: currentStage.name
 	}</>
 }

@@ -68,7 +68,7 @@ namespace ExtranetAPI.Controllers
 
             if ( tempLastCompletedStage.Id == lastOrderedStageId )
             {
-                return Ok();
+                return Ok( tempLastCompletedStage );
             }
 
             return Ok( orderedStages.First( item => item.Id == ( tempLastCompletedStage.Id + 1 ) ) );
