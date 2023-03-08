@@ -1,4 +1,4 @@
-import {DatePicker, Form, Input, InputNumber} from 'antd'
+import {DatePicker, Form, Input, InputNumber, Typography} from 'antd'
 import {Dayjs} from 'dayjs'
 import {ProjectBudget} from '../../../../../api/projects/useProjectBudget'
 import saveStage from '../../../../../api/saveStage'
@@ -44,34 +44,37 @@ export default function PaymentStage(props: PaymentStageProps) {
 				clientPayment2Date,
 			},
 		})
-		// Update hasChangesInModel flag
-		props.setStage(props.stage)
+		props.setStage({
+			...props.stage,
+			completedOn: clientPayment2Date,
+		})
 	}
 
 	return (
 		<>
-			<CommonStageFields
-				stage={props.stage}
-				setStage={props.setStage}
-			/>
-			{props.contract.form && <Form layout="vertical">
-				<Form.Item label="Оплата">
-					<Input.Group compact>
-						<InputNumber
-							value={props.contract.form.clientPayment2}
-							onChange={setClientPayment2}
-							addonAfter="₽"
-						/>
-						<DatePicker
-							value={props.contract.form.clientPayment2Date}
-							onChange={value => setClientPayment2Date(value!)}
-							getPopupContainer={getPopupContainer}
-							allowClear={false}
-							format="DD.MM.YYYY"
-						/>
-					</Input.Group>
-				</Form.Item>
-			</Form>}
+			{props.contract.form
+				? (
+					<Form layout="vertical" style={{marginTop: '20px'}}>
+						<Form.Item label="Оплата">
+							<Input.Group compact>
+								<InputNumber
+									value={props.contract.form.clientPayment2}
+									onChange={setClientPayment2}
+									addonAfter="₽"
+								/>
+								<DatePicker
+									value={props.contract.form.clientPayment2Date}
+									onChange={value => setClientPayment2Date(value!)}
+									getPopupContainer={getPopupContainer}
+									allowClear={false}
+									format="DD.MM.YYYY"
+								/>
+							</Input.Group>
+						</Form.Item>
+					</Form>
+				)
+				: <Typography style={{margin: '20px'}}>Добавьте договор</Typography>
+			}
 		</>
 	)
 }

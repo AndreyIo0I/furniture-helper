@@ -34,14 +34,6 @@ export default function ContractStage(props: ContractStageProps) {
 	const [form] = Form.useForm()
 
 	React.useEffect(() => {
-		if (!props.contract.form && withContract) {
-			props.setContract({
-				form: form.getFieldsValue(true),
-			})
-		}
-	}, [withContract]) // eslint-disable-line react-hooks/exhaustive-deps
-
-	React.useEffect(() => {
 		if (withContract && props.contract.form && !isDeepEqual(form.getFieldsValue(true), props.contract.form)) {
 			form.setFieldsValue({...props.contract.form})
 		}
@@ -93,6 +85,11 @@ export default function ContractStage(props: ContractStageProps) {
 							projectId={props.project.id}
 							disabled={false}
 							getPopupContainer={getPopupContainer}
+							onLoaded={() => {
+								!props.contract.form && props.setContract({
+									form: form.getFieldsValue(true),
+								})
+							}}
 						/>
 					</Form>
 				)

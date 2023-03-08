@@ -59,6 +59,7 @@ type ContractProps = {
 	projectId: number
 	disabled: boolean
 	getPopupContainer?: (node: HTMLElement) => HTMLElement
+	onLoaded?: () => void
 }
 
 type ContentProps = {
@@ -191,7 +192,11 @@ export function Contract(props: ContractProps) {
 	const {data: budget} = useProjectBudget(props.projectId)
 	const {data: settings} = useAccountSettings()
 
-	if (!project || !budget || !settings)
+	const isLoaded = project && budget && settings
+
+	useEffect(() => isLoaded && props.onLoaded && props.onLoaded(), [isLoaded, props, props.onLoaded])
+
+	if (!isLoaded)
 		return null
 
 	return <Content project={project} budget={budget} settings={settings} {...props}/>
