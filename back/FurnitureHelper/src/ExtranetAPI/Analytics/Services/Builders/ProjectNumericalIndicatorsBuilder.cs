@@ -24,7 +24,7 @@ public class ProjectNumericalIndicatorsBuilder : IProjectNumericalIndicatorsBuil
     {
         NumericalIndicatorsDto numericalIndicatorsDto = new();
 
-        IReadOnlyList<Project> projects = await _projectRepository.GetByPeriod(period.StartDate, period.EndDate);
+        IReadOnlyList<Project> projects = await _projectRepository.GetActiveByPeriod(period.StartDate, period.EndDate);
         if ( projects.Count == 0 )
         {
             return numericalIndicatorsDto;
