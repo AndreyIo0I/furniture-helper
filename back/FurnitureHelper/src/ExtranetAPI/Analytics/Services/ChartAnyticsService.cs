@@ -37,21 +37,17 @@ public class ChartAnyticsService: IChartAnyticsService
                 _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
                 return await ProjectsDataByDays( period );
             case ChartPeriodType.ByMonths:
-                if (period.StartDate.Month == period.EndDate.Month)
-                {
-                    DateTime date = period.StartDate;
-                    period.StartDate = new DateTime(date.Year, date.Month, 1);
-                    period.EndDate = new DateTime(date.Year, date.Month + 1, 1).AddDays(-1);
-                }
-                _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
+                    DateTime startDate = period.StartDate;
+                    DateTime endDate = period.EndDate;
+                    period.StartDate = new DateTime(startDate.Year, startDate.Month, 1);
+                    period.EndDate = new DateTime(endDate.Year, endDate.Month + 1, 1).AddDays(-1);
+                    _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
                 return await ProjectCostByMonths( period );
             case ChartPeriodType.ByYears:
-                if (period.StartDate.Year == period.EndDate.Year)
-                {
-                    int year = period.StartDate.Year;
-                    period.StartDate = new DateTime(year, 1, 1);
-                    period.EndDate = new DateTime(year, 12, 31);
-                }
+                    int startDateYear = period.StartDate.Year;
+                    int endDateYear = period.EndDate.Year;
+                    period.StartDate = new DateTime(startDateYear, 1, 1);
+                    period.EndDate = new DateTime(endDateYear, 12, 31);
                 _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
                 return await ProjectCostByYears( period );
             default:
