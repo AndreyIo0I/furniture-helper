@@ -74,7 +74,6 @@
         public void Complete()
         {
             IsCompleted = true;
-            EndDate = DateTime.UtcNow;
         }
 
         public void Stop()
