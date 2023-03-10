@@ -1,7 +1,6 @@
-import {DeleteOutlined} from '@ant-design/icons'
-import {AddCircleOutline} from '@mui/icons-material'
-import {IconButton, TextField} from '@mui/material'
-import {Button, DatePicker, Input, InputNumber, List} from 'antd'
+import {DeleteOutlined, PlusCircleOutlined} from '@ant-design/icons'
+import {TextField} from '@mui/material'
+import {Button, DatePicker, Input, InputNumber, InputRef, List} from 'antd'
 import dayjs from 'dayjs'
 import React, {useRef, useState} from 'react'
 import {
@@ -82,6 +81,7 @@ function Row({
 					}
 				}}
 				format="DD.MM.YYYY"
+				style={{flexShrink: 0}}
 			/>
 			<InputNumber
 				disabled={!isEditable}
@@ -99,6 +99,7 @@ function Row({
 					}
 				}}
 				min={1}
+				style={{flexShrink: 0}}
 			/>
 			<Button
 				shape="circle"
@@ -121,7 +122,7 @@ function Content({
 	currentUser,
 }: ContentProps) {
 	const isEditable = [UserRole.Admin, UserRole.Owner].includes(currentUser.role)
-	const nameRef = useRef<HTMLInputElement>(null)
+	const nameRef = useRef<InputRef>(null)
 	const amountRef = useRef<HTMLInputElement>(null)
 
 	const [date, setDate] = useState(dayjs())
@@ -131,7 +132,7 @@ function Content({
 	const onSaveBusinessCost = () => {
 		saveChangesWithMsg(async () => {
 			const amount: number = amountRef.current?.value ? parseInt(amountRef.current?.value) : 0
-			const name: string = nameRef.current?.value!
+			const name: string = nameRef.current?.input?.value!
 			const newBusinessCostId: number = await createBusinessCost({
 				amount: amount,
 				date: date.toISOString(),
@@ -162,11 +163,9 @@ function Content({
 					<List.Item
 						style={{gap: '16px'}}
 					>
-						<TextField
+						<Input
 							placeholder="Название издержки"
-							inputRef={nameRef}
-							variant="standard"
-							fullWidth={true}
+							ref={nameRef}
 							autoComplete="off"
 						/>
 						<DatePicker
@@ -174,24 +173,20 @@ function Content({
 							onChange={newDate => setDate(newDate!)}
 							allowClear={false}
 							format="DD.MM.YYYY"
+							style={{flexShrink: 0}}
 						/>
-						<TextField
-							inputRef={amountRef}
-							margin="none"
+						<InputNumber
+							ref={amountRef}
 							required
 							type="number"
-							defaultValue={0}
-							label="Сумма"
-							sx={{
-								flex: '160px 0 0',
-							}}
+							placeholder="Сумма"
+							style={{flexShrink: 0}}
 						/>
-						<IconButton
-							type="submit"
+						<Button
+							type="link"
+							icon={<PlusCircleOutlined/>}
 							onClick={onSaveBusinessCost}
-						>
-							<AddCircleOutline/>
-						</IconButton>
+						/>
 					</List.Item>
 				)}
 				bordered
