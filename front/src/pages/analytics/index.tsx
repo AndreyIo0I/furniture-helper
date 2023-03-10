@@ -1,4 +1,5 @@
 import {Button, DatePicker, Radio, RadioChangeEvent, Select} from 'antd'
+import { RangePickerProps } from 'antd/es/date-picker'
 import dayjs, {Dayjs} from 'dayjs'
 import {useEffect, useRef, useState} from 'react'
 import {ChartDto, ChartPeriodType, ChartType} from '../../../api/typescript-fetch-client-generated'
@@ -43,20 +44,21 @@ export enum ChartKind {
 	Profit = 10
 }
 
+
 const renderDatePicker = (discretenessKind: Discreteness, startDate: Dayjs, endDate: Dayjs, onRangeChange: (dates: null | (Dayjs | null)[], dateStrings: string[]) => void) => {
 	return (
 		<>
-			{discretenessKind === Discreteness.Day && <RangePicker onChange={onRangeChange} defaultValue={[startDate, endDate]}/>}
-			{discretenessKind === Discreteness.Week && <RangePicker onChange={onRangeChange} defaultValue={[startDate, endDate]} picker="week"/>}
-			{discretenessKind === Discreteness.Month && <RangePicker onChange={onRangeChange} defaultValue={[startDate, endDate]} picker="month"/>}
-			{discretenessKind === Discreteness.Year && <RangePicker onChange={onRangeChange} defaultValue={[startDate, endDate]} picker="year"/>}
+			{discretenessKind === Discreteness.Day && <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]}/>}
+			{discretenessKind === Discreteness.Week && <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]} picker="week"/>}
+			{discretenessKind === Discreteness.Month && <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]} picker="month"/>}
+			{discretenessKind === Discreteness.Year && <RangePicker  allowClear={true} onChange={onRangeChange} value={[startDate, endDate]} picker="year"/>}
 		</>
 	)
 }
 
 export default function AnalyticsPage() {
-	const dateOfStart = useRef<Dayjs>(dayjs().add(-1, 'month'))
-	const endDate = useRef<Dayjs>(dayjs().add(1, 'month'))
+	const [dateOfStart, setDateOfStart] = useState<Dayjs | undefined>(dayjs()) //useRef<Dayjs>(dayjs().add(-1, 'month'))
+	const [endDate, setDateEnd] = useState<Dayjs | undefined>(dayjs().add(1, 'day'))//useRef<Dayjs>(dayjs().add(1, 'month'))
 	const [discretenessKind, setDiscretenessKind] = useState<Discreteness>(Discreteness.Day)
 	const [chartKind, setChartKind] = useState<ChartKind>(ChartKind.Revenue)
 
@@ -81,11 +83,11 @@ export default function AnalyticsPage() {
 
 	const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
 		if (dates) {
-			dateOfStart.current = dayjs(dates[0])
-			endDate.current = dayjs(dates[1])
+			setDateOfStart(dates[0]!)
+			setDateEnd(dates[1]!)
 		} else {
-			dateOfStart.current = dayjs()
-			endDate.current = dayjs()
+			setDateOfStart(dayjs())
+			setDateEnd(dayjs())
 		}
 	}
 
@@ -98,13 +100,17 @@ export default function AnalyticsPage() {
 	}
 
 	useEffect( () => {
-		 analyzeOnClickHandler()
+		 //analyzeOnClickHandler()
+		 setDateOfStart(undefined)
+		 setDateEnd(undefined)
+		 setNumericalIndicatorsState(undefined)
+		 setChartDataItemsState([])
 	}, [discretenessKind, chartKind])
 
 	const createPeriodParams = (): PeriodParams => {
 		return {
-			startDate: dateOfStart.current.toISOString()!,
-			endDate: endDate.current.toISOString()!,
+			startDate: dateOfStart!.toISOString()!,
+			endDate: endDate!.toISOString()!,
 		}
 	}
 
@@ -181,8 +187,8 @@ export default function AnalyticsPage() {
 	}
 
 	const mapChartItemPeriodToName = (period: PeriodItem): string => {
-		const startYear: number = dateOfStart.current.get('year')
-		const endYear: number = endDate.current.get('year')
+		const startYear: number = dateOfStart!.get('year')
+		const endYear: number = endDate!.get('year')
 		const isNeedApplyYearTag: boolean = (endYear - startYear) > 0
 
 		let name = `${period.startDate?.format('DD')}.${period.startDate?.format('MM')}-${period.endDate?.format('DD')}.${period.endDate?.format('MM')}`
@@ -194,6 +200,10 @@ export default function AnalyticsPage() {
 		return name
 	}
 
+	const canAnalyze = ():boolean => {
+		return !dateOfStart && !endDate
+	}
+
 	return (
 		<MainLayout>
 			<div className={styles.form}>
@@ -201,7 +211,7 @@ export default function AnalyticsPage() {
 					<div className={styles.panelControlsWrapper}>
 						<div>
 							<div
-								className={styles.dateWrapperDatePicker}>{renderDatePicker(discretenessKind, dateOfStart.current, endDate.current, onRangeChange)}</div>
+								className={styles.dateWrapperDatePicker}>{renderDatePicker(discretenessKind, dateOfStart!, endDate!, onRangeChange)}</div>
 							<div>
 								<Radio.Group onChange={onChangeRadio} value={discretenessKind}>
 									<Radio value={Discreteness.Day}>Д</Radio>
@@ -236,6 +246,7 @@ export default function AnalyticsPage() {
 					<div>
 						<Button
 							type="primary"
+							disabled={canAnalyze()}
 							onClick={() => analyzeOnClickHandler()}
 						>
 							Анализировать
@@ -251,8 +262,8 @@ export default function AnalyticsPage() {
 			<ChartComponent
 				data={chartDataItemsState}
 				chartKind={chartKind}
-				startDate={dateOfStart.current}
-				endDate={endDate.current}
+				startDate={dateOfStart!}
+				endDate={endDate!}
 			/>
 		</MainLayout>
 	)

@@ -57,6 +57,12 @@ export function resolveChartKindName(chartKind: ChartKind): string {
 }
 
 export default function ChartComponent(props: CharComponentProps) {
+	if (!props.startDate && !props.endDate) {
+		return <div className={styles.noDataWrapper}>
+			 <h2>Необходимо выбрать период для аналитики</h2>
+		</div>
+	}
+
 	if (!props.data || props.data.length == 0) {
 		return <div className={styles.noDataWrapper}>
 			<span className="">На период 
@@ -69,7 +75,6 @@ export default function ChartComponent(props: CharComponentProps) {
 
 	return (
 		<>
-			<h4>{resolveChartKindName(props.chartKind)}</h4>
 			<ResponsiveContainer width="100%" height="56%" >
 				<BarChart
 					width={500}
