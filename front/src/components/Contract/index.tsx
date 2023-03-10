@@ -8,7 +8,7 @@ import startDate from '../../../api/projects/startDate'
 import useProject from '../../../api/projects/useProject'
 import useProjectBudget, {ClientPayment, ProjectBudget} from '../../../api/projects/useProjectBudget'
 import useAccountSettings, {AccountSettings} from '../../../api/useAccountSettings'
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 import {Project} from '../../../api/projects/useProjects'
 
 export interface ContractForm {
@@ -79,15 +79,17 @@ function Content({
 }: ContentProps) {
 	const form = Form.useFormInstance()
 
-	const dateOfStart = Form.useWatch('dateOfStart', form)
-	useEffect(() => {
-		if (dateOfStart) {
-			form.setFieldValue('deadLine', (dateOfStart as Dayjs).add(settings.defaultProjectDurationDays, 'day'))
-		}
-	}, [dateOfStart, form, settings.defaultProjectDurationDays])
-
 	const dateOfStartInitial = project.dateOfStart ?? dayjs()
 	const deadlineInitial = project.deadLine ?? dateOfStartInitial.add(settings.defaultProjectDurationDays, 'day')
+
+	const dateOfStart: Dayjs | null = Form.useWatch('dateOfStart', form)
+	const lastDateOfStartRef = useRef<Dayjs | null>(dateOfStartInitial)
+	useEffect(() => {
+		if (dateOfStart && dateOfStart !== lastDateOfStartRef.current) {
+			lastDateOfStartRef.current = dateOfStart
+			form.setFieldValue('deadLine', dateOfStart.add(settings.defaultProjectDurationDays, 'day'))
+		}
+	}, [dateOfStart, form, settings.defaultProjectDurationDays])
 
 	return (
 		<Card title="Договор">
