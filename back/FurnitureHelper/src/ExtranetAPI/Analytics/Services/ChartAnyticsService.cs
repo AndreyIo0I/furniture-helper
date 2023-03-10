@@ -10,13 +10,11 @@ public class ChartAnyticsService: IChartAnyticsService
 {
     private IReadOnlyList<Tuple<Project, DateTime>> _projects;
     private IProjectsDataCollector _projectsDataCollector;
-
-    private readonly IProjectRepository _projectRepository;
+    
     private readonly IProjectsPayService _projectsPayService;
 
-    public ChartAnyticsService( IProjectRepository projectRepository, IProjectsPayService projectsPayService)
+    public ChartAnyticsService(IProjectsPayService projectsPayService)
     {
-        _projectRepository = projectRepository;
         _projectsPayService = projectsPayService;
     }
 
@@ -25,16 +23,36 @@ public class ChartAnyticsService: IChartAnyticsService
         ChartPeriodType chartPeriodType,
         Period period )
     {
-        _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
         _projectsDataCollector = projectsDataCollector;
 
         switch (chartPeriodType)
         {
             case ChartPeriodType.ByDays:
+                if (period.StartDate.Day == period.EndDate.Day)
+                {
+                    DateTime date = period.StartDate;
+                    period.StartDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                    period.EndDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0).AddHours(23).AddMinutes(59);
+                }
+                _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
                 return await ProjectsDataByDays( period );
             case ChartPeriodType.ByMonths:
+                if (period.StartDate.Month == period.EndDate.Month)
+                {
+                    DateTime date = period.StartDate;
+                    period.StartDate = new DateTime(date.Year, date.Month, 1);
+                    period.EndDate = new DateTime(date.Year, date.Month + 1, 1).AddDays(-1);
+                }
+                _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
                 return await ProjectCostByMonths( period );
             case ChartPeriodType.ByYears:
+                if (period.StartDate.Year == period.EndDate.Year)
+                {
+                    int year = period.StartDate.Year;
+                    period.StartDate = new DateTime(year, 1, 1);
+                    period.EndDate = new DateTime(year, 12, 31);
+                }
+                _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
                 return await ProjectCostByYears( period );
             default:
                 throw new ArgumentOutOfRangeException( "Invalid chart period type" );
@@ -46,7 +64,7 @@ public class ChartAnyticsService: IChartAnyticsService
         ChartPeriodType chartPeriodType,
         Period period)
     {
-        _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate, period.EndDate);
+        _projects = await _projectsPayService.GetProjectWithPayByPeriod(period.StartDate.Week().StartDate, period.EndDate.Week().EndDate);
         _projectsDataCollector = projectsDataCollector;
 
         if (chartPeriodType != ChartPeriodType.ByWeeks)
@@ -74,7 +92,7 @@ public class ChartAnyticsService: IChartAnyticsService
 
         return projectDataByDate.Select( x => new ChartItemDto
         {
-            Date = x.Key,
+            Date = x.Key.ToUniversalTime(),
             Value = x.Value
         } ).ToList();
     }
