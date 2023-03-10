@@ -11,6 +11,7 @@ import {Project} from '../../../../api/projects/useProjects'
 import {Contract, ContractForm, saveContract} from '../../../components/Contract'
 import MainLayout from '../../../components/MainLayout'
 import {saveChangesWithMsg} from '../../../saveChangesWithMsg'
+import endDate from '../../../../api/projects/endDate'
 
 type ProjectFormData = {
 	name: string
@@ -50,6 +51,9 @@ function Content({
 			}
 
 			if (isCompleted) {
+				if (!project.endDate && !data.clientPayment2Date) {
+					await endDate(project.id, new Date())
+				}
 				await completeProject(project.id)
 			}
 		})
