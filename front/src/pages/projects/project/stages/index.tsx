@@ -15,7 +15,7 @@ import styles from './styles.module.css'
 
 const mapToDayjs = (date: Date | null) => dayjs(date || undefined)
 
-function mapToProjectStagesViewModel(apiStages: Stage[]): model.ProjectStage[] {
+function mapToProjectStagesViewModel(apiStages: Stage[], apiBudget: ProjectBudget): model.ProjectStage[] {
 	const projectStages: model.ProjectStage[] = []
 	let productionGroup: model.GroupStage | undefined
 
@@ -60,7 +60,7 @@ function mapToProjectStagesViewModel(apiStages: Stage[]): model.ProjectStage[] {
 					id: apiStage.id,
 					name: apiStage.name,
 					isCompleted: apiStage.isCompleted,
-					completedOn: mapToDayjs(apiStage.completedOn),
+					completedOn: mapToDayjs(apiStage.completedOn || apiBudget.clientPayments[1]?.paymentDate),
 					description: apiStage.description,
 					hasChangesInModel: false,
 				})
@@ -90,7 +90,7 @@ interface ContentProps {
 function Content(props: ContentProps) {
 	const [contract, setContract] = React.useState<model.Contract>({})
 	const [stages, setStages] = React.useState(
-		() => mapToProjectStagesViewModel(props.apiStages),
+		() => mapToProjectStagesViewModel(props.apiStages, props.apiBudget),
 	)
 
 	const resetHasChangesFlag = (stages: model.ProjectStage[]): model.ProjectStage[] => (
