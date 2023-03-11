@@ -414,6 +414,26 @@ export interface NumericalIndicatorsDto {
 /**
  *
  * @export
+ * @interface NumericalPeriodDto
+ */
+export interface NumericalPeriodDto {
+	/**
+	 *
+	 * @type {Period}
+	 * @memberof NumericalPeriodDto
+	 */
+	period?: Period;
+	/**
+	 *
+	 * @type {ChartPeriodType}
+	 * @memberof NumericalPeriodDto
+	 */
+	chartPeriodType?: ChartPeriodType;
+}
+
+/**
+ *
+ * @export
  * @interface Period
  */
 export interface Period {
@@ -822,11 +842,11 @@ export const AnalyticsApiFetchParamCreator = function (configuration?: Configura
 		/**
 		 *
 		 * @summary Числовые показатели за период
-		 * @param {Period} [body]
+		 * @param {NumericalPeriodDto} [body]
 		 * @param {*} [options] Override http request option.
 		 * @throws {RequiredError}
 		 */
-		analyticsNumericalIndicatorsPost(body?: Period, options: any = {}): FetchArgs {
+		analyticsNumericalIndicatorsPost(body?: NumericalPeriodDto, options: any = {}): FetchArgs {
 			const localVarPath = `/analytics/numerical-indicators`
 			const localVarUrlObj = url.parse(localVarPath, true)
 			const localVarRequestOptions = Object.assign({method: 'POST'}, options)
@@ -839,7 +859,7 @@ export const AnalyticsApiFetchParamCreator = function (configuration?: Configura
 			// fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
 			delete localVarUrlObj.search
 			localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-			const needsSerialization = (<any>'Period' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
+			const needsSerialization = (<any>'NumericalPeriodDto' !== 'string') || localVarRequestOptions.headers['Content-Type'] === 'application/json'
 			localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || '')
 
 			return {
@@ -897,11 +917,11 @@ export const AnalyticsApiFp = function (configuration?: Configuration) {
 		/**
 		 *
 		 * @summary Числовые показатели за период
-		 * @param {Period} [body]
+		 * @param {NumericalPeriodDto} [body]
 		 * @param {*} [options] Override http request option.
 		 * @throws {RequiredError}
 		 */
-		analyticsNumericalIndicatorsPost(body?: Period, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<NumericalIndicatorsDto> {
+		analyticsNumericalIndicatorsPost(body?: NumericalPeriodDto, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<NumericalIndicatorsDto> {
 			const localVarFetchArgs = AnalyticsApiFetchParamCreator(configuration).analyticsNumericalIndicatorsPost(body, options)
 			return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
 				return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -945,11 +965,11 @@ export const AnalyticsApiFactory = function (configuration?: Configuration, fetc
 		/**
 		 *
 		 * @summary Числовые показатели за период
-		 * @param {Period} [body]
+		 * @param {NumericalPeriodDto} [body]
 		 * @param {*} [options] Override http request option.
 		 * @throws {RequiredError}
 		 */
-		analyticsNumericalIndicatorsPost(body?: Period, options?: any) {
+		analyticsNumericalIndicatorsPost(body?: NumericalPeriodDto, options?: any) {
 			return AnalyticsApiFp(configuration).analyticsNumericalIndicatorsPost(body, options)(fetch, basePath)
 		},
 	}
@@ -989,12 +1009,12 @@ export class AnalyticsApi extends BaseAPI {
 	/**
 	 *
 	 * @summary Числовые показатели за период
-	 * @param {Period} [body]
+	 * @param {NumericalPeriodDto} [body]
 	 * @param {*} [options] Override http request option.
 	 * @throws {RequiredError}
 	 * @memberof AnalyticsApi
 	 */
-	public analyticsNumericalIndicatorsPost(body?: Period, options?: any) {
+	public analyticsNumericalIndicatorsPost(body?: NumericalPeriodDto, options?: any) {
 		return AnalyticsApiFp(this.configuration).analyticsNumericalIndicatorsPost(body, options)(this.fetch, this.basePath)
 	}
 
