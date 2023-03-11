@@ -5,5 +5,5 @@ namespace ExtranetAPI.Analytics.Services.Builders;
 
 public interface IProjectNumericalIndicatorsBuilder
 {
-    Task<NumericalIndicatorsDto> Build( Period period );
+    Task<NumericalIndicatorsDto> Build( NumericalPeriodDto period );
 }

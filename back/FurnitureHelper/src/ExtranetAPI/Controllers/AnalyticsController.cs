@@ -28,9 +28,9 @@ public class AnalyticsController : ControllerBase
     /// <returns></returns>
     [HttpPost( "numerical-indicators" )]
     [SwaggerResponse( statusCode: 200, type: typeof( NumericalIndicatorsDto ), description: "Числовые показатели за период" )]
-    public async Task<IActionResult> GetNumericalIndicators( [FromBody] Period period )
+    public async Task<IActionResult> GetNumericalIndicators( [FromBody] NumericalPeriodDto period )
     {
-        if ( period.StartDate > period.EndDate )
+        if ( period.Period.StartDate > period.Period.EndDate )
         {
             return BadRequest();
         }
