@@ -1,7 +1,6 @@
 import {Button, DatePicker, Radio, RadioChangeEvent, Select} from 'antd'
-import { RangePickerProps } from 'antd/es/date-picker'
 import dayjs, {Dayjs} from 'dayjs'
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {ChartDto, ChartPeriodType, ChartType} from '../../../api/typescript-fetch-client-generated'
 import {
 	ChartItem,
@@ -48,10 +47,14 @@ export enum ChartKind {
 const renderDatePicker = (discretenessKind: Discreteness, startDate: Dayjs, endDate: Dayjs, onRangeChange: (dates: null | (Dayjs | null)[], dateStrings: string[]) => void) => {
 	return (
 		<>
-			{discretenessKind === Discreteness.Day && <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]}/>}
-			{discretenessKind === Discreteness.Week && <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]} picker="week"/>}
-			{discretenessKind === Discreteness.Month && <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]} picker="month"/>}
-			{discretenessKind === Discreteness.Year && <RangePicker  allowClear={true} onChange={onRangeChange} value={[startDate, endDate]} picker="year"/>}
+			{discretenessKind === Discreteness.Day &&
+                <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]}/>}
+			{discretenessKind === Discreteness.Week &&
+                <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]} picker="week"/>}
+			{discretenessKind === Discreteness.Month &&
+                <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]} picker="month"/>}
+			{discretenessKind === Discreteness.Year &&
+                <RangePicker allowClear={true} onChange={onRangeChange} value={[startDate, endDate]} picker="year"/>}
 		</>
 	)
 }
@@ -67,7 +70,10 @@ export default function AnalyticsPage() {
 
 	const analyzeOnClickHandler = async () => {
 		const periodParams: PeriodParams = createPeriodParams()
-		const numericalIndicators: NumericalIndicators = mapNumericalIndicatorsDto(await getNumericalIndicators(periodParams))
+		const numericalIndicators: NumericalIndicators = mapNumericalIndicatorsDto(await getNumericalIndicators({
+			period: periodParams,
+			chartPeriodType: mapToChartPeriodType(discretenessKind),
+		}))
 
 		const chartDto: ChartDto = createChartDto()
 		if (discretenessKind == Discreteness.Week) {
@@ -99,12 +105,12 @@ export default function AnalyticsPage() {
 		setChartKind(value)
 	}
 
-	useEffect( () => {
-		 //analyzeOnClickHandler()
-		 setDateOfStart(undefined)
-		 setDateEnd(undefined)
-		 setNumericalIndicatorsState(undefined)
-		 setChartDataItemsState([])
+	useEffect(() => {
+		//analyzeOnClickHandler()
+		setDateOfStart(undefined)
+		setDateEnd(undefined)
+		setNumericalIndicatorsState(undefined)
+		setChartDataItemsState([])
 	}, [discretenessKind, chartKind])
 
 	const createPeriodParams = (): PeriodParams => {
@@ -200,7 +206,7 @@ export default function AnalyticsPage() {
 		return name
 	}
 
-	const canAnalyze = ():boolean => {
+	const canAnalyze = (): boolean => {
 		return !dateOfStart && !endDate
 	}
 
