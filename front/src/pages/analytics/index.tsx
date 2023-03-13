@@ -106,11 +106,9 @@ export default function AnalyticsPage() {
 	}
 
 	useEffect(() => {
-		//analyzeOnClickHandler()
-		setDateOfStart(undefined)
-		setDateEnd(undefined)
-		setNumericalIndicatorsState(undefined)
-		setChartDataItemsState([])
+		// setNumericalIndicatorsState(undefined)
+		// setChartDataItemsState([])
+		analyzeOnClickHandler()
 	}, [discretenessKind, chartKind])
 
 	const createPeriodParams = (): PeriodParams => {

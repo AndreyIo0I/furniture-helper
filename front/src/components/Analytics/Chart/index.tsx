@@ -1,5 +1,5 @@
 import {Dayjs} from 'dayjs'
-import {Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
+import {Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, ReferenceLine} from 'recharts'
 import {ChartKind} from '../../../pages/analytics'
 import styles from './styles.module.css'
 
@@ -50,7 +50,7 @@ export function resolveChartKindName(chartKind: ChartKind): string {
 		case ChartKind.Payment:
 			return 'Оплаты'
 		case ChartKind.Profit:
-			return 'Выгода'
+			return 'Прибыль'
 		default:
 			return 'Unknown'
 	}
@@ -75,10 +75,12 @@ export default function ChartComponent(props: CharComponentProps) {
 
 	return (
 		<>
+		  <h4>{resolveChartKindName(props.chartKind)}</h4>
 			<ResponsiveContainer width="100%" height="56%" >
 				<BarChart
 					width={500}
 					height={300}
+					stackOffset={'sign'}
 					data={props.data}
 					margin={{
 						top: 20,
@@ -88,9 +90,10 @@ export default function ChartComponent(props: CharComponentProps) {
 					}}
 				>
 					<CartesianGrid strokeDasharray="3 3"/>
-					<XAxis dataKey="name" height={60} allowDataOverflow={true} angle={90} interval={0}
+					<XAxis dataKey="name" height={60} allowDataOverflow={false} angle={90} interval={0}
 						   tick={<CustomizedAxisTick/>}/>
 					<YAxis/>
+					<ReferenceLine y={0} stroke="#000" />
 					<Tooltip/>
 					<Bar dataKey="value" fill="#8884d8"/>
 				</BarChart>
