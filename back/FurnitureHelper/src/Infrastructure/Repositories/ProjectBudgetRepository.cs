@@ -10,6 +10,11 @@ namespace Infrastructure.Repositories
         {
         }
 
+        public async Task<IReadOnlyList<ProjectBudget>> GetAll()
+        {
+            return await Entities.ToListAsync();
+        }
+
         public async Task<ProjectBudget> GetByProjectId( int projectId )
         {
             return await Entities.FirstOrDefaultAsync( item => item.ProjectId == projectId );

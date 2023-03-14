@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using Domain.ProjectManagement;
 
 namespace ExtranetAPI.Controllers
 {
@@ -12,12 +13,14 @@ namespace ExtranetAPI.Controllers
     public class CostController : ControllerBase
     {
         private readonly ICostRepository _costRepository;
+        private readonly IProjectBudgetRepository _projectBudgetRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CostController( ICostRepository costRepository, IUnitOfWork unitOfWork )
+        public CostController( ICostRepository costRepository, IUnitOfWork unitOfWork, IProjectBudgetRepository projectBudgetRepository )
         {
             _costRepository = costRepository;
             _unitOfWork = unitOfWork;
+            _projectBudgetRepository = projectBudgetRepository;
         }
 
         /// <summary>
@@ -100,6 +103,16 @@ namespace ExtranetAPI.Controllers
             {
                 return BadRequest( $"Cost with id {costId} is not exist" );
             }
+
+            IReadOnlyList<ProjectBudget> projectBudgets = await _projectBudgetRepository.GetAll();
+            ProjectBudget? allProjectBudgetCostPayments = projectBudgets.
+                FirstOrDefault( item => item.CostPayments.Where( item => item.CostId == costId ) != new List<CostPayment> { } );
+
+            if( allProjectBudgetCostPayments != null )
+            {
+                return BadRequest( $"Cost with id {costId} is used" );
+            }
+
             _costRepository.Remove( cost );
             await _unitOfWork.Commit();
 
