@@ -54,7 +54,7 @@ function CostInput({
 		isEditable && saveChangesWithMsg(async () => {
 			await deleteCostType(row.id)
 			await mutate()
-		})
+		}, 'Упс, этот тип уже используется')
 
 	return (
 		<TableRow

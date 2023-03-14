@@ -13,13 +13,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Period'
+              $ref: '#/components/schemas/NumericalPeriodDto'
           text/json:
             schema:
-              $ref: '#/components/schemas/Period'
+              $ref: '#/components/schemas/NumericalPeriodDto'
           application/*+json:
             schema:
-              $ref: '#/components/schemas/Period'
+              $ref: '#/components/schemas/NumericalPeriodDto'
       responses:
         '200':
           description: Числовые показатели за период
@@ -1516,6 +1516,14 @@ components:
         numberOfProducts:
           type: integer
           format: int32
+      additionalProperties: false
+    NumericalPeriodDto:
+      type: object
+      properties:
+        period:
+          $ref: '#/components/schemas/Period'
+        chartPeriodType:
+          $ref: '#/components/schemas/ChartPeriodType'
       additionalProperties: false
     Period:
       type: object
