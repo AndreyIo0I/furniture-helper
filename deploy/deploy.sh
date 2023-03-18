@@ -16,7 +16,7 @@ dotnet /root/srv/FurnitureHelper/Infastructure.Migrations.dll
 
 cd /root/src/furniture-helper/front
 
-yarn isntall
+yarn install
 yarn build
 
 cp -rf .next/static .next/standalone/.next/static
