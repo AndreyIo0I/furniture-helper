@@ -43,7 +43,7 @@ dotnet run -c Release
 dotnet publish -c Release --runtime ubuntu.22.04-x64 -o /root/srv/FurnitureHelper --self-contained false /p:EnvironmentName=prod
 
 ### open port
-ufw allow 5000
+ufw allow 3000
 ufw enable
 ufw reload
 
@@ -64,7 +64,6 @@ http://62.217.183.33:5000/health
 
 Если что-то не так, то логи зауска:
 journalctl -u FHExtranetAPI.service -b -n 100 --no-pager
-
 
 ### Выполнение миграций:
 После publish:
